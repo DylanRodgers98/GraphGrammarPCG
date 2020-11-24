@@ -822,11 +822,14 @@ public class GraphMLParser : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
         IList<Graph> graphs = new List<Graph>();
         XmlSerializer serializer = new XmlSerializer(typeof (graphmltype));
         using (FileStream fileStream = new FileStream(graphFilePath, FileMode.Open))
         {
             graphmltype graphml = (graphmltype) serializer.Deserialize(fileStream);
+            Debug.Log($"Elapsed time after deserialization: {stopwatch.ElapsedMilliseconds}ms");
             foreach (object item in graphml.Items)
             {
                 switch (item)
@@ -837,10 +840,12 @@ public class GraphMLParser : MonoBehaviour
                 }
             }
         }
+        stopwatch.Stop();
         foreach (Graph graph in graphs)
         {
             Debug.Log(graph.ToString());
         }
+        Debug.Log($"Total execution time: {stopwatch.ElapsedMilliseconds}ms");
     }
 
     private Graph ParseGraph(graphtype graph)
