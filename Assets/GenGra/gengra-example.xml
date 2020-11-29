@@ -1,42 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gengra xmlns="https://github.com/DylanRodgers98/GraphGrammarPCG"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="https://github.com/DylanRodgers98/GraphGrammarPCG
+<GenGra xmlns="https://github.com/DylanRodgers98/GraphGrammarPCG"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="https://github.com/DylanRodgers98/GraphGrammarPCG
 		file:///C:/Users/dylan/Dropbox/Uni/Year 3/Project/Code/Procedural Generation - Final Year Project/Assets/GenGra/GenGra.xsd">
 	
-	<graphs>
-		<graph id="G1">
-			<node id="n0" symbol="A"/>
-			<node id="n1" symbol="B"/>
-			<node id="n2" symbol="C"/>
-			<node id="n3" symbol="D"/>
-			<node id="n4" symbol="E"/>
-			<node id="n5" symbol="F"/>
-			<node id="n6" symbol="G"/>
-			<node id="n7" symbol="H"/>
-			<node id="n8" symbol="I"/>
-			<node id="n9" symbol="J"/>
-			<node id="n10" symbol="K"/>
-			<edge source="n0" target="n2"/>
-			<edge source="n1" target="n2"/>
-			<edge source="n2" target="n3"/>
-			<edge source="n3" target="n5"/>
-			<edge source="n3" target="n4"/>
-			<edge source="n4" target="n6"/>
-			<edge source="n6" target="n5"/>
-			<edge source="n5" target="n7"/>
-			<edge source="n6" target="n8"/>
-			<edge source="n8" target="n7"/>
-			<edge source="n8" target="n9"/>
-			<edge source="n8" target="n10"/>
-		  </graph>
-	</graphs>
+	<Graphs>
+		<Graph id="S">
+			<Nodes>
+				<Node id="0" symbol="A"/>
+				<Node id="1" symbol="B"/>
+				<Node id="2" symbol="C"/>
+				<Node id="3" symbol="D"/>
+			</Nodes>
+			<Edges>
+				<Edge source="0" target="1"/>
+				<Edge source="1" target="2"/>
+				<Edge source="2" target="3"/>
+				<Edge source="3" target="0"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="G1">
+			<Nodes>
+				<Node id="0" symbol="A"/>
+				<Node id="1" symbol="B"/>
+			</Nodes>
+			<Edges>
+				<Edge source="0" target="1"/>
+			</Edges>
+		</Graph>
+		  
+		<Graph id="G2">
+			<Nodes>
+				<Node id="0" symbol="A"/>
+				<Node id="1" symbol="A"/>
+				<Node id="2" symbol="B"/>
+			</Nodes>
+			<Edges>
+				<Edge source="0" target="1"/>
+				<Edge source="0" target="2"/>
+				<Edge source="1" target="2"/>
+			</Edges>
+		</Graph>
+	</Graphs>
 	
-	<grammar>
-		<startGraph ref="G1"/>
-		<rules>
-			<rule source="G1" target="G2"/>
-		</rules>
-	</grammar>
+	<Grammar>
+		<StartGraph ref="S"/>
+		<Rules>
+			<Rule source="G1" target="G2"/>
+		</Rules>
+	</Grammar>
 	
-</gengra>
+</GenGra>
