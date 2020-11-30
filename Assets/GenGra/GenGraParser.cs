@@ -13,19 +13,49 @@ public class GenGraParser : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         GenGraType genGra;
         using (FileStream fileStream = new FileStream(_graphFilePath, FileMode.Open))
         {
-            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
             XmlSerializer serializer = new XmlSerializer(typeof(GenGraType));
             genGra = (GenGraType)serializer.Deserialize(fileStream);
 
-            stopwatch.Stop();
             Debug.Log($"XML deserialization completed in: {stopwatch.ElapsedMilliseconds}ms");
         }
         DebugLogDeserialization(genGra);
+
+        GraphType[] graphs = genGra.Graphs.Graph;
+        for (int i = 0; i < graphs.Length; i++)
+        {
+            GraphType graph = graphs[i];
+            GraphType[] subgraphs = graph.subgraphs;
+            for (int j = 0; j < subgraphs.Length; j++)
+            {
+                GraphType subgraph = subgraphs[j];
+                Debug.Log($"[Graph {i + 1} | id: {graph.id}] Subgraph {j + 1}: {subgraph}");
+            }
+        }
+
+        GraphType startGraph = null;
+        GraphType G1 = null;
+        foreach (GraphType graph in genGra.Graphs.Graph)
+        {
+            if (graph.id == "S")
+            {
+                startGraph = graph;
+            }
+            else if (graph.id == "G1")
+            {
+                G1 = graph;
+            }
+        }
+        GraphType[] matchingSubgraphs = startGraph.FindMatchingSubgraphs(G1);
+        Debug.Log($"num matching subgraphs: {matchingSubgraphs.Length}");
+
+        stopwatch.Stop();
+        Debug.Log($"Total execution completed in: {stopwatch.ElapsedMilliseconds}ms");
     }
 
     // TODO: remove this method when done prototyping

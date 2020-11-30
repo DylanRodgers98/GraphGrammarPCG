@@ -1,103 +1,141 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace GenGra
 {
-    public partial class GraphType
+    public partial class GraphType : IEquatable<GraphType>
     {
-
         private IDictionary<string, IList<string>> _adjacencyList;
 
-        public bool ContainsSubgraph(GraphType otherGraph)
+        private GraphType[] _subgraphs;
+
+        public override bool Equals(object obj)
         {
-            if (this == otherGraph)
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
             {
-                return true;
+                return false;
+            }
+            else
+            {
+                return Equals((GraphType) obj);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Nodes.Node.Length ^ this.Edges.Edge.Length;
+        }
+
+        public bool Equals(GraphType otherGraph)
+        {
+            NodeType[] thisNodes = this.Nodes.Node;
+            NodeType[] otherNodes = otherGraph.Nodes.Node;
+
+            EdgeType[] thisEdges = this.Edges.Edge;
+            EdgeType[] otherEdges = otherGraph.Edges.Edge;
+
+            if (thisNodes.Length != otherNodes.Length || thisEdges.Length != otherEdges.Length)
+            {
+                return false;
             }
 
-            foreach (string otherNodeId in otherGraph.adjacencyList.Keys)
+            IDictionary<Tuple<string, int>, int> thisSymbolOutdegreeCounts = new Dictionary<Tuple<string, int>, int>();
+            IDictionary<Tuple<string, int>, int> otherSymbolOutdegreeCounts = new Dictionary<Tuple<string, int>, int>();
+            for (int i = 0; i < thisNodes.Length; i++)
             {
-                IDictionary<string, int> otherAdjacentNodeSymbolCounts = otherGraph.GetAdjacentNodeSymbolCounts(otherNodeId);
+                NodeType thisNode = thisNodes[i];
+                int thisAdjacentNodesCount = adjacencyList[thisNode.id].Count;
+                Tuple<string, int> thisSymbolOutdegree = new Tuple<string, int>(thisNode.symbol, thisAdjacentNodesCount);
+                int thisCount;
+                thisSymbolOutdegreeCounts.TryGetValue(thisSymbolOutdegree, out thisCount);
+                thisSymbolOutdegreeCounts[thisSymbolOutdegree] = thisCount + 1;
 
-                // get nodes from this graph with symbol matching that of node from otherGraph
-                NodeType otherNode = otherGraph.GetNodeById(otherNodeId);
-                NodeType[] thisNodesMatchingSymbol = this.GetNodesBySymbol(otherNode.symbol);
+                NodeType otherNode = otherNodes[i];
+                int otherAdjacentNodesCount = otherGraph.adjacencyList[otherNode.id].Count;
+                Tuple<string, int> otherSymbolOutdegree = new Tuple<string, int>(otherNode.symbol, otherAdjacentNodesCount);
+                int otherCount;
+                otherSymbolOutdegreeCounts.TryGetValue(otherSymbolOutdegree, out otherCount);
+                otherSymbolOutdegreeCounts[otherSymbolOutdegree] = otherCount + 1;
+            }
 
-                // if nodes with matching symbols exists, and node from otherGraph has no adjacent nodes, then continue
-                if (thisNodesMatchingSymbol.Length > 0 && otherAdjacentNodeSymbolCounts.Keys.Count == 0)
-                {
-                    continue;
-                }
+            if (thisSymbolOutdegreeCounts.Count != otherSymbolOutdegreeCounts.Count)
+            {
+                return false;
+            }
 
-                bool matchingNodeFound = false;
-
-                foreach (NodeType thisNode in thisNodesMatchingSymbol)
-                {
-                    IDictionary<string, int> thisAdjacentNodeSymbolCounts = this.GetAdjacentNodeSymbolCounts(thisNode.id);
-
-                    // check to see if list of adjacent symbols from otherGraph is a sublist of list of adjacent symbols for current node from this graph
-                    bool isAdjacencyListSublist = true;
-                    foreach (string otherAdjacentNodeSymbol in otherAdjacentNodeSymbolCounts.Keys)
-                    {
-                        if (!thisAdjacentNodeSymbolCounts.ContainsKey(otherAdjacentNodeSymbol)
-                            || thisAdjacentNodeSymbolCounts[otherAdjacentNodeSymbol] < otherAdjacentNodeSymbolCounts[otherAdjacentNodeSymbol])
-                        {
-                            isAdjacencyListSublist = false;
-                            break;
-                        }
-                    }
-                    if (isAdjacencyListSublist)
-                    {
-                        matchingNodeFound = true;
-                        break;
-                    }
-                }
-
-                if (!matchingNodeFound)
+            foreach (Tuple<string, int> symbolOutdegree in thisSymbolOutdegreeCounts.Keys)
+            {
+                if (!otherSymbolOutdegreeCounts.ContainsKey(symbolOutdegree) 
+                    || thisSymbolOutdegreeCounts[symbolOutdegree] != otherSymbolOutdegreeCounts[symbolOutdegree])
                 {
                     return false;
                 }
             }
+
             return true;
         }
 
-        private IDictionary<string, IList<string>> adjacencyList
+        public GraphType[] FindMatchingSubgraphs(GraphType otherGraph)
+        {
+            return Array.FindAll(subgraphs, subgraph => subgraph.Equals(otherGraph));
+        }
+
+        public GraphType[] subgraphs
         {
             get
             {
-                if (_adjacencyList == null)
+                if (_subgraphs == null)
                 {
-                    IDictionary<string, IList<string>> adjacencyList = new Dictionary<string, IList<string>>();
-                    foreach (EdgeType edge in this.Edges.Edge)
-                    {
-                        if (!adjacencyList.ContainsKey(edge.source))
-                        {
-                            adjacencyList[edge.source] = new List<string>();
-                        }
-                        adjacencyList[edge.source].Add(edge.target);
-                    }
-                    _adjacencyList = adjacencyList;
+                    ISet<GraphType> subgraphs = FindSubgraphs();
+                    GraphType[] subgraphsArray = new GraphType[subgraphs.Count];
+                    subgraphs.CopyTo(subgraphsArray, 0);
+                    _subgraphs = subgraphsArray;
                 }
-                return _adjacencyList;
+                return _subgraphs;
             }
         }
 
-        private IDictionary<string, int> GetAdjacentNodeSymbolCounts(string nodeId)
+        private ISet<GraphType> FindSubgraphs()
         {
-            IDictionary<string, int> adjacentNodeSymbols = new Dictionary<string, int>();
-            foreach (string adjecentNodeId in this.adjacencyList[nodeId])
+            ISet<GraphType> subgraphs = new HashSet<GraphType>();
+            foreach (NodeType node in this.Nodes.Node)
             {
-                NodeType adjacentNode = this.GetNodeById(adjecentNodeId);
-                if (!adjacentNodeSymbols.ContainsKey(adjacentNode.symbol))
-                {
-                    adjacentNodeSymbols[adjacentNode.symbol] = 1;
-                }
-                else
-                {
-                    adjacentNodeSymbols[adjacentNode.symbol]++;
-                }
+                List<NodeType> nodes = new List<NodeType>();
+                nodes.Add(node);
+
+                List<EdgeType> edges = new List<EdgeType>();
+
+                subgraphs.Add(CreateSubgraph(nodes, edges));
+                
+                FindAdjacentSubgraphs(node.id, subgraphs, nodes, edges);
             }
-            return adjacentNodeSymbols;
+            return subgraphs;
+        }
+
+        private void FindAdjacentSubgraphs(string nodeId, ISet<GraphType> subgraphs, List<NodeType> nodes, List<EdgeType> edges)
+        {
+            IList<string> adjacentNodeIds = this.adjacencyList[nodeId];
+            foreach (string adjacentNodeId in adjacentNodeIds)
+            {
+                if (edges.Exists(e => e.source == nodeId && e.target == adjacentNodeId))
+                {
+                    continue;
+                }
+
+                NodeType adjacentNode = this.GetNodeById(adjacentNodeId);
+                nodes.Add(adjacentNode);
+
+                EdgeType edge = new EdgeType();
+                edge.source = nodeId;
+                edge.target = adjacentNodeId;
+                edges.Add(edge);
+
+                subgraphs.Add(CreateSubgraph(nodes, edges));
+
+                FindAdjacentSubgraphs(adjacentNodeId, subgraphs, nodes, edges);
+            }
         }
 
         private NodeType GetNodeById(string id)
@@ -105,9 +143,41 @@ namespace GenGra
             return Array.Find(this.Nodes.Node, n => n.id.Equals(id));
         }
 
-        private NodeType[] GetNodesBySymbol(string symbol)
+        private GraphType CreateSubgraph(IList<NodeType> nodes, IList<EdgeType> edges)
         {
-            return Array.FindAll(this.Nodes.Node, n => n.symbol.Equals(symbol));
+            GraphType subgraph = new GraphType();
+            subgraph.Nodes = new NodesType();
+            subgraph.Edges = new EdgesType();
+
+            NodeType[] nodesArray = new NodeType[nodes.Count];
+            nodes.CopyTo(nodesArray, 0);
+            subgraph.Nodes.Node = nodesArray;
+
+            EdgeType[] edgesArray = new EdgeType[edges.Count];
+            edges.CopyTo(edgesArray, 0);
+            subgraph.Edges.Edge = edgesArray;
+
+            return subgraph;
+        }
+
+        private IDictionary<string, IList<string>> adjacencyList
+        {
+            get
+            {
+                if (this._adjacencyList == null)
+                {
+                    _adjacencyList = new Dictionary<string, IList<string>>();
+                    foreach (NodeType node in this.Nodes.Node)
+                    {
+                        _adjacencyList[node.id] = new List<string>();
+                    }
+                    foreach (EdgeType edge in this.Edges.Edge)
+                    {
+                        _adjacencyList[edge.source].Add(edge.target);
+                    }
+                }
+                return _adjacencyList;
+            }
         }
 
     }
