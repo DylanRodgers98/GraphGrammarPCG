@@ -30,7 +30,7 @@ public class GenGraParser : MonoBehaviour
         for (int i = 0; i < graphs.Length; i++)
         {
             GraphType graph = graphs[i];
-            GraphType[] subgraphs = graph.subgraphs;
+            GraphType[] subgraphs = graph.Subgraphs;
             for (int j = 0; j < subgraphs.Length; j++)
             {
                 GraphType subgraph = subgraphs[j];
