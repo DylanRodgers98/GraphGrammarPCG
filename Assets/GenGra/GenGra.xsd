@@ -94,12 +94,12 @@
     </xs:unique>
 
     <xs:keyref name="rule_source_ref" refer="graph_id_key">
-      <xs:selector xpath=".//Graphs/Graph"/>
+      <xs:selector xpath=".//Rules/Rule"/>
       <xs:field xpath="@source"/>
     </xs:keyref>
 
     <xs:keyref name="rule_target_ref" refer="graph_id_key">
-      <xs:selector xpath=".//Graphs/Graph"/>
+      <xs:selector xpath=".//Rules/Rule"/>
       <xs:field xpath="@target"/>
     </xs:keyref>
   </xs:element>
