@@ -67,7 +67,7 @@ namespace GenGra
             foreach (NodeType otherGraphNode in otherGraph.Nodes.Node)
             {
                 // get all nodes in this graph with a symbol matching that of otherGraphNode
-                IList<NodeType> nodeCandidates = nodeSymbolMap[otherGraphNode.symbol];
+                IList<NodeType> nodeCandidates = NodeSymbolMap[otherGraphNode.symbol];
                 if (nodeCandidates.Count == 0) return false;
                 
                 // get all nodes adjacent to current node in otherGraph
@@ -78,7 +78,7 @@ namespace GenGra
                 {
                     // determine if all nodes adjacent to current node in otherGraph have a
                     // node adjacent to current nodeCandidate in this graph with a matching symbol
-                    IList<NodeType> adjacentNodes = adjacencyList[nodeCandidate.id];
+                    IList<NodeType> adjacentNodes = AdjacencyList[nodeCandidate.id];
                     return otherNodeAdjacentNodes.All(otherAdjNode => 
                         adjacentNodes.Any(adjNode => adjNode.symbol == otherAdjNode.symbol));
                 });
