@@ -39,7 +39,7 @@ public class GenGraParser : MonoBehaviour
         IEnumerable<RuleType> applicableRules = genGra.Grammar.Rules.Rule.Where(rule =>
         {
             GraphType ruleSourceGraph = graphs[rule.source];
-            return startGraph.IsSupergraph(ruleSourceGraph);
+            return startGraph.IsSupergraphOf(ruleSourceGraph);
         });
         
         foreach (RuleType applicableRule in applicableRules)

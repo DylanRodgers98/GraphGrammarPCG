@@ -62,8 +62,10 @@ namespace GenGra
             }
         }
 
-        public bool IsSupergraph(GraphType otherGraph)
+        public bool IsSupergraphOf(GraphType otherGraph)
         {
+            if (!HasAllSymbolsIn(otherGraph)) return false;
+            
             foreach (NodeType otherGraphNode in otherGraph.Nodes.Node)
             {
                 // get all nodes in this graph with a symbol matching that of otherGraphNode
@@ -86,6 +88,16 @@ namespace GenGra
             }
 
             return true;
+        }
+
+        private bool HasAllSymbolsIn(GraphType otherGraph)
+        {
+            return otherGraph.NodeSymbolMap.All(pair =>
+            {
+                string symbol = pair.Key;
+                IList<NodeType> otherGraphNodes = pair.Value;
+                return NodeSymbolMap.ContainsKey(symbol) && NodeSymbolMap[symbol].Count == otherGraphNodes.Count;
+            });
         }
 
     //     public GraphType[] Subgraphs
