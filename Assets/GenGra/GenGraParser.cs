@@ -41,6 +41,11 @@ public class GenGraParser : MonoBehaviour
             GraphType ruleSourceGraph = graphs[rule.source];
             return startGraph.IsSupergraph(ruleSourceGraph);
         });
+        
+        foreach (RuleType applicableRule in applicableRules)
+        {
+            Debug.Log($"[Applicable Rule] source: {applicableRule.source} | target: {applicableRule.target}");
+        }
 
         // GraphType[] graphs = genGra.Graphs.Graph;
         // for (int i = 0; i < graphs.Length; i++)
