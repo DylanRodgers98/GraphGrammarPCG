@@ -74,10 +74,20 @@ namespace GenGra
             foreach (NodeType nodeCandidate in nodeCandidates)
             {
                 IList<NodeType> adjacentNodes = AdjacencyList[nodeCandidate.id];
-                bool isSuccessfulCandidate = Search(otherGraph, adjacentNodes, otherAdjacentNodes);
+                bool isSuccessfulCandidate = DualSearch(otherGraph, adjacentNodes, otherAdjacentNodes);
                 if (isSuccessfulCandidate) return true;
             }
             return false;
+        }
+
+        private bool HasAllSymbolsIn(GraphType otherGraph)
+        {
+            return otherGraph.NodeSymbolMap.All(pair =>
+            {
+                string symbol = pair.Key;
+                IList<NodeType> otherGraphNodes = pair.Value;
+                return NodeSymbolMap.ContainsKey(symbol) && NodeSymbolMap[symbol].Count == otherGraphNodes.Count;
+            });
         }
 
         private NodeType FindStartingNode()
@@ -102,7 +112,7 @@ namespace GenGra
             return Nodes.Node[Random.Range(0, Nodes.Node.Length - 1)];
         }
 
-        private bool Search(GraphType otherGraph, IList<NodeType> adjacentNodes, IList<NodeType> otherAdjacentNodes, IList<string> visitedOtherNodes = null)
+        private bool DualSearch(GraphType otherGraph, IList<NodeType> adjacentNodes, IList<NodeType> otherAdjacentNodes, IList<string> visitedOtherNodes = null)
         {
             visitedOtherNodes = visitedOtherNodes ?? new List<string>();
             
@@ -118,7 +128,7 @@ namespace GenGra
                     {
                         IList<NodeType> newAdjacentNodes = AdjacencyList[adjacentNode.id];
                         IList<NodeType> newOtherAdjacentNodes = otherGraph.AdjacencyList[otherAdjacentNode.id];
-                        matchingNodeFound = Search(otherGraph, newAdjacentNodes, newOtherAdjacentNodes, visitedOtherNodes);
+                        matchingNodeFound = DualSearch(otherGraph, newAdjacentNodes, newOtherAdjacentNodes, visitedOtherNodes);
                         if (matchingNodeFound) break;
                     }
                 }
@@ -126,16 +136,6 @@ namespace GenGra
             }
 
             return true;
-        }
-
-        private bool HasAllSymbolsIn(GraphType otherGraph)
-        {
-            return otherGraph.NodeSymbolMap.All(pair =>
-            {
-                string symbol = pair.Key;
-                IList<NodeType> otherGraphNodes = pair.Value;
-                return NodeSymbolMap.ContainsKey(symbol) && NodeSymbolMap[symbol].Count == otherGraphNodes.Count;
-            });
         }
 
     //     public GraphType[] Subgraphs
