@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace GenGra
 {
@@ -65,25 +66,62 @@ namespace GenGra
         public bool IsSupergraphOf(GraphType otherGraph)
         {
             if (!HasAllSymbolsIn(otherGraph)) return false;
+
+            NodeType startingNode = FindStartingNode();
             
-            foreach (NodeType otherGraphNode in otherGraph.Nodes.Node)
+            IList<NodeType> otherAdjacentNodes = otherGraph.AdjacencyList[startingNode.id];
+            IList<NodeType> nodeCandidates = NodeSymbolMap[startingNode.symbol];
+            foreach (NodeType nodeCandidate in nodeCandidates)
             {
-                // get all nodes in this graph with a symbol matching that of otherGraphNode
-                IList<NodeType> nodeCandidates = NodeSymbolMap[otherGraphNode.symbol];
-                if (nodeCandidates.Count == 0) return false;
+                IList<NodeType> adjacentNodes = AdjacencyList[nodeCandidate.id];
+                bool isSuccessfulCandidate = Search(otherGraph, adjacentNodes, otherAdjacentNodes);
+                if (isSuccessfulCandidate) return true;
+            }
+            return false;
+        }
+
+        private NodeType FindStartingNode()
+        {
+            if (Edges.Edge.Length == 0)
+            {
+                if (Nodes.Node.Length == 1) return Nodes.Node[0];
+                throw new ArgumentException("Graph has no edges but more than one node, so cannot determine a starting node");
+            }
+            
+            ISet<string> nodeIdsWithIndegree = new HashSet<string>();
+            foreach (EdgeType edge in Edges.Edge) nodeIdsWithIndegree.Add(edge.target);
+
+            // Return first node with an indegree of 0
+            foreach (NodeType node in Nodes.Node)
+            {
+                if (!nodeIdsWithIndegree.Contains(node.id)) return node;
+            }
+            
+            // If no node exists with an indegree of 0, return a random node.
+            // This graph will be cyclic, so start node does not matter
+            return Nodes.Node[Random.Range(0, Nodes.Node.Length - 1)];
+        }
+
+        private bool Search(GraphType otherGraph, IList<NodeType> adjacentNodes, IList<NodeType> otherAdjacentNodes, IList<string> visitedOtherNodes = null)
+        {
+            visitedOtherNodes = visitedOtherNodes ?? new List<string>();
+            
+            foreach (NodeType otherAdjacentNode in otherAdjacentNodes)
+            {
+                if (visitedOtherNodes.Contains(otherAdjacentNode.id)) continue;
+                visitedOtherNodes.Add(otherAdjacentNode.id);
                 
-                // get all nodes adjacent to current node in otherGraph
-                IList<NodeType> otherNodeAdjacentNodes = otherGraph.AdjacencyList[otherGraphNode.id];
-                if (otherNodeAdjacentNodes.Count == 0) continue;
-                
-                bool matchingNodeFound = nodeCandidates.Any(nodeCandidate =>
+                bool matchingNodeFound = false;
+                foreach (NodeType adjacentNode in adjacentNodes)
                 {
-                    // determine if all nodes adjacent to current node in otherGraph have a
-                    // node adjacent to current nodeCandidate in this graph with a matching symbol
-                    IList<NodeType> adjacentNodes = AdjacencyList[nodeCandidate.id];
-                    return otherNodeAdjacentNodes.All(otherAdjNode => 
-                        adjacentNodes.Any(adjNode => adjNode.symbol == otherAdjNode.symbol));
-                });
+                    if (adjacentNode.symbol == otherAdjacentNode.symbol)
+                    {
+                        IList<NodeType> newAdjacentNodes = AdjacencyList[adjacentNode.id];
+                        IList<NodeType> newOtherAdjacentNodes = otherGraph.AdjacencyList[otherAdjacentNode.id];
+                        matchingNodeFound = Search(otherGraph, newAdjacentNodes, newOtherAdjacentNodes, visitedOtherNodes);
+                        if (matchingNodeFound) break;
+                    }
+                }
                 if (!matchingNodeFound) return false;
             }
 
