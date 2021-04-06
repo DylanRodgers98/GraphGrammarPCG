@@ -135,13 +135,18 @@ namespace GenGra
             return true;
         }
         
-        public void FindAndReplace(GraphType source, GraphType target)
+        public void FindAndReplace(GraphType sourceGraph, GraphType targetGraph)
         {
+            /*
+             * STEP 1: Find a subgraph in the target graph that matches the left-hand part
+             * of the rule and mark that subgraph by copying the identifiers of the nodes. 
+             */
+            
             IDictionary<string, NodeType> nodesMarkedBySourceNodeId = new Dictionary<string, NodeType>();
             
-            foreach (NodeType startingNode in source.StartingNodes)
+            foreach (NodeType startingNode in sourceGraph.StartingNodes)
             {
-                IList<NodeType> sourceNodes = new List<NodeType>(source.AdjacencyList[startingNode.id]);
+                IList<NodeType> sourceNodes = new List<NodeType>(sourceGraph.AdjacencyList[startingNode.id]);
                 sourceNodes.Add(startingNode);
 
                 bool isSuccessfulCandidate = false;
@@ -151,7 +156,7 @@ namespace GenGra
                     IList<NodeType> thisNodes = new List<NodeType>(AdjacencyList[nodeCandidate.id]);
                     thisNodes.Add(nodeCandidate);
                     
-                    isSuccessfulCandidate = DualSearch(source, thisNodes, sourceNodes, nodesMarkedBySourceNodeId);
+                    isSuccessfulCandidate = DualSearch(sourceGraph, thisNodes, sourceNodes, nodesMarkedBySourceNodeId);
                     if (isSuccessfulCandidate) break;
                     nodesMarkedBySourceNodeId = new Dictionary<string, NodeType>();
                 }
@@ -159,7 +164,7 @@ namespace GenGra
                 if (!isSuccessfulCandidate)
                 {
                     throw new InvalidOperationException($"No subgraph found in graph {id} matching source graph" +
-                                                        $" {source.id}, so cannot carry out find and replace operation");
+                                                        $" {sourceGraph.id}, so cannot carry out find and replace operation");
                 }
             }
 
@@ -168,6 +173,33 @@ namespace GenGra
                 string sourceNodeId = kvp.Key;
                 NodeType node = kvp.Value;
                 Debug.Log($"[Marked node] Source Node ID: {sourceNodeId} | This Node ID: {node.id}");
+            }
+
+            /*
+             * STEP 2: Remove all edges between the marked nodes. 
+             */
+            
+            for (int j = 0; j < Edges.Edge.Length; j++)
+            {
+                EdgeType edge = Edges.Edge[j];
+                Debug.Log($"[Graph {id} BEFORE Edge Removal | Edge: {j + 1}] source: {edge.source} | target: {edge.target}");
+            }
+            
+            List<EdgeType> thisGraphEdges = new List<EdgeType>(Edges.Edge);
+            
+            foreach (EdgeType sourceGraphEdge in sourceGraph.Edges.Edge)
+            {
+                string sourceNodeId = nodesMarkedBySourceNodeId[sourceGraphEdge.source].id;
+                string targetNodeId = nodesMarkedBySourceNodeId[sourceGraphEdge.target].id;
+                thisGraphEdges.RemoveAll(edge => edge.source == sourceNodeId && edge.target == targetNodeId);
+            }
+
+            Edges.Edge = thisGraphEdges.ToArray();
+            
+            for (int j = 0; j < Edges.Edge.Length; j++)
+            {
+                EdgeType edge = Edges.Edge[j];
+                Debug.Log($"[Graph {id} AFTER Edge Removal | Edge: {j + 1}] source: {edge.source} | target: {edge.target}");
             }
         }
 
