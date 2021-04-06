@@ -201,6 +201,33 @@ namespace GenGra
                 EdgeType edge = Edges.Edge[j];
                 Debug.Log($"[Graph {id} AFTER Edge Removal | Edge: {j + 1}] source: {edge.source} | target: {edge.target}");
             }
+            
+            /*
+             * STEP 3: Transform the graph by transforming marked nodes into their corresponding nodes on the
+             * right-hand side, adding a node for each node on the right-hand side that has no match in the
+             * target graph, and removing any nodes that have no corresponding node on the right-hand side.
+             */
+            
+            foreach (NodeType node in Nodes.Node)
+            {
+                Debug.Log($"[Graph {id} BEFORE node transform | Node: {node.id}] symbol: {node.symbol}");
+            }
+
+            foreach (NodeType targetGraphNode in targetGraph.Nodes.Node)
+            {
+                string nodeId = targetGraphNode.id;
+                if (nodesMarkedBySourceNodeId.ContainsKey(nodeId))
+                {
+                    string newSymbol = targetGraphNode.symbol;
+                    nodesMarkedBySourceNodeId[nodeId].symbol = newSymbol;
+                }
+            }
+            
+            foreach (NodeType node in Nodes.Node)
+            {
+                Debug.Log($"[Graph {id} AFTER node transform | Node: {node.id}] symbol: {node.symbol}");
+            }
+            
         }
 
         private bool HasAllSymbolsIn(GraphType otherGraph)
