@@ -64,7 +64,7 @@ namespace GenGra
         {
             if (!HasAllSymbolsIn(otherGraph)) return false;
 
-            IList<NodeType> startingNodes = otherGraph.FindStartingNodes();
+            NodeType[] startingNodes = otherGraph.FindStartingNodes();
             foreach (NodeType startingNode in startingNodes)
             {
                 IList<NodeType> otherAdjacentNodes = otherGraph.AdjacencyList[startingNode.id];
@@ -93,7 +93,7 @@ namespace GenGra
             });
         }
 
-        private IList<NodeType> FindStartingNodes()
+        private NodeType[] FindStartingNodes()
         {
             // If graph has no edges then nodes in graph are disconnected,
             // therefore all nodes should be used as starting nodes
@@ -104,7 +104,7 @@ namespace GenGra
                     throw new InvalidOperationException(
                         "Encountered graph with no nodes or edges. Please check the validity of your grammar");
                 }
-                return Nodes.Node.ToList();
+                return Nodes.Node;
             }
 
             // Calculate the indegree for each node in the graph
@@ -119,23 +119,22 @@ namespace GenGra
             }
 
             // Return all nodes with an indegree of 0
-            IList<NodeType> returnNodes = Nodes.Node
+            NodeType[] returnNodes = Nodes.Node
                 .Where(node => !nodeIndegrees.ContainsKey(node.id))
-                .ToList();
+                .ToArray();
             
-            if (returnNodes.Count != 0) return returnNodes;
+            if (returnNodes.Length != 0) return returnNodes;
 
             // If no node exists with an indegree of 0, then this graph is cyclic,
-            // so return a random start node
+            // so return an array containing just one random start node
             NodeType randomNode = Nodes.Node[Random.Range(0, Nodes.Node.Length - 1)];
-            returnNodes.Add(randomNode);
-            return returnNodes;
+            return new [] {randomNode};
         }
 
         private bool DualSearch(GraphType otherGraph, IList<NodeType> adjacentNodes, 
-            IList<NodeType> otherAdjacentNodes, IList<string> visitedOtherNodes = null)
+            IList<NodeType> otherAdjacentNodes, ISet<string> visitedOtherNodes = null)
         {
-            visitedOtherNodes = visitedOtherNodes ?? new List<string>();
+            visitedOtherNodes = visitedOtherNodes ?? new HashSet<string>();
             
             foreach (NodeType otherAdjacentNode in otherAdjacentNodes)
             {
