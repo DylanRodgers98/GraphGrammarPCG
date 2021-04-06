@@ -67,17 +67,22 @@ namespace GenGra
         {
             if (!HasAllSymbolsIn(otherGraph)) return false;
 
-            NodeType startingNode = FindStartingNode();
-            
-            IList<NodeType> otherAdjacentNodes = otherGraph.AdjacencyList[startingNode.id];
-            IList<NodeType> nodeCandidates = NodeSymbolMap[startingNode.symbol];
-            foreach (NodeType nodeCandidate in nodeCandidates)
+            IList<NodeType> startingNodes = FindStartingNodes();
+            foreach (NodeType startingNode in startingNodes)
             {
-                IList<NodeType> adjacentNodes = AdjacencyList[nodeCandidate.id];
-                bool isSuccessfulCandidate = DualSearch(otherGraph, adjacentNodes, otherAdjacentNodes);
-                if (isSuccessfulCandidate) return true;
+                IList<NodeType> otherAdjacentNodes = otherGraph.AdjacencyList[startingNode.id];
+                IList<NodeType> nodeCandidates = NodeSymbolMap[startingNode.symbol];
+                bool isSuccessfulCandidate = false;
+                foreach (NodeType nodeCandidate in nodeCandidates)
+                {
+                    IList<NodeType> adjacentNodes = AdjacencyList[nodeCandidate.id];
+                    isSuccessfulCandidate = DualSearch(otherGraph, adjacentNodes, otherAdjacentNodes);
+                    if (isSuccessfulCandidate) break;
+                }
+                if (!isSuccessfulCandidate) return false;
             }
-            return false;
+            
+            return true;
         }
 
         private bool HasAllSymbolsIn(GraphType otherGraph)
@@ -86,33 +91,52 @@ namespace GenGra
             {
                 string symbol = pair.Key;
                 IList<NodeType> otherGraphNodes = pair.Value;
-                return NodeSymbolMap.ContainsKey(symbol) && NodeSymbolMap[symbol].Count == otherGraphNodes.Count;
+                return NodeSymbolMap.ContainsKey(symbol) && 
+                       NodeSymbolMap[symbol].Count == otherGraphNodes.Count;
             });
         }
 
-        private NodeType FindStartingNode()
+        private IList<NodeType> FindStartingNodes()
         {
+            // If graph has no edges then nodes in graph are disconnected,
+            // therefore all nodes should be used as starting nodes
             if (Edges.Edge.Length == 0)
             {
-                if (Nodes.Node.Length == 1) return Nodes.Node[0];
-                throw new ArgumentException("Graph has no edges but more than one node, so cannot determine a starting node");
+                if (Nodes.Node.Length == 0)
+                {
+                    throw new InvalidOperationException(
+                        "Encountered graph with no nodes or edges. Please check the validity of your grammar");
+                }
+                return Nodes.Node.ToList();
             }
-            
-            ISet<string> nodeIdsWithIndegree = new HashSet<string>();
-            foreach (EdgeType edge in Edges.Edge) nodeIdsWithIndegree.Add(edge.target);
 
-            // Return first node with an indegree of 0
-            foreach (NodeType node in Nodes.Node)
+            // Calculate the indegree for each node in the graph
+            IDictionary<string, int> nodeIndegrees = new Dictionary<string, int>();
+            foreach (EdgeType edge in Edges.Edge)
             {
-                if (!nodeIdsWithIndegree.Contains(node.id)) return node;
+                if (!nodeIndegrees.ContainsKey(edge.target))
+                {
+                    nodeIndegrees[edge.target] = 0;
+                }
+                nodeIndegrees[edge.target]++;
             }
+
+            // Return all nodes with an indegree of 0
+            IList<NodeType> returnNodes = Nodes.Node
+                .Where(node => !nodeIndegrees.ContainsKey(node.id))
+                .ToList();
             
-            // If no node exists with an indegree of 0, return a random node.
-            // This graph will be cyclic, so start node does not matter
-            return Nodes.Node[Random.Range(0, Nodes.Node.Length - 1)];
+            if (returnNodes.Count != 0) return returnNodes;
+
+            // If no node exists with an indegree of 0, then this graph is cyclic,
+            // so return a random start node
+            NodeType randomNode = Nodes.Node[Random.Range(0, Nodes.Node.Length - 1)];
+            returnNodes.Add(randomNode);
+            return returnNodes;
         }
 
-        private bool DualSearch(GraphType otherGraph, IList<NodeType> adjacentNodes, IList<NodeType> otherAdjacentNodes, IList<string> visitedOtherNodes = null)
+        private bool DualSearch(GraphType otherGraph, IList<NodeType> adjacentNodes, 
+            IList<NodeType> otherAdjacentNodes, IList<string> visitedOtherNodes = null)
         {
             visitedOtherNodes = visitedOtherNodes ?? new List<string>();
             
