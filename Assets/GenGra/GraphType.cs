@@ -168,22 +168,9 @@ namespace GenGra
                 }
             }
 
-            foreach (var kvp in nodesMarkedBySourceNodeId)
-            {
-                string sourceNodeId = kvp.Key;
-                NodeType node = kvp.Value;
-                Debug.Log($"[Marked node] Source Node ID: {sourceNodeId} | This Node ID: {node.id}");
-            }
-
             /*
              * STEP 2: Remove all edges between the marked nodes. 
              */
-            
-            for (int j = 0; j < Edges.Edge.Length; j++)
-            {
-                EdgeType edge = Edges.Edge[j];
-                Debug.Log($"[Graph {id} BEFORE Edge Removal | Edge: {j + 1}] source: {edge.source} | target: {edge.target}");
-            }
             
             List<EdgeType> thisGraphEdges = new List<EdgeType>(Edges.Edge);
             
@@ -193,14 +180,6 @@ namespace GenGra
                 string targetNodeId = nodesMarkedBySourceNodeId[sourceGraphEdge.target].id;
                 thisGraphEdges.RemoveAll(edge => edge.source == sourceNodeId && edge.target == targetNodeId);
             }
-
-            Edges.Edge = thisGraphEdges.ToArray();
-            
-            for (int j = 0; j < Edges.Edge.Length; j++)
-            {
-                EdgeType edge = Edges.Edge[j];
-                Debug.Log($"[Graph {id} AFTER Edge Removal | Edge: {j + 1}] source: {edge.source} | target: {edge.target}");
-            }
             
             /*
              * STEP 3: Transform the graph by transforming marked nodes into their corresponding nodes on the
@@ -209,11 +188,6 @@ namespace GenGra
              */
 
             List<NodeType> thisGraphNodes = new List<NodeType>(Nodes.Node);
-            
-            foreach (NodeType node in thisGraphNodes)
-            {
-                Debug.Log($"[Graph {id} BEFORE node transform | Node: {node.id}] symbol: {node.symbol}");
-            }
             
             IEnumerable<string> nodesToRemove = sourceGraph.Nodes.Node
                 .Where(sourceNode => targetGraph.Nodes.Node.All(targetNode => targetNode.id != sourceNode.id))
@@ -235,22 +209,37 @@ namespace GenGra
                         .Select(node => int.Parse(node.id))
                         .OrderBy(i => i)
                         .Last() + 1;
-                    
-                    thisGraphNodes.Add(new NodeType
+
+                    NodeType newNode = new NodeType
                     {
                         id = newNodeId.ToString(),
                         symbol = newSymbol
-                    });
+                    };
+                    
+                    thisGraphNodes.Add(newNode);
+                    nodesMarkedBySourceNodeId[nodeId] = newNode;
                 }
             }
 
             Nodes.Node = thisGraphNodes.ToArray();
             
-            foreach (NodeType node in Nodes.Node)
+            /*
+             * STEP 4: Copy the edges as specified by the right-hand side.
+             */
+
+            foreach (EdgeType targetGraphEdge in targetGraph.Edges.Edge)
             {
-                Debug.Log($"[Graph {id} AFTER node transform | Node: {node.id}] symbol: {node.symbol}");
+                string source = targetGraphEdge.source;
+                string target = targetGraphEdge.target;
+                
+                thisGraphEdges.Add(new EdgeType
+                {
+                    source = nodesMarkedBySourceNodeId[source].id,
+                    target = nodesMarkedBySourceNodeId[target].id
+                });
             }
-            
+
+            Edges.Edge = thisGraphEdges.ToArray();
         }
 
         private bool HasAllSymbolsIn(GraphType otherGraph)

@@ -50,7 +50,7 @@
 	<Grammar>
 		<StartGraph ref="S"/>
 		<Rules>
-			<Rule source="G2" target="G1"/>
+			<Rule source="G1" target="G2"/>
 		</Rules>
 	</Grammar>
 	
