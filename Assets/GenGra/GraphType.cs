@@ -207,8 +207,10 @@ namespace GenGra
              * right-hand side, adding a node for each node on the right-hand side that has no match in the
              * target graph, and removing any nodes that have no corresponding node on the right-hand side.
              */
+
+            List<NodeType> thisGraphNodes = new List<NodeType>(Nodes.Node);
             
-            foreach (NodeType node in Nodes.Node)
+            foreach (NodeType node in thisGraphNodes)
             {
                 Debug.Log($"[Graph {id} BEFORE node transform | Node: {node.id}] symbol: {node.symbol}");
             }
@@ -216,12 +218,27 @@ namespace GenGra
             foreach (NodeType targetGraphNode in targetGraph.Nodes.Node)
             {
                 string nodeId = targetGraphNode.id;
+                string newSymbol = targetGraphNode.symbol;
                 if (nodesMarkedBySourceNodeId.ContainsKey(nodeId))
                 {
-                    string newSymbol = targetGraphNode.symbol;
                     nodesMarkedBySourceNodeId[nodeId].symbol = newSymbol;
                 }
+                else
+                {
+                    int newNodeId = thisGraphNodes
+                        .Select(node => int.Parse(node.id))
+                        .OrderBy(i => i)
+                        .Last() + 1;
+                    
+                    thisGraphNodes.Add(new NodeType
+                    {
+                        id = newNodeId.ToString(),
+                        symbol = newSymbol
+                    });
+                }
             }
+
+            Nodes.Node = thisGraphNodes.ToArray();
             
             foreach (NodeType node in Nodes.Node)
             {
