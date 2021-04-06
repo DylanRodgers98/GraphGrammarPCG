@@ -1,4 +1,5 @@
-﻿using GenGra;
+﻿using System;
+using GenGra;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GenGraParser : MonoBehaviour
 {
@@ -36,16 +38,31 @@ public class GenGraParser : MonoBehaviour
         string startGraphRef = genGra.Grammar.StartGraph.@ref;
         GraphType startGraph = graphs[startGraphRef];
 
-        IEnumerable<RuleType> applicableRules = genGra.Grammar.Rules.Rule.Where(rule =>
-        {
-            GraphType ruleSourceGraph = graphs[rule.source];
-            return startGraph.IsSupergraphOf(ruleSourceGraph);
-        });
+        RuleType[] applicableRules = genGra.Grammar.Rules.Rule
+            .Where(rule =>
+            {
+                GraphType ruleSourceGraph = graphs[rule.source];
+                return startGraph.IsSupergraphOf(ruleSourceGraph);
+            })
+            .ToArray();
         
         foreach (RuleType applicableRule in applicableRules)
         {
             Debug.Log($"[Applicable Rule] source: {applicableRule.source} | target: {applicableRule.target}");
         }
+
+        if (applicableRules.Length == 0)
+        {
+            // no rules applicable; return "startGraph"/final graph
+        }
+
+        RuleType ruleToApply = applicableRules.Length == 1
+            ? applicableRules[0]
+            : applicableRules[Random.Range(0, applicableRules.Length - 1)];
+
+        GraphType ruleSource = graphs[ruleToApply.source];
+        GraphType ruleTarget = graphs[ruleToApply.target];
+        startGraph.FindAndReplace(ruleSource, ruleTarget);
         
         stopwatch.Stop();
         Debug.Log($"Total execution completed in: {stopwatch.ElapsedMilliseconds}ms");
