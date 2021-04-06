@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -136,53 +134,7 @@ namespace GenGra
             
             return true;
         }
-
-        private bool HasAllSymbolsIn(GraphType otherGraph)
-        {
-            return otherGraph.NodeSymbolMap.All(pair =>
-            {
-                string symbol = pair.Key;
-                IList<NodeType> otherGraphNodes = pair.Value;
-                return NodeSymbolMap.ContainsKey(symbol) && 
-                       NodeSymbolMap[symbol].Count >= otherGraphNodes.Count;
-            });
-        }
-
-        private bool DualSearch(GraphType otherGraph, IList<NodeType> thisNodes, 
-            IList<NodeType> otherNodes, ISet<string> visitedOtherNodes = null,
-            IDictionary<string, NodeType> nodesMarkedByOtherNodeId = null)
-        {
-            visitedOtherNodes = visitedOtherNodes ?? new HashSet<string>();
-            
-            foreach (NodeType otherNode in otherNodes)
-            {
-                if (visitedOtherNodes.Contains(otherNode.id)) continue;
-                visitedOtherNodes.Add(otherNode.id);
-                
-                bool matchingNodeFound = false;
-                foreach (NodeType thisNode in thisNodes)
-                {
-                    if (thisNode.symbol == otherNode.symbol)
-                    {
-                        IList<NodeType> thisAdjacentNodes = AdjacencyList[thisNode.id];
-                        IList<NodeType> otherAdjacentNodes = otherGraph.AdjacencyList[otherNode.id];
-                        matchingNodeFound = DualSearch(otherGraph, thisAdjacentNodes, otherAdjacentNodes, visitedOtherNodes, nodesMarkedByOtherNodeId);
-                        if (matchingNodeFound)
-                        {
-                            if (nodesMarkedByOtherNodeId != null)
-                            {
-                                nodesMarkedByOtherNodeId[otherNode.id] = thisNode;
-                            }
-                            break;
-                        }
-                    }
-                }
-                if (!matchingNodeFound) return false;
-            }
-
-            return true;
-        }
-
+        
         public void FindAndReplace(GraphType source, GraphType target)
         {
             IDictionary<string, NodeType> nodesMarkedBySourceNodeId = new Dictionary<string, NodeType>();
@@ -219,10 +171,56 @@ namespace GenGra
             }
         }
 
-        private bool DualSearch(GraphType otherGraph, IList<NodeType> thisNodes,
-            IList<NodeType> otherNodes, IDictionary<string, NodeType> nodesMarkedByOtherNodeId)
+        private bool HasAllSymbolsIn(GraphType otherGraph)
+        {
+            return otherGraph.NodeSymbolMap.All(pair =>
+            {
+                string symbol = pair.Key;
+                IList<NodeType> otherGraphNodes = pair.Value;
+                return NodeSymbolMap.ContainsKey(symbol) && 
+                       NodeSymbolMap[symbol].Count >= otherGraphNodes.Count;
+            });
+        }
+        
+        private bool DualSearch(GraphType otherGraph, IList<NodeType> thisNodes, IList<NodeType> otherNodes, 
+            IDictionary<string, NodeType> nodesMarkedByOtherNodeId)
         {
             return DualSearch(otherGraph, thisNodes, otherNodes, null, nodesMarkedByOtherNodeId);
+        }
+        
+        private bool DualSearch(GraphType otherGraph, IList<NodeType> thisNodes, 
+            IList<NodeType> otherNodes, ISet<string> visitedOtherNodes = null,
+            IDictionary<string, NodeType> nodesMarkedByOtherNodeId = null)
+        {
+            visitedOtherNodes = visitedOtherNodes ?? new HashSet<string>();
+            
+            foreach (NodeType otherNode in otherNodes)
+            {
+                if (visitedOtherNodes.Contains(otherNode.id)) continue;
+                visitedOtherNodes.Add(otherNode.id);
+                
+                bool matchingNodeFound = false;
+                foreach (NodeType thisNode in thisNodes)
+                {
+                    if (thisNode.symbol == otherNode.symbol)
+                    {
+                        IList<NodeType> thisAdjacentNodes = AdjacencyList[thisNode.id];
+                        IList<NodeType> otherAdjacentNodes = otherGraph.AdjacencyList[otherNode.id];
+                        matchingNodeFound = DualSearch(otherGraph, thisAdjacentNodes, otherAdjacentNodes, visitedOtherNodes, nodesMarkedByOtherNodeId);
+                        if (matchingNodeFound)
+                        {
+                            if (nodesMarkedByOtherNodeId != null)
+                            {
+                                nodesMarkedByOtherNodeId[otherNode.id] = thisNode;
+                            }
+                            break;
+                        }
+                    }
+                }
+                if (!matchingNodeFound) return false;
+            }
+
+            return true;
         }
     }
 }

@@ -1,10 +1,7 @@
-﻿using System;
-using GenGra;
-using System.Collections;
+﻿using GenGra;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
 using System.Xml.Serialization;
 using UnityEngine;
 using Random = UnityEngine.Random;
