@@ -214,6 +214,12 @@ namespace GenGra
             {
                 Debug.Log($"[Graph {id} BEFORE node transform | Node: {node.id}] symbol: {node.symbol}");
             }
+            
+            IEnumerable<string> nodesToRemove = sourceGraph.Nodes.Node
+                .Where(sourceNode => targetGraph.Nodes.Node.All(targetNode => targetNode.id != sourceNode.id))
+                .Select(sourceNode => nodesMarkedBySourceNodeId[sourceNode.id].id);
+            
+            thisGraphNodes.RemoveAll(node => nodesToRemove.Contains(node.id));
 
             foreach (NodeType targetGraphNode in targetGraph.Nodes.Node)
             {
