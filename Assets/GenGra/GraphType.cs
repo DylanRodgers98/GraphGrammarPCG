@@ -67,7 +67,7 @@ namespace GenGra
         {
             if (!HasAllSymbolsIn(otherGraph)) return false;
 
-            IList<NodeType> startingNodes = FindStartingNodes();
+            IList<NodeType> startingNodes = otherGraph.FindStartingNodes();
             foreach (NodeType startingNode in startingNodes)
             {
                 IList<NodeType> otherAdjacentNodes = otherGraph.AdjacencyList[startingNode.id];
@@ -92,7 +92,7 @@ namespace GenGra
                 string symbol = pair.Key;
                 IList<NodeType> otherGraphNodes = pair.Value;
                 return NodeSymbolMap.ContainsKey(symbol) && 
-                       NodeSymbolMap[symbol].Count == otherGraphNodes.Count;
+                       NodeSymbolMap[symbol].Count >= otherGraphNodes.Count;
             });
         }
 

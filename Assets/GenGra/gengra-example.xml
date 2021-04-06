@@ -8,12 +8,15 @@
 		<Graph id="S">
 			<Nodes>
 				<Node id="0" symbol="A"/>
+				<Node id="4" symbol="A"/>
 				<Node id="1" symbol="B"/>
 				<Node id="2" symbol="C"/>
 				<Node id="3" symbol="D"/>
 			</Nodes>
 			<Edges>
 				<Edge source="0" target="1"/>
+				<Edge source="0" target="4"/>
+				<Edge source="4" target="1"/>
 				<Edge source="1" target="2"/>
 				<Edge source="2" target="3"/>
 				<Edge source="3" target="0"/>
