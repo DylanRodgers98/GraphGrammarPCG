@@ -46,35 +46,7 @@ public class GenGraParser : MonoBehaviour
         {
             Debug.Log($"[Applicable Rule] source: {applicableRule.source} | target: {applicableRule.target}");
         }
-
-        // GraphType[] graphs = genGra.Graphs.Graph;
-        // for (int i = 0; i < graphs.Length; i++)
-        // {
-        //     GraphType graph = graphs[i];
-        //     GraphType[] subgraphs = graph.Subgraphs;
-        //     for (int j = 0; j < subgraphs.Length; j++)
-        //     {
-        //         GraphType subgraph = subgraphs[j];
-        //         Debug.Log($"[Graph {i + 1} | id: {graph.id}] Subgraph {j + 1}: {subgraph}");
-        //     }
-        // }
-        //
-        // GraphType startGraph = null;
-        // GraphType G1 = null;
-        // foreach (GraphType graph in genGra.Graphs.Graph)
-        // {
-        //     if (graph.id == "S")
-        //     {
-        //         startGraph = graph;
-        //     }
-        //     else if (graph.id == "G1")
-        //     {
-        //         G1 = graph;
-        //     }
-        // }
-        // GraphType[] matchingSubgraphs = startGraph.FindMatchingSubgraphs(G1);
-        // Debug.Log($"num matching subgraphs: {matchingSubgraphs.Length}");
-        //
+        
         stopwatch.Stop();
         Debug.Log($"Total execution completed in: {stopwatch.ElapsedMilliseconds}ms");
     }
