@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenGra xmlns="https://github.com/DylanRodgers98/GraphGrammarPCG"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="https://github.com/DylanRodgers98/GraphGrammarPCG
+		file:///C:/Users/dylan/Dropbox/Uni/Year 3/Project/Code/Procedural Generation - Final Year Project/Assets/GenGra/GenGra.xsd">
+	
+	<Graphs>
+		<Graph id="S1">
+			<Nodes>
+				<Node id="1" symbol="S"/>
+			</Nodes>
+		</Graph>
+		
+		<Graph id="S2">
+			<Nodes>
+				<Node id="1" symbol="e"/>
+				<Node id="2" symbol="C"/>
+				<Node id="3" symbol="G"/>
+				<Node id="4" symbol="bm"/>
+				<Node id="5" symbol="iq"/>
+				<Node id="6" symbol="ti"/>
+				<Node id="7" symbol="CF"/>
+				<Node id="8" symbol="g"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="2"/>
+				<Edge source="2" target="3"/>
+				<Edge source="3" target="4"/>
+				<Edge source="4" target="5"/>
+				<Edge source="5" target="6"/>
+				<Edge source="6" target="7"/>
+				<Edge source="7" target="8"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="1A">
+			<Nodes>
+				<Node id="1" symbol="CF"/>
+				<Node id="2" symbol="g"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="2"/>
+			</Edges>
+		</Graph>
+		  
+		<Graph id="1B">
+			<Nodes>
+				<Node id="1" symbol="C"/>
+				<Node id="2" symbol="g"/>
+				<Node id="3" symbol="G"/>
+				<Node id="4" symbol="lf"/>
+				<Node id="5" symbol="bl"/>
+				<Node id="6" symbol="t"/>
+				<Node id="7" symbol="kf"/>
+				<Node id="8" symbol="H"/>
+				<Node id="9" symbol="H"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="3"/>
+				<Edge source="1" target="6"/>
+				<Edge source="1" target="8"/>
+				<Edge source="3" target="4"/>
+				<Edge source="4" target="5"/>
+				<Edge source="5" target="2"/>
+				<Edge source="6" target="7"/>
+				<Edge source="6" target="9"/>
+				<Edge source="7" target="4"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="2A">
+			<Nodes>
+				<Node id="1" symbol="C"/>
+				<Node id="2" symbol="G"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="2B">
+			<Nodes>
+				<Node id="1" symbol="CL"/>
+				<Node id="2" symbol="CL"/>
+				<Node id="3" symbol="CL"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="3"/>
+				<Edge source="3" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="3B">
+			<Nodes>
+				<Node id="1" symbol="CL"/>
+				<Node id="2" symbol="CL"/>
+				<Node id="3" symbol="CL"/>
+				<Node id="4" symbol="CL"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="3"/>
+				<Edge source="3" target="4"/>
+				<Edge source="4" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="4B">
+			<Nodes>
+				<Node id="1" symbol="CL"/>
+				<Node id="2" symbol="CL"/>
+				<Node id="3" symbol="CL"/>
+				<Node id="4" symbol="CL"/>
+				<Node id="5" symbol="CL"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="3"/>
+				<Edge source="3" target="4"/>
+				<Edge source="4" target="5"/>
+				<Edge source="5" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="3A">
+			<Nodes>
+				<Node id="1" symbol="CL"/>
+			</Nodes>
+		</Graph>
+		
+		<Graph id="5B">
+			<Nodes>
+				<Node id="1" symbol="t"/>
+			</Nodes>
+		</Graph>
+		
+		<Graph id="6B">
+			<Nodes>
+				<Node id="1" symbol="t"/>
+				<Node id="2" symbol="t"/>
+				<Node id="3" symbol="ib"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="2"/>
+				<Edge source="2" target="3"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="7B">
+			<Nodes>
+				<Node id="1" symbol="ts"/>
+			</Nodes>
+		</Graph>
+		
+		<Graph id="4A">
+			<Nodes>
+				<Node id="1" symbol="CL"/>
+				<Node id="2" symbol="CL"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="8B">
+			<Nodes>
+				<Node id="1" symbol="k"/>
+				<Node id="2" symbol="l"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="9B">
+			<Nodes>
+				<Node id="1" symbol="k"/>
+				<Node id="2" symbol="CL"/>
+				<Node id="3" symbol="l"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="3"/>
+				<Edge source="3" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="5A">
+			<Nodes>
+				<Node id="1" symbol="H"/>
+			</Nodes>
+		</Graph>
+		
+		<Graph id="10B">
+			<Nodes>
+				<Node id="1" symbol="n"/>
+			</Nodes>
+		</Graph>
+		
+		<Graph id="11B">
+			<Nodes>
+				<Node id="1" symbol="t"/>
+				<Node id="2" symbol="ib"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="12B">
+			<Nodes>
+				<Node id="1" symbol="ts"/>
+				<Node id="2" symbol="ib"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="6A">
+			<Nodes>
+				<Node id="1" symbol="C"/>
+				<Node id="2" symbol="G"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="13B">
+			<Nodes>
+				<Node id="1" symbol="CP"/>
+				<Node id="2" symbol="G"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="14B">
+			<Nodes>
+				<Node id="1" symbol="F"/>
+				<Node id="2" symbol="lm"/>
+				<Node id="3" symbol="km"/>
+				<Node id="4" symbol="km"/>
+				<Node id="5" symbol="km"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="3"/>
+				<Edge source="1" target="4"/>
+				<Edge source="1" target="5"/>
+				<Edge source="3" target="2"/>
+				<Edge source="4" target="2"/>
+				<Edge source="5" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="7A">
+			<Nodes>
+				<Node id="1" symbol="F"/>
+				<Node id="2" symbol="km"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="15B">
+			<Nodes>
+				<Node id="1" symbol="F"/>
+				<Node id="2" symbol="km"/>
+				<Node id="3" symbol="k"/>
+				<Node id="4" symbol="l"/>
+				<Node id="5" symbol="H"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="3"/>
+				<Edge source="3" target="4"/>
+				<Edge source="4" target="2"/>
+				<Edge source="4" target="5"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="16B">
+			<Nodes>
+				<Node id="1" symbol="F"/>
+				<Node id="2" symbol="km"/>
+				<Node id="3" symbol="t"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="3"/>
+				<Edge source="3" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="17B">
+			<Nodes>
+				<Node id="1" symbol="F"/>
+				<Node id="2" symbol="km"/>
+				<Node id="3" symbol="ts"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="3"/>
+				<Edge source="3" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="8A">
+			<Nodes>
+				<Node id="1" symbol="F"/>
+				<Node id="2" symbol="k"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="18B">
+			<Nodes>
+				<Node id="1" symbol="F"/>
+				<Node id="2" symbol="k"/>
+				<Node id="3" symbol="t"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="3"/>
+				<Edge source="3" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="19B">
+			<Nodes>
+				<Node id="1" symbol="F"/>
+				<Node id="2" symbol="k"/>
+				<Node id="3" symbol="ts"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="3"/>
+				<Edge source="3" target="2"/>
+			</Edges>
+		</Graph>
+		
+		<Graph id="9A">
+			<Nodes>
+				<Node id="1" symbol="F"/>
+			</Nodes>
+		</Graph>
+		
+		<Graph id="20B">
+			<Nodes>
+				<Node id="1" symbol="n"/>
+				<Node id="2" symbol="H"/>
+				<Node id="3" symbol="H"/>
+			</Nodes>
+			<Edges>
+				<Edge source="1" target="2"/>
+				<Edge source="1" target="3"/>
+			</Edges>
+		</Graph>
+	</Graphs>
+	
+	<Grammar>
+		<StartGraph ref="S1"/>
+		<Rules>
+			<Rule source="S1" target="S2"/>
+			<Rule source="1A" target="1B"/>
+			<Rule source="2A" target="2B"/>
+			<Rule source="2A" target="3B"/>
+			<Rule source="2A" target="4B"/>
+			<Rule source="3A" target="5B"/>
+			<Rule source="3A" target="6B"/>
+			<Rule source="3A" target="7B"/>
+			<Rule source="4A" target="8B"/>
+			<Rule source="4A" target="9B"/>
+			<Rule source="5A" target="10B"/>
+			<Rule source="5A" target="11B"/>
+			<Rule source="5A" target="12B"/>
+			<Rule source="6A" target="13B"/>
+			<Rule source="13B" target="14B"/>
+			<Rule source="7A" target="15B"/>
+			<Rule source="7A" target="16B"/>
+			<Rule source="7A" target="17B"/>
+			<Rule source="8A" target="18B"/>
+			<Rule source="8A" target="19B"/>
+			<Rule source="9A" target="20B"/>
+		</Rules>
+	</Grammar>
+	
+</GenGra>

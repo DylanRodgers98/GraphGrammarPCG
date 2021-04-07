@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace GenGra
@@ -40,9 +39,9 @@ namespace GenGra
                 
                 // If graph has no edges then nodes in graph are disconnected,
                 // therefore all nodes should be used as starting nodes
-                if (Edges.Edge.Length == 0)
+                if ((Edges?.Edge?.Length ?? 0) == 0)
                 {
-                    if (Nodes.Node.Length == 0)
+                    if ((Nodes?.Node?.Length ?? 0) == 0)
                     {
                         throw new InvalidOperationException(
                             "Graph has no nodes or edges. Please check the validity of your grammar");
@@ -53,13 +52,16 @@ namespace GenGra
 
                 // Calculate the indegree for each node in the graph
                 IDictionary<string, int> nodeIndegrees = new Dictionary<string, int>();
-                foreach (EdgeType edge in Edges.Edge)
+                if (Edges?.Edge != null)
                 {
-                    if (!nodeIndegrees.ContainsKey(edge.target))
+                    foreach (EdgeType edge in Edges.Edge)
                     {
-                        nodeIndegrees[edge.target] = 0;
+                        if (!nodeIndegrees.ContainsKey(edge.target))
+                        {
+                            nodeIndegrees[edge.target] = 0;
+                        }
+                        nodeIndegrees[edge.target]++;
                     }
-                    nodeIndegrees[edge.target]++;
                 }
 
                 // Find all nodes with an indegree of 0
@@ -106,6 +108,8 @@ namespace GenGra
                 adjacencyList[node.id] = new List<NodeType>();
                 nodes[node.id] = node;
             }
+
+            if (Edges?.Edge == null) return;
             foreach (EdgeType edge in Edges.Edge)
             {
                 NodeType targetNode = nodes[edge.target];
@@ -204,15 +208,14 @@ namespace GenGra
 
         private void RemoveEdgesBetweenMarkedNodes(GraphType otherGraph, IDictionary<string, NodeType> markedNodes)
         {
+            if (Edges?.Edge == null) return;
             List<EdgeType> edges = new List<EdgeType>(Edges.Edge);
-            
             foreach (EdgeType sourceGraphEdge in otherGraph.Edges.Edge)
             {
                 string sourceNodeId = markedNodes[sourceGraphEdge.source].id;
                 string targetNodeId = markedNodes[sourceGraphEdge.target].id;
                 edges.RemoveAll(edge => edge.source == sourceNodeId && edge.target == targetNodeId);
             }
-
             Edges.Edge = edges.ToArray();
         }
         
@@ -279,7 +282,11 @@ namespace GenGra
          */
         private void InsertEdgesBetweenMarkedNodes(GraphType otherGraph, IDictionary<string, NodeType> markedNodes)
         {
-            IList<EdgeType> edges = new List<EdgeType>(Edges.Edge);
+            if (otherGraph.Edges?.Edge == null) return;
+            
+            IList<EdgeType> edges = Edges?.Edge != null
+                ? new List<EdgeType>(Edges?.Edge)
+                : new List<EdgeType>();
             
             foreach (EdgeType targetGraphEdge in otherGraph.Edges.Edge)
             {
@@ -293,6 +300,7 @@ namespace GenGra
                 });
             }
 
+            if (Edges == null) Edges = new EdgesType();
             Edges.Edge = edges.ToArray();
         }
         

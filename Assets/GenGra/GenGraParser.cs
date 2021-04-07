@@ -36,12 +36,12 @@ namespace GenGra
             Debug.Log($"Total execution completed in: {stopwatch.ElapsedMilliseconds}ms");
         }
 
-        private static GraphType TransformGraph(GenGraType genGra, int maxIterations = 10)
+        private static GraphType TransformGraph(GenGraType genGra)
         {
             int iteration = 0;
             while (true)
             {
-                Debug.Log($"TransformGraph iteration: {iteration}");
+                Debug.Log($"TransformGraph iteration: {iteration++}");
                 
                 IDictionary<string, GraphType> graphs = new Dictionary<string, GraphType>();
                 foreach (GraphType graph in genGra.Graphs.Graph)
@@ -54,7 +54,7 @@ namespace GenGra
 
                 RuleType[] applicableRules = GetApplicableRules(genGra, graphs, startGraph);
 
-                if (applicableRules.Length == 0 || iteration++ == maxIterations) return startGraph;
+                if (applicableRules.Length == 0) return startGraph;
 
                 foreach (RuleType applicableRule in applicableRules)
                 {
@@ -107,7 +107,7 @@ namespace GenGra
                 Debug.Log($"[Graph {graph.id} | Node: {node.id}] symbol: {node.symbol}");
             }
 
-            EdgeType[] edges = graph.Edges.Edge;
+            EdgeType[] edges = graph.Edges?.Edge ?? new EdgeType[0];
             for (int j = 0; j < edges.Length; j++)
             {
                 EdgeType edge = edges[j];
