@@ -5,13 +5,7 @@
 		file:///C:/Users/dylan/Dropbox/Uni/Year 3/Project/Code/Procedural Generation - Final Year Project/Assets/GenGra/GenGra.xsd">
 	
 	<Graphs>
-		<Graph id="S1">
-			<Nodes>
-				<Node id="1" symbol="S"/>
-			</Nodes>
-		</Graph>
-		
-		<Graph id="S2">
+		<Graph id="S">
 			<Nodes>
 				<Node id="1" symbol="e"/>
 				<Node id="2" symbol="C"/>
@@ -356,9 +350,8 @@
 	</Graphs>
 	
 	<Grammar>
-		<StartGraph ref="S1"/>
+		<StartGraph ref="S"/>
 		<Rules>
-			<Rule source="S1" target="S2"/>
 			<Rule source="1A" target="1B"/>
 			<Rule source="2A" target="2B"/>
 			<Rule source="2A" target="3B"/>

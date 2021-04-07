@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace GenGra
@@ -145,14 +146,14 @@ namespace GenGra
         {
             foreach (NodeType startingNode in otherGraph.StartingNodes)
             {
-                IList<NodeType> sourceNodes = new List<NodeType>(otherGraph.AdjacencyList[startingNode.id]);
+                IList<NodeType> sourceNodes = new List<NodeType>();
                 sourceNodes.Add(startingNode);
 
                 bool isSuccessfulCandidate = false;
                 IList<NodeType> nodeCandidates = NodeSymbolMap[startingNode.symbol];
                 foreach (NodeType nodeCandidate in nodeCandidates)
                 {
-                    IList<NodeType> thisNodes = new List<NodeType>(AdjacencyList[nodeCandidate.id]);
+                    IList<NodeType> thisNodes = new List<NodeType>();
                     thisNodes.Add(nodeCandidate);
 
                     isSuccessfulCandidate = DualSearch(otherGraph, thisNodes, sourceNodes, markedNodes);
@@ -208,7 +209,7 @@ namespace GenGra
 
         private void RemoveEdgesBetweenMarkedNodes(GraphType otherGraph, IDictionary<string, NodeType> markedNodes)
         {
-            if (Edges?.Edge == null) return;
+            if (Edges?.Edge == null || otherGraph.Edges?.Edge == null) return;
             List<EdgeType> edges = new List<EdgeType>(Edges.Edge);
             foreach (EdgeType sourceGraphEdge in otherGraph.Edges.Edge)
             {
@@ -239,9 +240,25 @@ namespace GenGra
                 }
                 else
                 {
+                    List<int> numericIds = new List<int>();
+                    foreach (NodeType node in thisGraphNodes)
+                    {
+                        if (int.TryParse(node.id, out int idAsInt))
+                        {
+                            numericIds.Add(idAsInt);
+                        }
+                    }
+
+                    int newNodeId = 0;
+                    if (numericIds.Count > 0)
+                    {
+                        numericIds.Sort();
+                        newNodeId = numericIds.Last() + 1;
+                    }
+                    
                     NodeType newNode = new NodeType
                     {
-                        id = CalculateNewNodeId(),
+                        id = newNodeId.ToString(),
                         symbol = newSymbol
                     };
                     
@@ -259,10 +276,10 @@ namespace GenGra
             Nodes.Node = thisGraphNodes.ToArray();
         }
 
-        private string CalculateNewNodeId()
+        private string CalculateNewNodeId(List<NodeType> nodes)
         {
             List<int> numericIds = new List<int>();
-            foreach (NodeType node in Nodes.Node)
+            foreach (NodeType node in nodes)
             {
                 if (int.TryParse(node.id, out int idAsInt))
                 {

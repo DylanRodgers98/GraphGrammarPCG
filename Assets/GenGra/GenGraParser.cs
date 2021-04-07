@@ -36,26 +36,28 @@ namespace GenGra
             Debug.Log($"Total execution completed in: {stopwatch.ElapsedMilliseconds}ms");
         }
 
-        private static GraphType TransformGraph(GenGraType genGra)
+        private GraphType TransformGraph(GenGraType genGra, int maxDepth = 10)
         {
+            IDictionary<string, GraphType> graphs = new Dictionary<string, GraphType>();
+            foreach (GraphType graph in genGra.Graphs.Graph)
+            {
+                graphs[graph.id] = graph;
+            }
+
+            string startGraphRef = genGra.Grammar.StartGraph.@ref;
+            GraphType startGraph = graphs[startGraphRef];
+            
             int iteration = 0;
             while (true)
             {
-                Debug.Log($"TransformGraph iteration: {iteration++}");
+                iteration++;
+                // if (iteration > maxDepth) return startGraph;
+                Debug.Log($"TransformGraph ITERATION: {iteration}");
                 
-                IDictionary<string, GraphType> graphs = new Dictionary<string, GraphType>();
-                foreach (GraphType graph in genGra.Graphs.Graph)
-                {
-                    graphs[graph.id] = graph;
-                }
-
-                string startGraphRef = genGra.Grammar.StartGraph.@ref;
-                GraphType startGraph = graphs[startGraphRef];
-
                 RuleType[] applicableRules = GetApplicableRules(genGra, graphs, startGraph);
 
                 if (applicableRules.Length == 0) return startGraph;
-
+                
                 foreach (RuleType applicableRule in applicableRules)
                 {
                     Debug.Log($"[Applicable Rule] source: {applicableRule.source} | target: {applicableRule.target}");
@@ -64,6 +66,8 @@ namespace GenGra
                 RuleType ruleToApply = applicableRules.Length == 1
                     ? applicableRules[0]
                     : applicableRules[Random.Range(0, applicableRules.Length - 1)];
+                
+                Debug.Log($"[Rule To Apply] source: {ruleToApply.source} | target: {ruleToApply.target}");
 
                 GraphType ruleSource = graphs[ruleToApply.source];
                 GraphType ruleTarget = graphs[ruleToApply.target];

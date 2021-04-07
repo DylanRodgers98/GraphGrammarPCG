@@ -164,7 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a11148189c4fe1c4595fef51d045fc44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  graphFilePath: Assets/GenGra/gengra-example.xml
+  graphFilePath: Assets/GenGra/dormans-grammar.xml
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
