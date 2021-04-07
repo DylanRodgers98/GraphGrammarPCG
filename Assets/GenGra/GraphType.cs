@@ -117,91 +117,10 @@ namespace GenGra
         
         public void FindAndReplace(GraphType sourceGraph, GraphType targetGraph)
         {
-            /*
-             * STEP 1: Find a subgraph in the target graph that matches the left-hand part
-             * of the rule and mark that subgraph by copying the identifiers of the nodes. 
-             */
-            
-            IDictionary<string, NodeType> nodesMarkedBySourceNodeId = new Dictionary<string, NodeType>();
-            bool isSupergraphOfSourceGraph = DualSearch(sourceGraph, nodesMarkedBySourceNodeId);
-            if (!isSupergraphOfSourceGraph)
-            {
-                throw new InvalidOperationException($"No subgraph found in graph {id} matching source graph" +
-                                                    $" {sourceGraph.id}, so cannot carry out find and replace operation");
-            }
-
-            /*
-             * STEP 2: Remove all edges between the marked nodes. 
-             */
-            
-            List<EdgeType> thisGraphEdges = new List<EdgeType>(Edges.Edge);
-            
-            foreach (EdgeType sourceGraphEdge in sourceGraph.Edges.Edge)
-            {
-                string sourceNodeId = nodesMarkedBySourceNodeId[sourceGraphEdge.source].id;
-                string targetNodeId = nodesMarkedBySourceNodeId[sourceGraphEdge.target].id;
-                thisGraphEdges.RemoveAll(edge => edge.source == sourceNodeId && edge.target == targetNodeId);
-            }
-            
-            /*
-             * STEP 3: Transform the graph by transforming marked nodes into their corresponding nodes on the
-             * right-hand side, adding a node for each node on the right-hand side that has no match in the
-             * target graph, and removing any nodes that have no corresponding node on the right-hand side.
-             */
-
-            List<NodeType> thisGraphNodes = new List<NodeType>(Nodes.Node);
-            
-            IEnumerable<string> nodesToRemove = sourceGraph.Nodes.Node
-                .Where(sourceNode => targetGraph.Nodes.Node.All(targetNode => targetNode.id != sourceNode.id))
-                .Select(sourceNode => nodesMarkedBySourceNodeId[sourceNode.id].id);
-            
-            thisGraphNodes.RemoveAll(node => nodesToRemove.Contains(node.id));
-
-            foreach (NodeType targetGraphNode in targetGraph.Nodes.Node)
-            {
-                string nodeId = targetGraphNode.id;
-                string newSymbol = targetGraphNode.symbol;
-                if (nodesMarkedBySourceNodeId.ContainsKey(nodeId))
-                {
-                    nodesMarkedBySourceNodeId[nodeId].symbol = newSymbol;
-                }
-                else
-                {
-                    int newNodeId = thisGraphNodes
-                        .Select(node => int.Parse(node.id))
-                        .OrderBy(i => i)
-                        .Last() + 1;
-
-                    NodeType newNode = new NodeType
-                    {
-                        id = newNodeId.ToString(),
-                        symbol = newSymbol
-                    };
-                    
-                    thisGraphNodes.Add(newNode);
-                    nodesMarkedBySourceNodeId[nodeId] = newNode;
-                }
-            }
-
-            Nodes.Node = thisGraphNodes.ToArray();
-            
-            /*
-             * STEP 4: Copy the edges as specified by the right-hand side.
-             */
-
-            foreach (EdgeType targetGraphEdge in targetGraph.Edges.Edge)
-            {
-                string source = targetGraphEdge.source;
-                string target = targetGraphEdge.target;
-                
-                thisGraphEdges.Add(new EdgeType
-                {
-                    source = nodesMarkedBySourceNodeId[source].id,
-                    target = nodesMarkedBySourceNodeId[target].id
-                });
-            }
-
-            Edges.Edge = thisGraphEdges.ToArray();
+            IDictionary<string, NodeType> markedNodes = FindSubgraphAndMarkNodes(sourceGraph);
+            RemoveEdgesBetweenMarkedNodes(sourceGraph, markedNodes);
+            FindAndReplaceNodes(sourceGraph, targetGraph, markedNodes);
+            InsertEdgesBetweenMarkedNodes(targetGraph, markedNodes);
         }
 
         private bool HasAllSymbolsIn(GraphType otherGraph)
@@ -215,7 +134,7 @@ namespace GenGra
             });
         }
         
-        private bool DualSearch(GraphType otherGraph, IDictionary<string, NodeType> nodesMarkedByOtherNodeId = null)
+        private bool DualSearch(GraphType otherGraph, IDictionary<string, NodeType> markedNodes = null)
         {
             foreach (NodeType startingNode in otherGraph.StartingNodes)
             {
@@ -229,11 +148,11 @@ namespace GenGra
                     IList<NodeType> thisNodes = new List<NodeType>(AdjacencyList[nodeCandidate.id]);
                     thisNodes.Add(nodeCandidate);
 
-                    isSuccessfulCandidate = DualSearch(otherGraph, thisNodes, sourceNodes, nodesMarkedByOtherNodeId);
+                    isSuccessfulCandidate = DualSearch(otherGraph, thisNodes, sourceNodes, markedNodes);
                     if (isSuccessfulCandidate) break;
-                    if (nodesMarkedByOtherNodeId != null)
+                    if (markedNodes != null)
                     {
-                        nodesMarkedByOtherNodeId = new Dictionary<string, NodeType>();
+                        markedNodes = new Dictionary<string, NodeType>();
                     }
                 }
                 if (!isSuccessfulCandidate) return false;
@@ -243,7 +162,7 @@ namespace GenGra
         }
         
         private bool DualSearch(GraphType otherGraph, IList<NodeType> thisNodes, IList<NodeType> otherNodes,
-            IDictionary<string, NodeType> nodesMarkedByOtherNodeId = null)
+            IDictionary<string, NodeType> markedNodes = null)
         {
             foreach (NodeType otherNode in otherNodes)
             {
@@ -254,16 +173,124 @@ namespace GenGra
                     
                     IList<NodeType> thisAdjacentNodes = AdjacencyList[thisNode.id];
                     IList<NodeType> otherAdjacentNodes = otherGraph.AdjacencyList[otherNode.id];
-                    matchingNodeFound = DualSearch(otherGraph, thisAdjacentNodes, otherAdjacentNodes, nodesMarkedByOtherNodeId);
-                    if (matchingNodeFound && nodesMarkedByOtherNodeId != null)
+                    matchingNodeFound = DualSearch(otherGraph, thisAdjacentNodes, otherAdjacentNodes, markedNodes);
+                    if (matchingNodeFound && markedNodes != null)
                     {
-                        nodesMarkedByOtherNodeId[otherNode.id] = thisNode;
+                        markedNodes[otherNode.id] = thisNode;
                     }
                 }
                 if (!matchingNodeFound) return false;
             }
 
             return true;
+        }
+
+        private IDictionary<string, NodeType> FindSubgraphAndMarkNodes(GraphType otherGraph)
+        {
+            IDictionary<string, NodeType> markedNodes = new Dictionary<string, NodeType>();
+            
+            bool isSupergraphOfSourceGraph = DualSearch(otherGraph, markedNodes);
+            if (!isSupergraphOfSourceGraph)
+            {
+                throw new InvalidOperationException($"No subgraph found in graph {id} matching source graph" +
+                                                    $" {otherGraph.id}, so cannot carry out find and replace operation");
+            }
+
+            return markedNodes;
+        }
+
+        private void RemoveEdgesBetweenMarkedNodes(GraphType otherGraph, IDictionary<string, NodeType> markedNodes)
+        {
+            List<EdgeType> edges = new List<EdgeType>(Edges.Edge);
+            
+            foreach (EdgeType sourceGraphEdge in otherGraph.Edges.Edge)
+            {
+                string sourceNodeId = markedNodes[sourceGraphEdge.source].id;
+                string targetNodeId = markedNodes[sourceGraphEdge.target].id;
+                edges.RemoveAll(edge => edge.source == sourceNodeId && edge.target == targetNodeId);
+            }
+
+            Edges.Edge = edges.ToArray();
+        }
+        
+        /**
+         * Transform this graph by transforming marked nodes into their corresponding nodes
+         * in targetGraph, adding a node for each node in targetGraph that has no match in
+         * this graph, and removing any nodes that have no corresponding node in targetGraph.
+         */
+        private void FindAndReplaceNodes(GraphType sourceGraph, GraphType targetGraph,
+            IDictionary<string, NodeType> markedNodes)
+        {
+            List<NodeType> thisGraphNodes = new List<NodeType>(Nodes.Node);
+
+            foreach (NodeType targetGraphNode in targetGraph.Nodes.Node)
+            {
+                string nodeId = targetGraphNode.id;
+                string newSymbol = targetGraphNode.symbol;
+                if (markedNodes.ContainsKey(nodeId))
+                {
+                    markedNodes[nodeId].symbol = newSymbol;
+                }
+                else
+                {
+                    NodeType newNode = new NodeType
+                    {
+                        id = CalculateNewNodeId(),
+                        symbol = newSymbol
+                    };
+                    
+                    thisGraphNodes.Add(newNode);
+                    markedNodes[nodeId] = newNode;
+                }
+            }
+            
+            IEnumerable<string> nodesToRemove = sourceGraph.Nodes.Node
+                .Where(sourceNode => targetGraph.Nodes.Node.All(targetNode => targetNode.id != sourceNode.id))
+                .Select(sourceNode => markedNodes[sourceNode.id].id);
+            
+            thisGraphNodes.RemoveAll(node => nodesToRemove.Contains(node.id));
+
+            Nodes.Node = thisGraphNodes.ToArray();
+        }
+
+        private string CalculateNewNodeId()
+        {
+            List<int> numericIds = new List<int>();
+            foreach (NodeType node in Nodes.Node)
+            {
+                if (int.TryParse(node.id, out int idAsInt))
+                {
+                    numericIds.Add(idAsInt);
+                }
+            }
+
+            if (numericIds.Count == 0) return "0";
+            
+            numericIds.Sort();
+            int newNodeId = numericIds.Last() + 1;
+            return newNodeId.ToString();
+        }
+
+        /**
+         * Copy the edges from targetGraph into this graph, determining the source and target nodes from markedNodes
+         */
+        private void InsertEdgesBetweenMarkedNodes(GraphType otherGraph, IDictionary<string, NodeType> markedNodes)
+        {
+            IList<EdgeType> edges = new List<EdgeType>(Edges.Edge);
+            
+            foreach (EdgeType targetGraphEdge in otherGraph.Edges.Edge)
+            {
+                string source = targetGraphEdge.source;
+                string target = targetGraphEdge.target;
+                
+                edges.Add(new EdgeType
+                {
+                    source = markedNodes[source].id,
+                    target = markedNodes[target].id
+                });
+            }
+
+            Edges.Edge = edges.ToArray();
         }
     }
 }
