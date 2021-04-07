@@ -27,25 +27,40 @@ namespace GenGra
             }
 
             DebugLogDeserialization(genGra);
+            
+            GraphType finalGraph = TransformGraph(genGra);
+            
+            DebugLogGraph(finalGraph);
 
-            IDictionary<string, GraphType> graphs = new Dictionary<string, GraphType>();
-            foreach (GraphType graph in genGra.Graphs.Graph)
+            stopwatch.Stop();
+            Debug.Log($"Total execution completed in: {stopwatch.ElapsedMilliseconds}ms");
+        }
+
+        private static GraphType TransformGraph(GenGraType genGra, int maxIterations = 10)
+        {
+            int iteration = 0;
+            while (true)
             {
-                graphs[graph.id] = graph;
-            }
+                Debug.Log($"TransformGraph iteration: {iteration}");
+                
+                IDictionary<string, GraphType> graphs = new Dictionary<string, GraphType>();
+                foreach (GraphType graph in genGra.Graphs.Graph)
+                {
+                    graphs[graph.id] = graph;
+                }
 
-            string startGraphRef = genGra.Grammar.StartGraph.@ref;
-            GraphType startGraph = graphs[startGraphRef];
+                string startGraphRef = genGra.Grammar.StartGraph.@ref;
+                GraphType startGraph = graphs[startGraphRef];
 
-            RuleType[] applicableRules = GetApplicableRules(genGra, graphs, startGraph);
+                RuleType[] applicableRules = GetApplicableRules(genGra, graphs, startGraph);
 
-            foreach (RuleType applicableRule in applicableRules)
-            {
-                Debug.Log($"[Applicable Rule] source: {applicableRule.source} | target: {applicableRule.target}");
-            }
+                if (applicableRules.Length == 0 || iteration++ == maxIterations) return startGraph;
 
-            while (applicableRules.Length > 0)
-            {
+                foreach (RuleType applicableRule in applicableRules)
+                {
+                    Debug.Log($"[Applicable Rule] source: {applicableRule.source} | target: {applicableRule.target}");
+                }
+            
                 RuleType ruleToApply = applicableRules.Length == 1
                     ? applicableRules[0]
                     : applicableRules[Random.Range(0, applicableRules.Length - 1)];
@@ -53,17 +68,10 @@ namespace GenGra
                 GraphType ruleSource = graphs[ruleToApply.source];
                 GraphType ruleTarget = graphs[ruleToApply.target];
                 startGraph.FindAndReplace(ruleSource, ruleTarget);
-
-                applicableRules = GetApplicableRules(genGra, graphs, startGraph);
             }
-
-            DebugLogGraph(startGraph);
-
-            stopwatch.Stop();
-            Debug.Log($"Total execution completed in: {stopwatch.ElapsedMilliseconds}ms");
         }
 
-        private RuleType[] GetApplicableRules(GenGraType genGra, IDictionary<string, GraphType> graphs,
+        private static RuleType[] GetApplicableRules(GenGraType genGra, IDictionary<string, GraphType> graphs,
             GraphType startGraph)
         {
             return genGra.Grammar.Rules.Rule
