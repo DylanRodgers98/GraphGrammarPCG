@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace GenGra
@@ -17,23 +18,7 @@ namespace GenGra
         {
             get
             {
-                if (adjacencyList == null)
-                {
-                    adjacencyList = new Dictionary<string, IList<NodeType>>();
-                    IDictionary<string, NodeType> nodes = new Dictionary<string, NodeType>();
-                    
-                    foreach (NodeType node in Nodes.Node)
-                    {
-                        adjacencyList[node.id] = new List<NodeType>();
-                        nodes[node.id] = node;
-                    }
-                    foreach (EdgeType edge in Edges.Edge)
-                    {
-                        NodeType targetNode = nodes[edge.target];
-                        adjacencyList[edge.source].Add(targetNode);
-                    }
-                }
-                
+                if (adjacencyList == null) CalculateAdjacencyList();
                 return adjacencyList;
             }
         }
@@ -42,19 +27,7 @@ namespace GenGra
         {
             get
             {
-                if (nodeSymbolMap == null)
-                {
-                    nodeSymbolMap = new Dictionary<string, IList<NodeType>>();
-                    foreach (NodeType node in Nodes.Node)
-                    {
-                        if (!nodeSymbolMap.ContainsKey(node.symbol))
-                        {
-                            nodeSymbolMap[node.symbol] = new List<NodeType>();
-                        }
-                        nodeSymbolMap[node.symbol].Add(node);
-                    }
-                }
-
+                if (nodeSymbolMap == null) CalculateNodeSymbolMap();
                 return nodeSymbolMap;
             }
         }
@@ -120,6 +93,37 @@ namespace GenGra
             RemoveEdgesBetweenMarkedNodes(sourceGraph, markedNodes);
             FindAndReplaceNodes(sourceGraph, targetGraph, markedNodes);
             InsertEdgesBetweenMarkedNodes(targetGraph, markedNodes);
+            RecalculateFields();
+        }
+
+        private void CalculateAdjacencyList()
+        {
+            adjacencyList = new Dictionary<string, IList<NodeType>>();
+            IDictionary<string, NodeType> nodes = new Dictionary<string, NodeType>();
+                    
+            foreach (NodeType node in Nodes.Node)
+            {
+                adjacencyList[node.id] = new List<NodeType>();
+                nodes[node.id] = node;
+            }
+            foreach (EdgeType edge in Edges.Edge)
+            {
+                NodeType targetNode = nodes[edge.target];
+                adjacencyList[edge.source].Add(targetNode);
+            }
+        }
+
+        private void CalculateNodeSymbolMap()
+        {
+            nodeSymbolMap = new Dictionary<string, IList<NodeType>>();
+            foreach (NodeType node in Nodes.Node)
+            {
+                if (!nodeSymbolMap.ContainsKey(node.symbol))
+                {
+                    nodeSymbolMap[node.symbol] = new List<NodeType>();
+                }
+                nodeSymbolMap[node.symbol].Add(node);
+            }
         }
 
         private bool HasAllSymbolsIn(GraphType otherGraph)
@@ -290,6 +294,12 @@ namespace GenGra
             }
 
             Edges.Edge = edges.ToArray();
+        }
+        
+        private void RecalculateFields()
+        {
+            CalculateAdjacencyList();
+            CalculateNodeSymbolMap();
         }
     }
 }
