@@ -35,38 +35,43 @@ public class GenGraParser : MonoBehaviour
         string startGraphRef = genGra.Grammar.StartGraph.@ref;
         GraphType startGraph = graphs[startGraphRef];
 
-        RuleType[] applicableRules = genGra.Grammar.Rules.Rule
-            .Where(rule =>
-            {
-                GraphType ruleSourceGraph = graphs[rule.source];
-                return startGraph.IsSupergraphOf(ruleSourceGraph);
-            })
-            .ToArray();
+        RuleType[] applicableRules = GetApplicableRules(genGra, graphs, startGraph);
         
         foreach (RuleType applicableRule in applicableRules)
         {
             Debug.Log($"[Applicable Rule] source: {applicableRule.source} | target: {applicableRule.target}");
         }
 
-        if (applicableRules.Length == 0)
+        while (applicableRules.Length > 0)
         {
-            // no rules applicable; return "startGraph"/final graph
+            RuleType ruleToApply = applicableRules.Length == 1
+                ? applicableRules[0]
+                : applicableRules[Random.Range(0, applicableRules.Length - 1)];
+
+            GraphType ruleSource = graphs[ruleToApply.source];
+            GraphType ruleTarget = graphs[ruleToApply.target];
+            startGraph.FindAndReplace(ruleSource, ruleTarget);
+            
+            applicableRules = GetApplicableRules(genGra, graphs, startGraph);
         }
 
-        RuleType ruleToApply = applicableRules.Length == 1
-            ? applicableRules[0]
-            : applicableRules[Random.Range(0, applicableRules.Length - 1)];
-
-        GraphType ruleSource = graphs[ruleToApply.source];
-        GraphType ruleTarget = graphs[ruleToApply.target];
-        startGraph.FindAndReplace(ruleSource, ruleTarget);
-        
         DebugLogGraph(startGraph);
         
         stopwatch.Stop();
         Debug.Log($"Total execution completed in: {stopwatch.ElapsedMilliseconds}ms");
     }
 
+    private RuleType[] GetApplicableRules(GenGraType genGra, IDictionary<string, GraphType> graphs, GraphType startGraph)
+    {
+        return genGra.Grammar.Rules.Rule
+            .Where(rule =>
+            {
+                GraphType ruleSourceGraph = graphs[rule.source];
+                return startGraph.IsSupergraphOf(ruleSourceGraph);
+            })
+            .ToArray();
+    }
+    
     // TODO: remove this method when done prototyping
     private void DebugLogDeserialization(GenGraType genGra)
     {
