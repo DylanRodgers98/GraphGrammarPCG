@@ -112,27 +112,7 @@ namespace GenGra
 
         public bool IsSupergraphOf(GraphType otherGraph)
         {
-            if (!HasAllSymbolsIn(otherGraph)) return false;
-
-            foreach (NodeType startingNode in otherGraph.StartingNodes)
-            {
-                IList<NodeType> otherNodes = new List<NodeType>(otherGraph.AdjacencyList[startingNode.id]);
-                otherNodes.Add(startingNode);
-                
-                bool isSuccessfulCandidate = false;
-                IList<NodeType> nodeCandidates = NodeSymbolMap[startingNode.symbol];
-                foreach (NodeType nodeCandidate in nodeCandidates)
-                {
-                    IList<NodeType> thisNodes = new List<NodeType>(AdjacencyList[nodeCandidate.id]);
-                    thisNodes.Add(nodeCandidate);
-                    
-                    isSuccessfulCandidate = DualSearch(otherGraph, thisNodes, otherNodes);
-                    if (isSuccessfulCandidate) break;
-                }
-                if (!isSuccessfulCandidate) return false;
-            }
-            
-            return true;
+            return HasAllSymbolsIn(otherGraph) && DualSearch(otherGraph);
         }
         
         public void FindAndReplace(GraphType sourceGraph, GraphType targetGraph)
@@ -143,29 +123,11 @@ namespace GenGra
              */
             
             IDictionary<string, NodeType> nodesMarkedBySourceNodeId = new Dictionary<string, NodeType>();
-            
-            foreach (NodeType startingNode in sourceGraph.StartingNodes)
+            bool isSupergraphOfSourceGraph = DualSearch(sourceGraph, nodesMarkedBySourceNodeId);
+            if (!isSupergraphOfSourceGraph)
             {
-                IList<NodeType> sourceNodes = new List<NodeType>(sourceGraph.AdjacencyList[startingNode.id]);
-                sourceNodes.Add(startingNode);
-
-                bool isSuccessfulCandidate = false;
-                IList<NodeType> nodeCandidates = NodeSymbolMap[startingNode.symbol];
-                foreach (NodeType nodeCandidate in nodeCandidates)
-                {
-                    IList<NodeType> thisNodes = new List<NodeType>(AdjacencyList[nodeCandidate.id]);
-                    thisNodes.Add(nodeCandidate);
-                    
-                    isSuccessfulCandidate = DualSearch(sourceGraph, thisNodes, sourceNodes, nodesMarkedBySourceNodeId);
-                    if (isSuccessfulCandidate) break;
-                    nodesMarkedBySourceNodeId = new Dictionary<string, NodeType>();
-                }
-
-                if (!isSuccessfulCandidate)
-                {
-                    throw new InvalidOperationException($"No subgraph found in graph {id} matching source graph" +
-                                                        $" {sourceGraph.id}, so cannot carry out find and replace operation");
-                }
+                throw new InvalidOperationException($"No subgraph found in graph {id} matching source graph" +
+                                                    $" {sourceGraph.id}, so cannot carry out find and replace operation");
             }
 
             /*
@@ -253,39 +215,49 @@ namespace GenGra
             });
         }
         
-        private bool DualSearch(GraphType otherGraph, IList<NodeType> thisNodes, IList<NodeType> otherNodes, 
-            IDictionary<string, NodeType> nodesMarkedByOtherNodeId)
+        private bool DualSearch(GraphType otherGraph, IDictionary<string, NodeType> nodesMarkedByOtherNodeId = null)
         {
-            return DualSearch(otherGraph, thisNodes, otherNodes, null, nodesMarkedByOtherNodeId);
+            foreach (NodeType startingNode in otherGraph.StartingNodes)
+            {
+                IList<NodeType> sourceNodes = new List<NodeType>(otherGraph.AdjacencyList[startingNode.id]);
+                sourceNodes.Add(startingNode);
+
+                bool isSuccessfulCandidate = false;
+                IList<NodeType> nodeCandidates = NodeSymbolMap[startingNode.symbol];
+                foreach (NodeType nodeCandidate in nodeCandidates)
+                {
+                    IList<NodeType> thisNodes = new List<NodeType>(AdjacencyList[nodeCandidate.id]);
+                    thisNodes.Add(nodeCandidate);
+
+                    isSuccessfulCandidate = DualSearch(otherGraph, thisNodes, sourceNodes, nodesMarkedByOtherNodeId);
+                    if (isSuccessfulCandidate) break;
+                    if (nodesMarkedByOtherNodeId != null)
+                    {
+                        nodesMarkedByOtherNodeId = new Dictionary<string, NodeType>();
+                    }
+                }
+                if (!isSuccessfulCandidate) return false;
+            }
+
+            return true;
         }
         
-        private bool DualSearch(GraphType otherGraph, IList<NodeType> thisNodes, 
-            IList<NodeType> otherNodes, ISet<string> visitedOtherNodes = null,
+        private bool DualSearch(GraphType otherGraph, IList<NodeType> thisNodes, IList<NodeType> otherNodes,
             IDictionary<string, NodeType> nodesMarkedByOtherNodeId = null)
         {
-            visitedOtherNodes = visitedOtherNodes ?? new HashSet<string>();
-            
             foreach (NodeType otherNode in otherNodes)
             {
-                if (visitedOtherNodes.Contains(otherNode.id)) continue;
-                visitedOtherNodes.Add(otherNode.id);
-                
                 bool matchingNodeFound = false;
                 foreach (NodeType thisNode in thisNodes)
                 {
-                    if (thisNode.symbol == otherNode.symbol)
+                    if (thisNode.symbol != otherNode.symbol) continue;
+                    
+                    IList<NodeType> thisAdjacentNodes = AdjacencyList[thisNode.id];
+                    IList<NodeType> otherAdjacentNodes = otherGraph.AdjacencyList[otherNode.id];
+                    matchingNodeFound = DualSearch(otherGraph, thisAdjacentNodes, otherAdjacentNodes, nodesMarkedByOtherNodeId);
+                    if (matchingNodeFound && nodesMarkedByOtherNodeId != null)
                     {
-                        IList<NodeType> thisAdjacentNodes = AdjacencyList[thisNode.id];
-                        IList<NodeType> otherAdjacentNodes = otherGraph.AdjacencyList[otherNode.id];
-                        matchingNodeFound = DualSearch(otherGraph, thisAdjacentNodes, otherAdjacentNodes, visitedOtherNodes, nodesMarkedByOtherNodeId);
-                        if (matchingNodeFound)
-                        {
-                            if (nodesMarkedByOtherNodeId != null)
-                            {
-                                nodesMarkedByOtherNodeId[otherNode.id] = thisNode;
-                            }
-                            break;
-                        }
+                        nodesMarkedByOtherNodeId[otherNode.id] = thisNode;
                     }
                 }
                 if (!matchingNodeFound) return false;

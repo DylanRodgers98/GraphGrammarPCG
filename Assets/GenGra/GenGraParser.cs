@@ -61,6 +61,8 @@ public class GenGraParser : MonoBehaviour
         GraphType ruleTarget = graphs[ruleToApply.target];
         startGraph.FindAndReplace(ruleSource, ruleTarget);
         
+        DebugLogGraph(startGraph);
+        
         stopwatch.Stop();
         Debug.Log($"Total execution completed in: {stopwatch.ElapsedMilliseconds}ms");
     }
@@ -70,16 +72,7 @@ public class GenGraParser : MonoBehaviour
     {
         foreach (GraphType graph in genGra.Graphs.Graph)
         {
-            foreach (NodeType node in graph.Nodes.Node)
-            {
-                Debug.Log($"[Graph {graph.id} | Node: {node.id}] symbol: {node.symbol}");
-            }
-            EdgeType[] edges = graph.Edges.Edge;
-            for (int j = 0; j < edges.Length; j++)
-            {
-                EdgeType edge = edges[j];
-                Debug.Log($"[Graph {graph.id} | Edge: {j + 1}] source: {edge.source} | target: {edge.target}");
-            }
+            DebugLogGraph(graph);
         }
         Debug.Log($"[Grammar] StartGraph: {genGra.Grammar.StartGraph.@ref}");
         RuleType[] rules = genGra.Grammar.Rules.Rule;
@@ -87,6 +80,20 @@ public class GenGraParser : MonoBehaviour
         {
             RuleType rule = rules[i];
             Debug.Log($"[Grammar | Rule {i + 1}] source: {rule.source} | target: {rule.target}");
+        }
+    }
+
+    private void DebugLogGraph(GraphType graph)
+    {
+        foreach (NodeType node in graph.Nodes.Node)
+        {
+            Debug.Log($"[Graph {graph.id} | Node: {node.id}] symbol: {node.symbol}");
+        }
+        EdgeType[] edges = graph.Edges.Edge;
+        for (int j = 0; j < edges.Length; j++)
+        {
+            EdgeType edge = edges[j];
+            Debug.Log($"[Graph {graph.id} | Edge: {j + 1}] source: {edge.source} | target: {edge.target}");
         }
     }
 
