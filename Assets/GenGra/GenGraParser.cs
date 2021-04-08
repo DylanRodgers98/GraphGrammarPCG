@@ -27,9 +27,9 @@ namespace GenGra
             }
 
             DebugLogDeserialization(genGra);
-            
+
             GraphType finalGraph = TransformGraph(genGra);
-            
+
             DebugLogGraph(finalGraph);
 
             stopwatch.Stop();
@@ -46,27 +46,27 @@ namespace GenGra
 
             string startGraphRef = genGra.Grammar.StartGraph.@ref;
             GraphType startGraph = graphs[startGraphRef];
-            
+
             int iteration = 0;
             while (true)
             {
                 iteration++;
                 // if (iteration > maxDepth) return startGraph;
                 Debug.Log($"TransformGraph ITERATION: {iteration}");
-                
+
                 RuleType[] applicableRules = GetApplicableRules(genGra, graphs, startGraph);
 
                 if (applicableRules.Length == 0) return startGraph;
-                
+
                 foreach (RuleType applicableRule in applicableRules)
                 {
                     Debug.Log($"[Applicable Rule] source: {applicableRule.source} | target: {applicableRule.target}");
                 }
-            
+
                 RuleType ruleToApply = applicableRules.Length == 1
                     ? applicableRules[0]
                     : applicableRules[Random.Range(0, applicableRules.Length - 1)];
-                
+
                 Debug.Log($"[Rule To Apply] source: {ruleToApply.source} | target: {ruleToApply.target}");
 
                 GraphType ruleSource = graphs[ruleToApply.source];

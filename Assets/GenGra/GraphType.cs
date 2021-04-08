@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace GenGra
@@ -37,7 +36,7 @@ namespace GenGra
             get
             {
                 if (startingNodes != null) return startingNodes;
-                
+
                 // If graph has no edges then nodes in graph are disconnected,
                 // therefore all nodes should be used as starting nodes
                 if ((Edges?.Edge?.Length ?? 0) == 0)
@@ -47,6 +46,7 @@ namespace GenGra
                         throw new InvalidOperationException(
                             "Graph has no nodes or edges. Please check the validity of your grammar");
                     }
+
                     startingNodes = Nodes.Node;
                     return startingNodes;
                 }
@@ -61,6 +61,7 @@ namespace GenGra
                         {
                             nodeIndegrees[edge.target] = 0;
                         }
+
                         nodeIndegrees[edge.target]++;
                     }
                 }
@@ -80,7 +81,7 @@ namespace GenGra
                 // to be an array containing just one random start node, as the actual start node will not
                 // matter since all nodes can be visited from any other node
                 NodeType randomNode = Nodes.Node[Random.Range(0, Nodes.Node.Length - 1)];
-                startingNodes = new [] {randomNode};
+                startingNodes = new[] {randomNode};
                 return startingNodes;
             }
         }
@@ -89,7 +90,7 @@ namespace GenGra
         {
             return HasAllSymbolsIn(otherGraph) && DualSearch(otherGraph);
         }
-        
+
         public void FindAndReplace(GraphType sourceGraph, GraphType targetGraph)
         {
             IDictionary<string, NodeType> markedNodes = FindSubgraphAndMarkNodes(sourceGraph);
@@ -103,7 +104,7 @@ namespace GenGra
         {
             adjacencyList = new Dictionary<string, IList<NodeType>>();
             IDictionary<string, NodeType> nodes = new Dictionary<string, NodeType>();
-                    
+
             foreach (NodeType node in Nodes.Node)
             {
                 adjacencyList[node.id] = new List<NodeType>();
@@ -127,6 +128,7 @@ namespace GenGra
                 {
                     nodeSymbolMap[node.symbol] = new List<NodeType>();
                 }
+
                 nodeSymbolMap[node.symbol].Add(node);
             }
         }
@@ -137,11 +139,11 @@ namespace GenGra
             {
                 string symbol = pair.Key;
                 IList<NodeType> otherGraphNodes = pair.Value;
-                return NodeSymbolMap.ContainsKey(symbol) && 
+                return NodeSymbolMap.ContainsKey(symbol) &&
                        NodeSymbolMap[symbol].Count >= otherGraphNodes.Count;
             });
         }
-        
+
         private bool DualSearch(GraphType otherGraph, IDictionary<string, NodeType> markedNodes = null)
         {
             foreach (NodeType startingNode in otherGraph.StartingNodes)
@@ -163,32 +165,34 @@ namespace GenGra
                         markedNodes.Clear();
                     }
                 }
+
                 if (!isSuccessfulCandidate) return false;
             }
 
             return true;
         }
-        
+
         private bool DualSearch(GraphType otherGraph, IList<NodeType> thisNodes, IList<NodeType> otherNodes,
             IDictionary<string, NodeType> markedNodes = null, IList<string> visitedOtherNodes = null)
         {
             visitedOtherNodes = visitedOtherNodes ?? new List<string>();
-            
+
             foreach (NodeType otherNode in otherNodes)
             {
                 if (visitedOtherNodes.Contains(otherNode.id)) continue;
                 visitedOtherNodes.Add(otherNode.id);
                 IList<string> visitedOtherNodesThusFar = new List<string>(visitedOtherNodes);
-                
+
                 bool matchingNodeFound = false;
                 foreach (NodeType thisNode in thisNodes)
                 {
                     if (thisNode.symbol != otherNode.symbol) continue;
-                    
+
                     IList<NodeType> thisAdjacentNodes = AdjacencyList[thisNode.id];
                     IList<NodeType> otherAdjacentNodes = otherGraph.AdjacencyList[otherNode.id];
-                    matchingNodeFound = DualSearch(otherGraph, thisAdjacentNodes, otherAdjacentNodes, markedNodes, visitedOtherNodes);
-                    
+                    matchingNodeFound = DualSearch(otherGraph, thisAdjacentNodes, 
+                        otherAdjacentNodes, markedNodes, visitedOtherNodes);
+
                     if (!matchingNodeFound)
                     {
                         visitedOtherNodes = new List<string>(visitedOtherNodesThusFar);
@@ -198,6 +202,7 @@ namespace GenGra
                         markedNodes[otherNode.id] = thisNode;
                     }
                 }
+
                 if (!matchingNodeFound) return false;
             }
 
@@ -207,7 +212,7 @@ namespace GenGra
         private IDictionary<string, NodeType> FindSubgraphAndMarkNodes(GraphType otherGraph)
         {
             IDictionary<string, NodeType> markedNodes = new Dictionary<string, NodeType>();
-            
+
             bool isSupergraphOfSourceGraph = DualSearch(otherGraph, markedNodes);
             if (!isSupergraphOfSourceGraph)
             {
@@ -228,9 +233,10 @@ namespace GenGra
                 string targetNodeId = markedNodes[sourceGraphEdge.target].id;
                 edges.RemoveAll(edge => edge.source == sourceNodeId && edge.target == targetNodeId);
             }
+
             Edges.Edge = edges.ToArray();
         }
-        
+
         /**
          * Transform this graph by transforming marked nodes into their corresponding nodes
          * in targetGraph, adding a node for each node in targetGraph that has no match in
@@ -266,43 +272,25 @@ namespace GenGra
                         numericIds.Sort();
                         newNodeId = numericIds.Last() + 1;
                     }
-                    
+
                     NodeType newNode = new NodeType
                     {
                         id = newNodeId.ToString(),
                         symbol = newSymbol
                     };
-                    
+
                     thisGraphNodes.Add(newNode);
                     markedNodes[nodeId] = newNode;
                 }
             }
-            
+
             IEnumerable<string> nodesToRemove = sourceGraph.Nodes.Node
                 .Where(sourceNode => targetGraph.Nodes.Node.All(targetNode => targetNode.id != sourceNode.id))
                 .Select(sourceNode => markedNodes[sourceNode.id].id);
-            
+
             thisGraphNodes.RemoveAll(node => nodesToRemove.Contains(node.id));
 
             Nodes.Node = thisGraphNodes.ToArray();
-        }
-
-        private string CalculateNewNodeId(List<NodeType> nodes)
-        {
-            List<int> numericIds = new List<int>();
-            foreach (NodeType node in nodes)
-            {
-                if (int.TryParse(node.id, out int idAsInt))
-                {
-                    numericIds.Add(idAsInt);
-                }
-            }
-
-            if (numericIds.Count == 0) return "0";
-            
-            numericIds.Sort();
-            int newNodeId = numericIds.Last() + 1;
-            return newNodeId.ToString();
         }
 
         /**
@@ -311,16 +299,16 @@ namespace GenGra
         private void InsertEdgesBetweenMarkedNodes(GraphType otherGraph, IDictionary<string, NodeType> markedNodes)
         {
             if (otherGraph.Edges?.Edge == null) return;
-            
+
             IList<EdgeType> edges = Edges?.Edge != null
                 ? new List<EdgeType>(Edges?.Edge)
                 : new List<EdgeType>();
-            
+
             foreach (EdgeType targetGraphEdge in otherGraph.Edges.Edge)
             {
                 string source = targetGraphEdge.source;
                 string target = targetGraphEdge.target;
-                
+
                 edges.Add(new EdgeType
                 {
                     source = markedNodes[source].id,
@@ -331,7 +319,7 @@ namespace GenGra
             if (Edges == null) Edges = new EdgesType();
             Edges.Edge = edges.ToArray();
         }
-        
+
         private void RecalculateFields()
         {
             CalculateAdjacencyList();
