@@ -43,7 +43,7 @@ namespace GenGra
         // TODO: move this method to be an instance method on GenGraType
         private GraphType TransformGraph(GenGraType genGra)
         {
-            IDictionary<string, GraphType> graphs = new Dictionary<string, GraphType>();
+            IDictionary<string, GraphType> graphs = new Dictionary<string, GraphType>(genGra.Graphs.Graph.Length);
             foreach (GraphType graph in genGra.Graphs.Graph)
             {
                 graphs[graph.id] = graph;
@@ -125,6 +125,31 @@ namespace GenGra
             // based on the node's symbol and place the SpaceObject on the plane of the scene, connecting it to
             // an existing SpaceObject where possible (i.e. not the first SpaceObject placed, and only connected where
             // specified by the SpaceObject - such as a doorway).
+            foreach (NodeType startNode in missionGraph.StartNodes)
+            {
+                BFS(missionGraph, startNode);
+            }
+        }
+
+        private void BFS(GraphType graph, NodeType startNode)
+        {
+            IList<string> visitedNodeIds = new List<string>(graph.Nodes.Node.Length);
+            Queue<NodeType> queue = new Queue<NodeType>();
+            
+            visitedNodeIds.Add(startNode.id);
+            queue.Enqueue(startNode);
+
+            while (queue.Count != 0)
+            {
+                NodeType currentNode = queue.Dequeue();
+                IList<NodeType> adjacentNodes = graph.AdjacencyList[currentNode.id];
+                foreach (NodeType adjacentNode in adjacentNodes)
+                {
+                    if (visitedNodeIds.Contains(adjacentNode.id)) continue;
+                    visitedNodeIds.Add(adjacentNode.id);
+                    queue.Enqueue(adjacentNode);
+                }
+            }
         }
         
         [Serializable]
