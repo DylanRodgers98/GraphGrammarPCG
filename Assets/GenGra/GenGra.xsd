@@ -21,7 +21,7 @@
   <xs:complexType name="GraphType">
     <xs:sequence>
       <xs:element name="Nodes" type="NodesType" />
-      <xs:element name="Edges" type="EdgesType" />
+      <xs:element name="Edges" type="EdgesType" minOccurs="0" />
     </xs:sequence>
     <xs:attribute name="id" type="xs:string" use="required" />
   </xs:complexType>
