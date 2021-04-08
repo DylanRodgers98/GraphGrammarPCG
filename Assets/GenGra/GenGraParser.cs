@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -9,27 +10,31 @@ namespace GenGra
 {
     public class GenGraParser : MonoBehaviour
     {
-        [SerializeField] private string graphFilePath;
+        [SerializeField] private string missionGraphGrammarFilePath;
+        [SerializeField] private SpaceObjectByMissionSymbol[] spaceObjectsByMissionSymbol;
 
         void Start()
         {
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            
+
             GenGraType genGra;
-            using (FileStream fileStream = new FileStream(graphFilePath, FileMode.Open))
+            using (FileStream fileStream = new FileStream(missionGraphGrammarFilePath, FileMode.Open))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(GenGraType));
                 genGra = (GenGraType) serializer.Deserialize(fileStream);
 
-                Debug.Log($"XML deserialization completed in: {stopwatch.ElapsedMilliseconds}ms");
+                Debug.Log($"XML deserialization completed after: {stopwatch.ElapsedMilliseconds}ms");
             }
 
             DebugLogDeserialization(genGra);
 
-            GraphType finalGraph = TransformGraph(genGra);
-
-            DebugLogGraph(finalGraph);
+            GraphType missionGraph = TransformGraph(genGra);
+            
+            Debug.Log($"Mission graph generation completed after: {stopwatch.ElapsedMilliseconds}ms");
+            DebugLogGraph(missionGraph);
+            
+            GenerateSpace(missionGraph);
 
             stopwatch.Stop();
             Debug.Log($"Total execution completed in: {stopwatch.ElapsedMilliseconds}ms");
@@ -58,7 +63,8 @@ namespace GenGra
                     ? applicableRules[0]
                     : applicableRules[Random.Range(0, applicableRules.Length - 1)];
 
-                Debug.Log($"[Applying Rule {++ruleNumber}] source: {ruleToApply.source} | target: {ruleToApply.target}");
+                Debug.Log(
+                    $"[Applying Rule {++ruleNumber}] source: {ruleToApply.source} | target: {ruleToApply.target}");
 
                 GraphType ruleSource = graphs[ruleToApply.source];
                 GraphType ruleTarget = graphs[ruleToApply.target];
@@ -104,12 +110,28 @@ namespace GenGra
                 Debug.Log($"[Graph {graph.id} | Node: {node.id}] symbol: {node.symbol}");
             }
 
-            EdgeType[] edges = graph.Edges?.Edge ?? new EdgeType[0];
-            for (int j = 0; j < edges.Length; j++)
+            if (graph.Edges == null || graph.Edges.Edge == null) return;
+
+            for (int j = 0; j < graph.Edges.Edge.Length; j++)
             {
-                EdgeType edge = edges[j];
+                EdgeType edge = graph.Edges.Edge[j];
                 Debug.Log($"[Graph {graph.id} | Edge: {j + 1}] source: {edge.source} | target: {edge.target}");
             }
+        }
+
+        private void GenerateSpace(GraphType missionGraph)
+        {
+            // Carry out a BFS through missionGraph. For each node, retrieve the correct SpaceObjectByMissionSymbol
+            // based on the node's symbol and place the SpaceObject on the plane of the scene, connecting it to
+            // an existing SpaceObject where possible (i.e. not the first SpaceObject placed, and only connected where
+            // specified by the SpaceObject - such as a doorway).
+        }
+        
+        [Serializable]
+        private struct SpaceObjectByMissionSymbol
+        {
+            [SerializeField] private string missionSymbol;
+            [SerializeField] private GameObject spaceObject;
         }
     }
 }
