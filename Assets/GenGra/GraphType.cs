@@ -160,7 +160,7 @@ namespace GenGra
                     if (isSuccessfulCandidate) break;
                     if (markedNodes != null)
                     {
-                        markedNodes = new Dictionary<string, NodeType>();
+                        markedNodes.Clear();
                     }
                 }
                 if (!isSuccessfulCandidate) return false;
