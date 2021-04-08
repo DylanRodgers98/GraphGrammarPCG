@@ -9,17 +9,17 @@ namespace GenGra
 {
     public class GenGraParser : MonoBehaviour
     {
-        public string graphFilePath;
+        [SerializeField]
+        private string graphFilePath;
 
-        // Start is called before the first frame update
         void Start()
         {
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+            
             GenGraType genGra;
             using (FileStream fileStream = new FileStream(graphFilePath, FileMode.Open))
             {
-                stopwatch.Start();
-
                 XmlSerializer serializer = new XmlSerializer(typeof(GenGraType));
                 genGra = (GenGraType) serializer.Deserialize(fileStream);
 
@@ -36,7 +36,8 @@ namespace GenGra
             Debug.Log($"Total execution completed in: {stopwatch.ElapsedMilliseconds}ms");
         }
 
-        private GraphType TransformGraph(GenGraType genGra, int maxDepth = 10)
+        // TODO: move this method to be an instance method on GenGraType
+        private GraphType TransformGraph(GenGraType genGra)
         {
             IDictionary<string, GraphType> graphs = new Dictionary<string, GraphType>();
             foreach (GraphType graph in genGra.Graphs.Graph)
@@ -47,27 +48,18 @@ namespace GenGra
             string startGraphRef = genGra.Grammar.StartGraph.@ref;
             GraphType startGraph = graphs[startGraphRef];
 
-            int iteration = 0;
+            int ruleNumber = 0;
+
             while (true)
             {
-                iteration++;
-                // if (iteration > maxDepth) return startGraph;
-                Debug.Log($"TransformGraph ITERATION: {iteration}");
-
                 RuleType[] applicableRules = GetApplicableRules(genGra, graphs, startGraph);
-
                 if (applicableRules.Length == 0) return startGraph;
-
-                foreach (RuleType applicableRule in applicableRules)
-                {
-                    Debug.Log($"[Applicable Rule] source: {applicableRule.source} | target: {applicableRule.target}");
-                }
 
                 RuleType ruleToApply = applicableRules.Length == 1
                     ? applicableRules[0]
                     : applicableRules[Random.Range(0, applicableRules.Length - 1)];
 
-                Debug.Log($"[Rule To Apply] source: {ruleToApply.source} | target: {ruleToApply.target}");
+                Debug.Log($"[Applying Rule {++ruleNumber}] source: {ruleToApply.source} | target: {ruleToApply.target}");
 
                 GraphType ruleSource = graphs[ruleToApply.source];
                 GraphType ruleTarget = graphs[ruleToApply.target];
@@ -75,6 +67,7 @@ namespace GenGra
             }
         }
 
+        // TODO: move this method to be an instance method on GenGraType
         private static RuleType[] GetApplicableRules(GenGraType genGra, IDictionary<string, GraphType> graphs,
             GraphType startGraph)
         {
@@ -104,6 +97,7 @@ namespace GenGra
             }
         }
 
+        // TODO: remove this method when done prototyping
         private void DebugLogGraph(GraphType graph)
         {
             foreach (NodeType node in graph.Nodes.Node)
