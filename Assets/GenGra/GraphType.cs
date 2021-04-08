@@ -11,7 +11,7 @@ namespace GenGra
 
         private IDictionary<string, IList<NodeType>> nodeSymbolMap;
 
-        private NodeType[] startingNodes;
+        private NodeType[] startNodes;
 
         public IDictionary<string, IList<NodeType>> AdjacencyList
         {
@@ -31,58 +31,12 @@ namespace GenGra
             }
         }
 
-        public NodeType[] StartingNodes
+        public NodeType[] StartNodes
         {
             get
             {
-                if (startingNodes != null) return startingNodes;
-
-                // If graph has no edges then nodes in graph are disconnected,
-                // therefore all nodes should be used as starting nodes
-                if ((Edges?.Edge?.Length ?? 0) == 0)
-                {
-                    if ((Nodes?.Node?.Length ?? 0) == 0)
-                    {
-                        throw new InvalidOperationException(
-                            "Graph has no nodes or edges. Please check the validity of your grammar");
-                    }
-
-                    startingNodes = Nodes.Node;
-                    return startingNodes;
-                }
-
-                // Calculate the indegree for each node in the graph
-                IDictionary<string, int> nodeIndegrees = new Dictionary<string, int>();
-                if (Edges?.Edge != null)
-                {
-                    foreach (EdgeType edge in Edges.Edge)
-                    {
-                        if (!nodeIndegrees.ContainsKey(edge.target))
-                        {
-                            nodeIndegrees[edge.target] = 0;
-                        }
-
-                        nodeIndegrees[edge.target]++;
-                    }
-                }
-
-                // Find all nodes with an indegree of 0
-                NodeType[] returnNodes = Nodes.Node
-                    .Where(node => !nodeIndegrees.ContainsKey(node.id))
-                    .ToArray();
-
-                if (returnNodes.Length != 0)
-                {
-                    startingNodes = returnNodes;
-                    return startingNodes;
-                }
-
-                // If no node exists with an indegree of 0, then this graph is cyclic, so set startingNodes
-                // to be an array containing just one random start node, as the actual start node will not
-                // matter since all nodes can be visited from any other node
-                NodeType randomNode = Nodes.Node[Random.Range(0, Nodes.Node.Length - 1)];
-                startingNodes = new[] {randomNode};
-                return startingNodes;
+                if (startNodes == null) CalculateStartNodes();
+                return startNodes;
             }
         }
 
@@ -133,6 +87,55 @@ namespace GenGra
             }
         }
 
+        private void CalculateStartNodes()
+        {
+            // If graph has no edges then nodes in graph are disconnected,
+            // therefore all nodes should be used as start nodes
+            if ((Edges?.Edge?.Length ?? 0) == 0)
+            {
+                if ((Nodes?.Node?.Length ?? 0) == 0)
+                {
+                    throw new InvalidOperationException(
+                        "Graph has no nodes or edges. Please check the validity of your grammar");
+                }
+
+                startNodes = Nodes.Node;
+                return;
+            }
+
+            // Calculate the indegree for each node in the graph
+            IDictionary<string, int> nodeIndegrees = new Dictionary<string, int>();
+            if (Edges?.Edge != null)
+            {
+                foreach (EdgeType edge in Edges.Edge)
+                {
+                    if (!nodeIndegrees.ContainsKey(edge.target))
+                    {
+                        nodeIndegrees[edge.target] = 0;
+                    }
+
+                    nodeIndegrees[edge.target]++;
+                }
+            }
+
+            // Find all nodes with an indegree of 0
+            NodeType[] returnNodes = Nodes.Node
+                .Where(node => !nodeIndegrees.ContainsKey(node.id))
+                .ToArray();
+
+            if (returnNodes.Length != 0)
+            {
+                startNodes = returnNodes;
+                return;
+            }
+
+            // If no node exists with an indegree of 0, then this graph is cyclic, so set startNodes
+            // to be an array containing just one random start node, as the actual start node will
+            // not matter since all nodes can be visited from any other node
+            NodeType randomNode = Nodes.Node[Random.Range(0, Nodes.Node.Length - 1)];
+            startNodes = new[] {randomNode};
+        }
+
         private bool HasAllSymbolsIn(GraphType otherGraph)
         {
             return otherGraph.NodeSymbolMap.All(pair =>
@@ -146,24 +149,18 @@ namespace GenGra
 
         private bool DualSearch(GraphType otherGraph, IDictionary<string, NodeType> markedNodes = null)
         {
-            foreach (NodeType startingNode in otherGraph.StartingNodes)
+            foreach (NodeType startNode in otherGraph.StartNodes)
             {
-                IList<NodeType> sourceNodes = new List<NodeType>();
-                sourceNodes.Add(startingNode);
+                IList<NodeType> sourceNodes = new List<NodeType> {startNode};
 
                 bool isSuccessfulCandidate = false;
-                IList<NodeType> nodeCandidates = NodeSymbolMap[startingNode.symbol];
+                IList<NodeType> nodeCandidates = NodeSymbolMap[startNode.symbol];
                 foreach (NodeType nodeCandidate in nodeCandidates)
                 {
-                    IList<NodeType> thisNodes = new List<NodeType>();
-                    thisNodes.Add(nodeCandidate);
-
+                    IList<NodeType> thisNodes = new List<NodeType> {nodeCandidate};
                     isSuccessfulCandidate = DualSearch(otherGraph, thisNodes, sourceNodes, markedNodes);
                     if (isSuccessfulCandidate) break;
-                    if (markedNodes != null)
-                    {
-                        markedNodes.Clear();
-                    }
+                    markedNodes?.Clear();
                 }
 
                 if (!isSuccessfulCandidate) return false;
@@ -175,7 +172,7 @@ namespace GenGra
         private bool DualSearch(GraphType otherGraph, IList<NodeType> thisNodes, IList<NodeType> otherNodes,
             IDictionary<string, NodeType> markedNodes = null, IList<string> visitedOtherNodes = null)
         {
-            visitedOtherNodes = visitedOtherNodes ?? new List<string>();
+            visitedOtherNodes = visitedOtherNodes ?? new List<string>(otherGraph.Nodes.Node.Length);
 
             foreach (NodeType otherNode in otherNodes)
             {
@@ -190,7 +187,7 @@ namespace GenGra
 
                     IList<NodeType> thisAdjacentNodes = AdjacencyList[thisNode.id];
                     IList<NodeType> otherAdjacentNodes = otherGraph.AdjacencyList[otherNode.id];
-                    matchingNodeFound = DualSearch(otherGraph, thisAdjacentNodes, 
+                    matchingNodeFound = DualSearch(otherGraph, thisAdjacentNodes,
                         otherAdjacentNodes, markedNodes, visitedOtherNodes);
 
                     if (!matchingNodeFound)
@@ -257,7 +254,7 @@ namespace GenGra
                 }
                 else
                 {
-                    List<int> numericIds = new List<int>();
+                    List<int> numericIds = new List<int>(thisGraphNodes.Count);
                     foreach (NodeType node in thisGraphNodes)
                     {
                         if (int.TryParse(node.id, out int idAsInt))
@@ -298,11 +295,11 @@ namespace GenGra
          */
         private void InsertEdgesBetweenMarkedNodes(GraphType otherGraph, IDictionary<string, NodeType> markedNodes)
         {
-            if (otherGraph.Edges?.Edge == null) return;
+            if (otherGraph.Edges?.Edge == null || otherGraph.Edges?.Edge?.Length == 0) return;
 
             IList<EdgeType> edges = Edges?.Edge != null
                 ? new List<EdgeType>(Edges?.Edge)
-                : new List<EdgeType>();
+                : new List<EdgeType>(otherGraph.Edges.Edge.Length);
 
             foreach (EdgeType targetGraphEdge in otherGraph.Edges.Edge)
             {
@@ -324,6 +321,7 @@ namespace GenGra
         {
             CalculateAdjacencyList();
             CalculateNodeSymbolMap();
+            CalculateStartNodes();
         }
     }
 }
