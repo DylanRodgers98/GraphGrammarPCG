@@ -11,30 +11,68 @@ namespace GenGra
     public class GenGraParser : MonoBehaviour
     {
         [SerializeField] private string missionGraphGrammarFilePath;
+
+        /*
+         * See doc comment on struct SpaceObjectByMissionSymbol about the
+         * necessity for both a public Array and a private IDictionary
+         */
         [SerializeField] private SpaceObjectByMissionSymbol[] spaceObjectsByMissionSymbol;
+        private IDictionary<string, GameObject> spaceObjects;
+
+        private IDictionary<string, GameObject> SpaceObjects
+        {
+            get
+            {
+                if (spaceObjects == null)
+                {
+                    spaceObjects = new Dictionary<string, GameObject>();
+                    foreach (SpaceObjectByMissionSymbol spaceObjectByMissionSymbol in spaceObjectsByMissionSymbol)
+                    {
+                        spaceObjects[spaceObjectByMissionSymbol.MissionSymbol] =
+                            spaceObjectByMissionSymbol.SpaceObject;
+                    }
+                }
+
+                return spaceObjects;
+            }
+        }
 
         void Start()
         {
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
+            long timeBeforeXmlDeserialization = stopwatch.ElapsedMilliseconds;
+
             GenGraType genGra;
             using (FileStream fileStream = new FileStream(missionGraphGrammarFilePath, FileMode.Open))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(GenGraType));
                 genGra = (GenGraType) serializer.Deserialize(fileStream);
-
-                Debug.Log($"XML deserialization completed after: {stopwatch.ElapsedMilliseconds}ms");
             }
+
+            long timeAfterXmlDeserialization = stopwatch.ElapsedMilliseconds;
+            long xmlDeserializationTime = timeAfterXmlDeserialization - timeBeforeXmlDeserialization;
+            Debug.Log($"XML deserialization completed in: {xmlDeserializationTime}ms");
 
             DebugLogDeserialization(genGra);
 
+            long timeBeforeGraphTransformation = stopwatch.ElapsedMilliseconds;
+
             GraphType missionGraph = TransformGraph(genGra);
-            
-            Debug.Log($"Mission graph generation completed after: {stopwatch.ElapsedMilliseconds}ms");
+
+            long timeAfterGraphTransformation = stopwatch.ElapsedMilliseconds;
+            long graphTransformationTime = timeAfterGraphTransformation - timeBeforeGraphTransformation;
+            Debug.Log($"Mission graph generation completed in: {graphTransformationTime}ms");
             DebugLogGraph(missionGraph);
-            
+
+            long timeBeforeSpaceGeneration = stopwatch.ElapsedMilliseconds;
+
             GenerateSpace(missionGraph);
+
+            long timeAfterSpaceGeneration = stopwatch.ElapsedMilliseconds;
+            long spaceGenerationTime = timeAfterSpaceGeneration - timeBeforeSpaceGeneration;
+            Debug.Log($"Space generation completed in: {spaceGenerationTime}ms");
 
             stopwatch.Stop();
             Debug.Log($"Total execution completed in: {stopwatch.ElapsedMilliseconds}ms");
@@ -135,7 +173,7 @@ namespace GenGra
         {
             IList<string> visitedNodeIds = new List<string>(graph.Nodes.Node.Length);
             Queue<NodeType> queue = new Queue<NodeType>();
-            
+
             visitedNodeIds.Add(startNode.id);
             queue.Enqueue(startNode);
 
@@ -147,16 +185,32 @@ namespace GenGra
                 {
                     if (visitedNodeIds.Contains(adjacentNode.id)) continue;
                     visitedNodeIds.Add(adjacentNode.id);
+                    PlaceSpaceObject(adjacentNode.symbol);
                     queue.Enqueue(adjacentNode);
                 }
             }
         }
-        
+
+        private void PlaceSpaceObject(string missionSymbol)
+        {
+            GameObject spaceObject = SpaceObjects[missionSymbol];
+            Debug.Log($"[Place Space Object] Mission Symbol: {missionSymbol} | Space Object: {spaceObject}");
+            // place spaceObject on plane in scene, relative to other spaceObjects
+        }
+
+        /**
+         * This struct is a workaround to allow GameObjects to be mapped to a string in the Unity editor in a
+         * similar vein to using a Dictionary, because IDictionary is not serializable by the Unity engine.
+         */
         [Serializable]
         private struct SpaceObjectByMissionSymbol
         {
             [SerializeField] private string missionSymbol;
             [SerializeField] private GameObject spaceObject;
+
+            public string MissionSymbol => missionSymbol;
+
+            public GameObject SpaceObject => spaceObject;
         }
     }
 }
