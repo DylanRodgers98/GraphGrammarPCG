@@ -9,8 +9,7 @@ namespace GenGra
 {
     public class GenGraParser : MonoBehaviour
     {
-        [SerializeField]
-        private string graphFilePath;
+        [SerializeField] private string graphFilePath;
 
         void Start()
         {
