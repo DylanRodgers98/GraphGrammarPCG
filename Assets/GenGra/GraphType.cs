@@ -170,10 +170,16 @@ namespace GenGra
         }
         
         private bool DualSearch(GraphType otherGraph, IList<NodeType> thisNodes, IList<NodeType> otherNodes,
-            IDictionary<string, NodeType> markedNodes = null)
+            IDictionary<string, NodeType> markedNodes = null, IList<string> visitedOtherNodes = null)
         {
+            visitedOtherNodes = visitedOtherNodes ?? new List<string>();
+            
             foreach (NodeType otherNode in otherNodes)
             {
+                if (visitedOtherNodes.Contains(otherNode.id)) continue;
+                visitedOtherNodes.Add(otherNode.id);
+                IList<string> visitedOtherNodesThusFar = new List<string>(visitedOtherNodes);
+                
                 bool matchingNodeFound = false;
                 foreach (NodeType thisNode in thisNodes)
                 {
@@ -181,8 +187,13 @@ namespace GenGra
                     
                     IList<NodeType> thisAdjacentNodes = AdjacencyList[thisNode.id];
                     IList<NodeType> otherAdjacentNodes = otherGraph.AdjacencyList[otherNode.id];
-                    matchingNodeFound = DualSearch(otherGraph, thisAdjacentNodes, otherAdjacentNodes, markedNodes);
-                    if (matchingNodeFound && markedNodes != null)
+                    matchingNodeFound = DualSearch(otherGraph, thisAdjacentNodes, otherAdjacentNodes, markedNodes, visitedOtherNodes);
+                    
+                    if (!matchingNodeFound)
+                    {
+                        visitedOtherNodes = new List<string>(visitedOtherNodesThusFar);
+                    }
+                    else if (markedNodes != null)
                     {
                         markedNodes[otherNode.id] = thisNode;
                     }
