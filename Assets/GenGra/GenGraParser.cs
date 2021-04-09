@@ -26,9 +26,10 @@ namespace GenGra
                 if (buildingInstructionsByMissionSymbolDict == null)
                 {
                     buildingInstructionsByMissionSymbolDict = new Dictionary<string, GameObject>();
-                    foreach (BuildingInstructionsHolder bih in buildingInstructionsByMissionSymbol)
+                    foreach (BuildingInstructionsHolder biHolder in buildingInstructionsByMissionSymbol)
                     {
-                        buildingInstructionsByMissionSymbolDict[bih.MissionSymbol] = bih.BuildingInstructionsPrefab;
+                        buildingInstructionsByMissionSymbolDict[biHolder.MissionSymbol] = 
+                            biHolder.BuildingInstructionsPrefab;
                     }
                 }
 
@@ -195,13 +196,13 @@ namespace GenGra
         {
             try
             {
-                GameObject buildingInstructionsPrefab = BuildingInstructionsByMissionSymbol[missionSymbol];
-                Debug.Log($"[Build Space] Mission Symbol: {missionSymbol} | Building Instructions Prefab: {buildingInstructionsPrefab}");
-                BuildingInstructions buildingInstructions = buildingInstructionsPrefab.GetComponent<BuildingInstructions>();
+                GameObject biPrefab = BuildingInstructionsByMissionSymbol[missionSymbol];
+                Debug.Log($"[Build Space] Mission Symbol: {missionSymbol} | Building Instructions Prefab: {biPrefab}");
+                BuildingInstructions buildingInstructions = biPrefab.GetComponent<BuildingInstructions>();
                 if (buildingInstructions == null)
                 {
                     throw new InvalidOperationException("No BuildingInstructions component found attached to " +
-                                                        $"{buildingInstructionsPrefab}. Please check validity of " +
+                                                        $"{biPrefab}. Please check validity of " +
                                                         "this prefab.");
                 }
 
