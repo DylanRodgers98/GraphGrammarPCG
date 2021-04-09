@@ -13,27 +13,26 @@ namespace GenGra
         [SerializeField] private string missionGraphGrammarFilePath;
 
         /*
-         * See doc comment on struct SpaceObjectByMissionSymbol about the
-         * necessity for both a public Array and a private IDictionary
+         * See doc comment on struct BuildingInstructionsHolder about
+         * the necessity for both a public Array and a private IDictionary
          */
-        [SerializeField] private SpaceObjectByMissionSymbol[] spaceObjectsByMissionSymbol;
-        private IDictionary<string, GameObject> spaceObjects;
+        [SerializeField] private BuildingInstructionsHolder[] buildingInstructionsByMissionSymbol;
+        private IDictionary<string, GameObject> buildingInstructionsByMissionSymbolDict;
 
-        private IDictionary<string, GameObject> SpaceObjects
+        private IDictionary<string, GameObject> BuildingInstructionsByMissionSymbol
         {
             get
             {
-                if (spaceObjects == null)
+                if (buildingInstructionsByMissionSymbolDict == null)
                 {
-                    spaceObjects = new Dictionary<string, GameObject>();
-                    foreach (SpaceObjectByMissionSymbol spaceObjectByMissionSymbol in spaceObjectsByMissionSymbol)
+                    buildingInstructionsByMissionSymbolDict = new Dictionary<string, GameObject>();
+                    foreach (BuildingInstructionsHolder bih in buildingInstructionsByMissionSymbol)
                     {
-                        spaceObjects[spaceObjectByMissionSymbol.MissionSymbol] =
-                            spaceObjectByMissionSymbol.SpaceObject;
+                        buildingInstructionsByMissionSymbolDict[bih.MissionSymbol] = bih.BuildingInstructionsPrefab;
                     }
                 }
 
-                return spaceObjects;
+                return buildingInstructionsByMissionSymbolDict;
             }
         }
 
@@ -175,6 +174,7 @@ namespace GenGra
             Queue<NodeType> queue = new Queue<NodeType>();
 
             visitedNodeIds.Add(startNode.id);
+            BuildSpaceForMissionSymbol(startNode.symbol);
             queue.Enqueue(startNode);
 
             while (queue.Count != 0)
@@ -185,17 +185,33 @@ namespace GenGra
                 {
                     if (visitedNodeIds.Contains(adjacentNode.id)) continue;
                     visitedNodeIds.Add(adjacentNode.id);
-                    PlaceSpaceObject(adjacentNode.symbol);
+                    BuildSpaceForMissionSymbol(adjacentNode.symbol);
                     queue.Enqueue(adjacentNode);
                 }
             }
         }
 
-        private void PlaceSpaceObject(string missionSymbol)
+        private void BuildSpaceForMissionSymbol(string missionSymbol)
         {
-            GameObject spaceObject = SpaceObjects[missionSymbol];
-            Debug.Log($"[Place Space Object] Mission Symbol: {missionSymbol} | Space Object: {spaceObject}");
-            // place spaceObject on plane in scene, relative to other spaceObjects
+            try
+            {
+                GameObject buildingInstructionsPrefab = BuildingInstructionsByMissionSymbol[missionSymbol];
+                Debug.Log($"[Build Space] Mission Symbol: {missionSymbol} | Building Instructions Prefab: {buildingInstructionsPrefab}");
+                BuildingInstructions buildingInstructions = buildingInstructionsPrefab.GetComponent<BuildingInstructions>();
+                if (buildingInstructions == null)
+                {
+                    throw new InvalidOperationException("No BuildingInstructions component found attached to " +
+                                                        $"{buildingInstructionsPrefab}. Please check validity of " +
+                                                        "this prefab.");
+                }
+                buildingInstructions.Build();
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new InvalidOperationException("No building instructions prefab found for mission symbol " +
+                                                    $"'{missionSymbol}'. Please check validity of Building " +
+                                                    "Instructions By Mission Symbol array.");
+            }
         }
 
         /**
@@ -203,14 +219,14 @@ namespace GenGra
          * similar vein to using a Dictionary, because IDictionary is not serializable by the Unity engine.
          */
         [Serializable]
-        private struct SpaceObjectByMissionSymbol
+        private class BuildingInstructionsHolder
         {
             [SerializeField] private string missionSymbol;
-            [SerializeField] private GameObject spaceObject;
+            [SerializeField] private GameObject buildingInstructionsPrefab;
 
             public string MissionSymbol => missionSymbol;
 
-            public GameObject SpaceObject => spaceObject;
+            public GameObject BuildingInstructionsPrefab => buildingInstructionsPrefab;
         }
     }
 }

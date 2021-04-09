@@ -165,55 +165,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   missionGraphGrammarFilePath: Assets/GenGra/dormans-grammar.xml
-  spaceObjectsByMissionSymbol:
-  - missionSymbol: bl
-    spaceObject: {fileID: 0}
-  - missionSymbol: bm
-    spaceObject: {fileID: 0}
-  - missionSymbol: C
-    spaceObject: {fileID: 0}
-  - missionSymbol: CF
-    spaceObject: {fileID: 0}
-  - missionSymbol: CL
-    spaceObject: {fileID: 0}
-  - missionSymbol: CP
-    spaceObject: {fileID: 0}
+  buildingInstructionsByMissionSymbol:
   - missionSymbol: e
-    spaceObject: {fileID: 0}
-  - missionSymbol: F
-    spaceObject: {fileID: 0}
-  - missionSymbol: G
-    spaceObject: {fileID: 0}
-  - missionSymbol: g
-    spaceObject: {fileID: 0}
-  - missionSymbol: H
-    spaceObject: {fileID: 0}
-  - missionSymbol: ib
-    spaceObject: {fileID: 0}
-  - missionSymbol: iq
-    spaceObject: {fileID: 0}
-  - missionSymbol: k
-    spaceObject: {fileID: 0}
-  - missionSymbol: kf
-    spaceObject: {fileID: 0}
-  - missionSymbol: km
-    spaceObject: {fileID: 0}
-  - missionSymbol: l
-    spaceObject: {fileID: 0}
-  - missionSymbol: lf
-    spaceObject: {fileID: 0}
-  - missionSymbol: lm
-    spaceObject: {fileID: 0}
-  - missionSymbol: n
-    spaceObject: {fileID: 0}
-  - missionSymbol: S
-    spaceObject: {fileID: 0}
-  - missionSymbol: t
-    spaceObject: {fileID: 0}
-  - missionSymbol: ti
-    spaceObject: {fileID: 0}
-  - missionSymbol: ts
-    spaceObject: {fileID: 0}
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
