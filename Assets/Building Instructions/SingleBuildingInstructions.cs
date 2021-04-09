@@ -29,7 +29,7 @@ public class SingleBuildingInstructions : BuildingInstructions
         if (thisAttachmentPoints.Length == 0)
         {
             throw new InvalidOperationException("Space Object Prefab has no child objects with the the " +
-                                                "'AttachmentPoint' tag. This tag is required to instantiated the " +
+                                                "'AttachmentPoint' tag. This tag is required to instantiate the " +
                                                 "prefab attached to existing GameObjects in the scene.");
         }
         
@@ -41,7 +41,7 @@ public class SingleBuildingInstructions : BuildingInstructions
         if (relativeAttachmentPoints.Length == 0)
         {
             throw new InvalidOperationException("No relative space objects have a child object with the the " +
-                                                "'AttachmentPoint' tag. This tag is required to instantiated the " +
+                                                "'AttachmentPoint' tag. This tag is required to instantiate the " +
                                                 "prefab attached to existing GameObjects in the scene.");
         }
 

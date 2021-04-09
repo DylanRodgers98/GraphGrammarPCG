@@ -226,9 +226,6 @@ MonoBehaviour:
   - missionSymbol: n
     buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
       type: 3}
-  - missionSymbol: S
-    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
-      type: 3}
   - missionSymbol: t
     buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
       type: 3}

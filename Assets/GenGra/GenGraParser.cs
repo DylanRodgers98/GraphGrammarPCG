@@ -202,8 +202,7 @@ namespace GenGra
                 if (buildingInstructions == null)
                 {
                     throw new InvalidOperationException("No BuildingInstructions component found attached to " +
-                                                        $"{biPrefab}. Please check validity of " +
-                                                        "this prefab.");
+                                                        $"{biPrefab}. Please check validity of this prefab.");
                 }
 
                 return buildingInstructions.Build(relativeSpaceObjects);
