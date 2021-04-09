@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using UnityEngine;
-using Random = UnityEngine.Random;
+﻿using UnityEngine;
 
 public class SingleBuildingInstructions : BuildingInstructions
 {
@@ -16,43 +13,13 @@ public class SingleBuildingInstructions : BuildingInstructions
         {
             return new []{Instantiate(spaceObjectPrefab, Vector3.zero, Quaternion.identity)};
         }
-        
-        
-        /*
-         * Choose random attachment point on relative object and the space object to be instantiated
-         */
-        
-        Transform[] thisAttachmentPoints = spaceObjectPrefab.transform.Cast<Transform>()
-            .Where(child => child.CompareTag("AttachmentPoint"))
-            .ToArray();
 
-        if (thisAttachmentPoints.Length == 0)
-        {
-            throw new InvalidOperationException("Space Object Prefab has no child objects with the the " +
-                                                "'AttachmentPoint' tag. This tag is required to instantiate the " +
-                                                "prefab attached to existing GameObjects in the scene.");
-        }
-        
-        Transform[] relativeAttachmentPoints = relativeSpaceObjects
-            .SelectMany(relativeSpaceObject => relativeSpaceObject.transform.Cast<Transform>())
-            .Where(child => child.CompareTag("AttachmentPoint"))
-            .ToArray();
+        Transform thisAttachmentPoint = GetRandomAttachmentPoint(spaceObjectPrefab);
+        Transform relativeAttachmentPoint = GetRandomAttachmentPoint(relativeSpaceObjects);
 
-        if (relativeAttachmentPoints.Length == 0)
-        {
-            throw new InvalidOperationException("No relative space objects have a child object with the the " +
-                                                "'AttachmentPoint' tag. This tag is required to instantiate the " +
-                                                "prefab attached to existing GameObjects in the scene.");
-        }
-
-        Transform thisAttachmentPoint = thisAttachmentPoints[Random.Range(0, thisAttachmentPoints.Length)];
-        Transform relativeAttachmentPoint = relativeAttachmentPoints[Random.Range(0, relativeAttachmentPoints.Length)];
-
-        
         /*
          * Calculate position of space object to be instantiated
          */
-        
         Vector3 thisObjectPosition = spaceObjectPrefab.transform.position;
         Vector3 thisAttachmentPointVectorFromCenter = thisAttachmentPoint.position - thisObjectPosition;
 
@@ -62,8 +29,7 @@ public class SingleBuildingInstructions : BuildingInstructions
         Vector3 vectorBetweenCenters = thisAttachmentPointVectorFromCenter + relativeAttachmentPointVectorFromCenter;
 
         Vector3 spaceObjectPosition = relativeObjectPosition + vectorBetweenCenters;
-        
-        
+
         // calculate rotation of space object to be instantiated
         float y = thisAttachmentPoint.eulerAngles.y - relativeAttachmentPoint.eulerAngles.y - 180;
         Quaternion spaceObjectRotation = Quaternion.Euler(0, y, 0);
