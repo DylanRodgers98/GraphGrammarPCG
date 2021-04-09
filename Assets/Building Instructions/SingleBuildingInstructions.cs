@@ -11,7 +11,7 @@ public class SingleBuildingInstructions : BuildingInstructions
         // as this should be the first instantiated space object (TODO: add validation around this assumption)
         if (relativeSpaceObjects == null || relativeSpaceObjects.Length == 0)
         {
-            return new []{Instantiate(spaceObjectPrefab, Vector3.zero, Quaternion.identity)};
+            return new[] {Instantiate(spaceObjectPrefab, Vector3.zero, Quaternion.identity)};
         }
 
         Transform thisAttachmentPoint = GetRandomAttachmentPoint(spaceObjectPrefab);
@@ -33,14 +33,14 @@ public class SingleBuildingInstructions : BuildingInstructions
         // calculate rotation of space object to be instantiated
         float y = thisAttachmentPoint.eulerAngles.y - relativeAttachmentPoint.eulerAngles.y - 180;
         Quaternion spaceObjectRotation = Quaternion.Euler(0, y, 0);
-        
+
         GameObject instantiated = Instantiate(spaceObjectPrefab, spaceObjectPosition, spaceObjectRotation);
-        
+
         // destroy used attachment points
         Transform instantiatedAttachmentPoint = instantiated.transform.Find(thisAttachmentPoint.name);
         Destroy(instantiatedAttachmentPoint.gameObject);
         Destroy(relativeAttachmentPoint.gameObject);
-        
+
         return new[] {instantiated};
     }
 }

@@ -28,7 +28,7 @@ namespace GenGra
                     buildingInstructionsByMissionSymbolDict = new Dictionary<string, GameObject>();
                     foreach (BuildingInstructionsHolder biHolder in buildingInstructionsByMissionSymbol)
                     {
-                        buildingInstructionsByMissionSymbolDict[biHolder.MissionSymbol] = 
+                        buildingInstructionsByMissionSymbolDict[biHolder.MissionSymbol] =
                             biHolder.BuildingInstructionsPrefab;
                     }
                 }
@@ -59,7 +59,7 @@ namespace GenGra
 
             long timeBeforeGraphTransformation = stopwatch.ElapsedMilliseconds;
 
-            GraphType missionGraph = TransformGraph(genGra);
+            GraphType missionGraph = genGra.GenerateGraph();
 
             long timeAfterGraphTransformation = stopwatch.ElapsedMilliseconds;
             long graphTransformationTime = timeAfterGraphTransformation - timeBeforeGraphTransformation;
@@ -76,51 +76,6 @@ namespace GenGra
 
             stopwatch.Stop();
             Debug.Log($"Total execution completed in: {stopwatch.ElapsedMilliseconds}ms");
-        }
-
-        // TODO: move this method to be an instance method on GenGraType
-        private GraphType TransformGraph(GenGraType genGra)
-        {
-            IDictionary<string, GraphType> graphs = new Dictionary<string, GraphType>(genGra.Graphs.Graph.Length);
-            foreach (GraphType graph in genGra.Graphs.Graph)
-            {
-                graphs[graph.id] = graph;
-            }
-
-            string startGraphRef = genGra.Grammar.StartGraph.@ref;
-            GraphType startGraph = graphs[startGraphRef];
-
-            int ruleNumber = 0;
-
-            while (true)
-            {
-                RuleType[] applicableRules = GetApplicableRules(genGra, graphs, startGraph);
-                if (applicableRules.Length == 0) return startGraph;
-
-                RuleType ruleToApply = applicableRules.Length == 1
-                    ? applicableRules[0]
-                    : applicableRules[Random.Range(0, applicableRules.Length - 1)];
-
-                Debug.Log(
-                    $"[Applying Rule {++ruleNumber}] source: {ruleToApply.source} | target: {ruleToApply.target}");
-
-                GraphType ruleSource = graphs[ruleToApply.source];
-                GraphType ruleTarget = graphs[ruleToApply.target];
-                startGraph.FindAndReplace(ruleSource, ruleTarget);
-            }
-        }
-
-        // TODO: move this method to be an instance method on GenGraType
-        private static RuleType[] GetApplicableRules(GenGraType genGra, IDictionary<string, GraphType> graphs,
-            GraphType startGraph)
-        {
-            return genGra.Grammar.Rules.Rule
-                .Where(rule =>
-                {
-                    GraphType ruleSourceGraph = graphs[rule.source];
-                    return startGraph.IsSupergraphOf(ruleSourceGraph);
-                })
-                .ToArray();
         }
 
         // TODO: remove this method when done prototyping
@@ -164,11 +119,11 @@ namespace GenGra
             // specified by the SpaceObject - such as a doorway).
             foreach (NodeType startNode in missionGraph.StartNodes)
             {
-                BreadthFirstSearch(missionGraph, startNode);
+                BreadthFirstSpaceGeneration(missionGraph, startNode);
             }
         }
 
-        private void BreadthFirstSearch(GraphType graph, NodeType startNode)
+        private void BreadthFirstSpaceGeneration(GraphType graph, NodeType startNode)
         {
             IList<string> visitedNodeIds = new List<string>(graph.Nodes.Node.Length);
             Queue<Tuple<NodeType, GameObject[]>> queue = new Queue<Tuple<NodeType, GameObject[]>>();
