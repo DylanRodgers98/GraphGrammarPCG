@@ -9,15 +9,7 @@ public abstract class BuildingInstructions : MonoBehaviour
 
     public abstract GameObject[] Build(GameObject[] relativeSpaceObjects = null);
 
-    protected void ValidateSpaceObjectPrefab()
-    {
-        if (spaceObjectPrefab == null)
-        {
-            throw new ArgumentException("Space Object Prefab cannot be null");
-        }
-    }
-
-    protected Transform GetRandomAttachmentPoint(params GameObject[] spaceObjects)
+    protected static Transform GetRandomAttachmentPoint(params GameObject[] spaceObjects)
     {
         Transform[] attachmentPoints = spaceObjects
             .SelectMany(spaceObject => spaceObject.transform.Cast<Transform>())
@@ -32,5 +24,40 @@ public abstract class BuildingInstructions : MonoBehaviour
         }
 
         return attachmentPoints[Random.Range(0, attachmentPoints.Length)];
+    }
+
+    protected static void DestroyAttachmentPoints(params Transform[] attachmentPoints)
+    {
+        foreach (Transform attachmentPoint in attachmentPoints)
+        {
+            Destroy(attachmentPoint.gameObject);
+        }
+    }
+
+    protected static Quaternion CalculateInstantiationRotation(Transform attachmentPoint1, Transform attachmentPoint2)
+    {
+        float y = attachmentPoint1.eulerAngles.y - attachmentPoint2.eulerAngles.y - 180;
+        return Quaternion.Euler(0, y, 0);
+    }
+
+    protected Vector3 CalculateInstantiationPosition(Transform attachmentPoint1, Transform attachmentPoint2)
+    {
+        Vector3 thisObjectPosition = spaceObjectPrefab.transform.position;
+        Vector3 thisAttachmentPointVectorFromCenter = attachmentPoint1.position - thisObjectPosition;
+
+        Vector3 relativeObjectPosition = attachmentPoint2.parent.position;
+        Vector3 relativeAttachmentPointVectorFromCenter = attachmentPoint2.position - relativeObjectPosition;
+
+        Vector3 vectorBetweenCenters = thisAttachmentPointVectorFromCenter + relativeAttachmentPointVectorFromCenter;
+
+        return relativeObjectPosition + vectorBetweenCenters;
+    }
+
+    protected void ValidateSpaceObjectPrefab()
+    {
+        if (spaceObjectPrefab == null)
+        {
+            throw new ArgumentException("Space Object Prefab cannot be null");
+        }
     }
 }

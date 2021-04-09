@@ -17,29 +17,13 @@ public class SingleBuildingInstructions : BuildingInstructions
         Transform thisAttachmentPoint = GetRandomAttachmentPoint(spaceObjectPrefab);
         Transform relativeAttachmentPoint = GetRandomAttachmentPoint(relativeSpaceObjects);
 
-        /*
-         * Calculate position of space object to be instantiated
-         */
-        Vector3 thisObjectPosition = spaceObjectPrefab.transform.position;
-        Vector3 thisAttachmentPointVectorFromCenter = thisAttachmentPoint.position - thisObjectPosition;
-
-        Vector3 relativeObjectPosition = relativeAttachmentPoint.parent.position;
-        Vector3 relativeAttachmentPointVectorFromCenter = relativeAttachmentPoint.position - relativeObjectPosition;
-
-        Vector3 vectorBetweenCenters = thisAttachmentPointVectorFromCenter + relativeAttachmentPointVectorFromCenter;
-
-        Vector3 spaceObjectPosition = relativeObjectPosition + vectorBetweenCenters;
-
-        // calculate rotation of space object to be instantiated
-        float y = thisAttachmentPoint.eulerAngles.y - relativeAttachmentPoint.eulerAngles.y - 180;
-        Quaternion spaceObjectRotation = Quaternion.Euler(0, y, 0);
+        Vector3 spaceObjectPosition = CalculateInstantiationPosition(thisAttachmentPoint, relativeAttachmentPoint);
+        Quaternion spaceObjectRotation = CalculateInstantiationRotation(thisAttachmentPoint, relativeAttachmentPoint);
 
         GameObject instantiated = Instantiate(spaceObjectPrefab, spaceObjectPosition, spaceObjectRotation);
 
-        // destroy used attachment points
         Transform instantiatedAttachmentPoint = instantiated.transform.Find(thisAttachmentPoint.name);
-        Destroy(instantiatedAttachmentPoint.gameObject);
-        Destroy(relativeAttachmentPoint.gameObject);
+        DestroyAttachmentPoints(instantiatedAttachmentPoint, relativeAttachmentPoint);
 
         return new[] {instantiated};
     }

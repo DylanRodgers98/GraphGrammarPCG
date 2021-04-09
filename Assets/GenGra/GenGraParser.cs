@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml.Serialization;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace GenGra
 {
@@ -111,12 +109,14 @@ namespace GenGra
             }
         }
 
+        /**
+         * Carry out a BFS through missionGraph. For each node, retrieve the correct SpaceObjectByMissionSymbol based
+         * on the node's symbol and place the SpaceObject on the plane of the scene, connecting it to an existing
+         * SpaceObject where possible (e.g. not the first SpaceObject placed, and only connected where specified by the
+         * SpaceObject - such as a doorway).
+         */
         private void GenerateSpace(GraphType missionGraph)
         {
-            // Carry out a BFS through missionGraph. For each node, retrieve the correct SpaceObjectByMissionSymbol
-            // based on the node's symbol and place the SpaceObject on the plane of the scene, connecting it to
-            // an existing SpaceObject where possible (i.e. not the first SpaceObject placed, and only connected where
-            // specified by the SpaceObject - such as a doorway).
             foreach (NodeType startNode in missionGraph.StartNodes)
             {
                 BreadthFirstSpaceGeneration(missionGraph, startNode);
