@@ -147,8 +147,7 @@ namespace GenGra
                 Debug.Log($"[Graph {graph.id} | Node: {node.id}] symbol: {node.symbol}");
             }
 
-            if (graph.Edges == null || graph.Edges.Edge == null) return;
-
+            if (graph.Edges?.Edge == null) return;
             for (int j = 0; j < graph.Edges.Edge.Length; j++)
             {
                 EdgeType edge = graph.Edges.Edge[j];
@@ -164,34 +163,35 @@ namespace GenGra
             // specified by the SpaceObject - such as a doorway).
             foreach (NodeType startNode in missionGraph.StartNodes)
             {
-                BFS(missionGraph, startNode);
+                BreadthFirstSearch(missionGraph, startNode);
             }
         }
 
-        private void BFS(GraphType graph, NodeType startNode)
+        private void BreadthFirstSearch(GraphType graph, NodeType startNode)
         {
             IList<string> visitedNodeIds = new List<string>(graph.Nodes.Node.Length);
-            Queue<NodeType> queue = new Queue<NodeType>();
+            Queue<Tuple<NodeType, GameObject[]>> queue = new Queue<Tuple<NodeType, GameObject[]>>();
 
             visitedNodeIds.Add(startNode.id);
-            BuildSpaceForMissionSymbol(startNode.symbol);
-            queue.Enqueue(startNode);
+            GameObject[] startNodeSpaceObjects = BuildSpaceForMissionSymbol(startNode.symbol);
+            queue.Enqueue(Tuple.Create(startNode, startNodeSpaceObjects));
 
             while (queue.Count != 0)
             {
-                NodeType currentNode = queue.Dequeue();
+                (NodeType currentNode, GameObject[] currentNodeSpaceObjects) = queue.Dequeue();
                 IList<NodeType> adjacentNodes = graph.AdjacencyList[currentNode.id];
                 foreach (NodeType adjacentNode in adjacentNodes)
                 {
                     if (visitedNodeIds.Contains(adjacentNode.id)) continue;
                     visitedNodeIds.Add(adjacentNode.id);
-                    BuildSpaceForMissionSymbol(adjacentNode.symbol);
-                    queue.Enqueue(adjacentNode);
+                    GameObject[] adjacentNodeSpaceObjects = BuildSpaceForMissionSymbol(
+                        adjacentNode.symbol, currentNodeSpaceObjects);
+                    queue.Enqueue(Tuple.Create(adjacentNode, adjacentNodeSpaceObjects));
                 }
             }
         }
 
-        private void BuildSpaceForMissionSymbol(string missionSymbol)
+        private GameObject[] BuildSpaceForMissionSymbol(string missionSymbol, GameObject[] relativeSpaceObjects = null)
         {
             try
             {
@@ -204,7 +204,8 @@ namespace GenGra
                                                         $"{buildingInstructionsPrefab}. Please check validity of " +
                                                         "this prefab.");
                 }
-                buildingInstructions.Build();
+
+                return buildingInstructions.Build(relativeSpaceObjects);
             }
             catch (KeyNotFoundException)
             {
