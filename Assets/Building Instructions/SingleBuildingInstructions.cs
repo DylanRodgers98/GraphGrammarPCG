@@ -50,7 +50,7 @@ public class SingleBuildingInstructions : BuildingInstructions
 
         
         /*
-         * Calculate position and rotation of space object to be instantiated
+         * Calculate position of space object to be instantiated
          */
         
         Vector3 thisObjectPosition = spaceObjectPrefab.transform.position;
@@ -62,8 +62,19 @@ public class SingleBuildingInstructions : BuildingInstructions
         Vector3 vectorBetweenCenters = thisAttachmentPointVectorFromCenter + relativeAttachmentPointVectorFromCenter;
 
         Vector3 spaceObjectPosition = relativeObjectPosition + vectorBetweenCenters;
-        Quaternion spaceObjectRotation = Quaternion.Euler(0, relativeAttachmentPoint.eulerAngles.y - 180, 0);
         
-        return new []{Instantiate(spaceObjectPrefab, spaceObjectPosition, spaceObjectRotation)};
+        
+        // calculate rotation of space object to be instantiated
+        float y = thisAttachmentPoint.eulerAngles.y - relativeAttachmentPoint.eulerAngles.y - 180;
+        Quaternion spaceObjectRotation = Quaternion.Euler(0, y, 0);
+        
+        GameObject instantiated = Instantiate(spaceObjectPrefab, spaceObjectPosition, spaceObjectRotation);
+        
+        // destroy used attachment points
+        Transform instantiatedAttachmentPoint = instantiated.transform.Find(thisAttachmentPoint.name);
+        Destroy(instantiatedAttachmentPoint.gameObject);
+        Destroy(relativeAttachmentPoint.gameObject);
+        
+        return new[] {instantiated};
     }
 }
