@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace GenGra
@@ -147,30 +148,55 @@ namespace GenGra
             });
         }
 
-        private bool DualSearch(GraphType otherGraph, IDictionary<string, NodeType> markedNodes = null)
+        private bool DualSearch(GraphType otherGraph, IDictionary<string, IList<NodeType>> markedNodes = null)
         {
             foreach (NodeType startNode in otherGraph.StartNodes)
             {
+                IList<IDictionary<string, IList<NodeType>>> markedNodesList = new List<IDictionary<string, IList<NodeType>>>();
+                
                 IList<NodeType> sourceNodes = new List<NodeType> {startNode};
-
-                bool isSuccessfulCandidate = false;
                 IList<NodeType> nodeCandidates = NodeSymbolMap[startNode.symbol];
+                
+                bool markNodesForAllNodeCandidates = markedNodes != null && nodeCandidates.Count > 1;
+                bool successfulCandidateFound = false;
+                
                 foreach (NodeType nodeCandidate in nodeCandidates)
                 {
                     IList<NodeType> thisNodes = new List<NodeType> {nodeCandidate};
-                    isSuccessfulCandidate = DualSearch(otherGraph, thisNodes, sourceNodes, markedNodes);
-                    if (isSuccessfulCandidate) break;
-                    markedNodes?.Clear();
+
+                    IDictionary<string, IList<NodeType>> candidateMarkedNodes = markNodesForAllNodeCandidates
+                        ? new Dictionary<string, IList<NodeType>>()
+                        : markedNodes;
+
+                    bool isSuccessfulCandidate = DualSearch(otherGraph, thisNodes, sourceNodes, candidateMarkedNodes);
+                    if (!isSuccessfulCandidate) continue;
+                    successfulCandidateFound = true;
+                    
+                    if (markedNodes == null) break; // not marking nodes means we don't need to search every node, so break
+                    if (markNodesForAllNodeCandidates)
+                    {
+                        markedNodesList.Add(candidateMarkedNodes);
+                    }
                 }
 
-                if (!isSuccessfulCandidate) return false;
+                if (!successfulCandidateFound) return false;
+                if (!markNodesForAllNodeCandidates) continue;
+
+                // pick a random collection of marked nodes to use and add contents to original markedNodes Dictionary
+                IDictionary<string, IList<NodeType>> markedNodesToUse = 
+                    markedNodesList[Random.Range(0, markedNodesList.Count - 1)];
+
+                foreach (KeyValuePair<string, IList<NodeType>> keyValuePair in markedNodesToUse)
+                {
+                    markedNodes[keyValuePair.Key] = keyValuePair.Value;
+                }
             }
 
             return true;
         }
 
         private bool DualSearch(GraphType otherGraph, IList<NodeType> thisNodes, IList<NodeType> otherNodes,
-            IDictionary<string, NodeType> markedNodes = null, IList<string> visitedOtherNodes = null)
+            IDictionary<string, IList<NodeType>> markedNodes = null, IList<string> visitedOtherNodes = null)
         {
             visitedOtherNodes = visitedOtherNodes ?? new List<string>(otherGraph.Nodes.Node.Length);
 
@@ -196,7 +222,11 @@ namespace GenGra
                     }
                     else if (markedNodes != null)
                     {
-                        markedNodes[otherNode.id] = thisNode;
+                        if (!markedNodes.ContainsKey(otherNode.id))
+                        {
+                            markedNodes[otherNode.id] = new List<NodeType>();
+                        }
+                        markedNodes[otherNode.id].Add(thisNode);
                     }
                 }
 
@@ -208,13 +238,21 @@ namespace GenGra
 
         private IDictionary<string, NodeType> FindSubgraphAndMarkNodes(GraphType otherGraph)
         {
-            IDictionary<string, NodeType> markedNodes = new Dictionary<string, NodeType>();
+            IDictionary<string, IList<NodeType>> candidateMarkedNodes = new Dictionary<string, IList<NodeType>>();
 
-            bool isSupergraphOfSourceGraph = DualSearch(otherGraph, markedNodes);
+            bool isSupergraphOfSourceGraph = DualSearch(otherGraph, candidateMarkedNodes);
             if (!isSupergraphOfSourceGraph)
             {
                 throw new InvalidOperationException($"No subgraph found in graph {id} matching source graph" +
                                                     $" {otherGraph.id}, so cannot carry out find and replace operation");
+            }
+
+            IDictionary<string, NodeType> markedNodes = new Dictionary<string, NodeType>();
+            foreach (KeyValuePair<string, IList<NodeType>> keyValuePair in candidateMarkedNodes)
+            {
+                IList<NodeType> nodes = keyValuePair.Value;
+                NodeType nodeToUse = nodes.Count == 1 ? nodes[0] : nodes[Random.Range(0, nodes.Count - 1)];
+                markedNodes[keyValuePair.Key] = nodeToUse;
             }
 
             return markedNodes;
