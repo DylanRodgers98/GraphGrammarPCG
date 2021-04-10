@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class SinglePlacementBuildingInstructions : BuildingInstructions
 {
@@ -15,17 +16,31 @@ public class SinglePlacementBuildingInstructions : BuildingInstructions
         }
 
         Transform thisAttachmentPoint = GetRandomAttachmentPoint(spaceObjectPrefab);
-        Transform relativeAttachmentPoint = GetRandomAttachmentPoint(relativeSpaceObjects);
+        IList<Transform> relativeAttachmentPoints = GetAttachmentPoints(relativeSpaceObjects);
 
-        Quaternion spaceObjectRotation = CalculateInstantiationRotation(thisAttachmentPoint, relativeAttachmentPoint);
+        while (relativeAttachmentPoints.Count > 0)
+        {
+            Transform relativeAttachmentPoint = GetRandomAttachmentPoint(relativeAttachmentPoints);
+            Quaternion spaceObjectRotation = CalculateInstantiationRotation(thisAttachmentPoint, relativeAttachmentPoint);
+            GameObject instantiated = Instantiate(spaceObjectPrefab, relativeAttachmentPoint.position, spaceObjectRotation);
+            Transform instantiatedAttachmentPoint = instantiated.transform.Find(thisAttachmentPoint.name);
+            Vector3 translation = instantiated.transform.position - instantiatedAttachmentPoint.position;
+            instantiated.transform.Translate(translation, Space.World);
 
-        GameObject instantiated = Instantiate(spaceObjectPrefab, relativeAttachmentPoint.position, spaceObjectRotation);
-        Transform instantiatedAttachmentPoint = instantiated.transform.Find(thisAttachmentPoint.name);
-        Vector3 translation = instantiated.transform.position - instantiatedAttachmentPoint.position;
-        instantiated.transform.Translate(translation, Space.World);
+            if (Physics.OverlapBox(instantiated.transform.position, instantiated.transform.localScale / 2 * 0.99f).Length > 1)
+            {
+                DestroyImmediate(instantiated);
+                relativeAttachmentPoints.Remove(relativeAttachmentPoint);
+            }
+            else
+            {
+                DestroyAttachmentPoints(instantiatedAttachmentPoint, relativeAttachmentPoint);
+                return new[] {instantiated};
+            }
+        }
         
-        DestroyAttachmentPoints(instantiatedAttachmentPoint, relativeAttachmentPoint);
-
-        return new[] {instantiated};
+        throw new CannotBuildException("There are no available attachment points to attach the GameObject to. " +
+                                       "This may be because the scene has no space near the relative space objects " +
+                                       $"to instantiate {spaceObjectPrefab}.");
     }
 }

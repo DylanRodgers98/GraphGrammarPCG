@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -11,19 +12,30 @@ public abstract class BuildingInstructions : MonoBehaviour
 
     protected static Transform GetRandomAttachmentPoint(params GameObject[] spaceObjects)
     {
-        Transform[] attachmentPoints = spaceObjects
+        IList<Transform> attachmentPoints = GetAttachmentPoints(spaceObjects);
+        return GetRandomAttachmentPoint(attachmentPoints);
+    }
+
+    protected static IList<Transform> GetAttachmentPoints(params GameObject[] spaceObjects)
+    {
+        IList<Transform> attachmentPoints = spaceObjects
             .SelectMany(spaceObject => spaceObject.transform.Cast<Transform>())
             .Where(child => child.CompareTag("AttachmentPoint"))
-            .ToArray();
+            .ToList();
 
-        if (attachmentPoints.Length == 0)
+        if (attachmentPoints.Count == 0)
         {
             throw new InvalidOperationException($"No space objects in {spaceObjects} have a child object with " +
                                                 "the 'AttachmentPoint' tag. This tag is required to instantiate one " +
                                                 "the GameObjects attached to an existing GameObject in the scene.");
         }
 
-        return attachmentPoints[Random.Range(0, attachmentPoints.Length)];
+        return attachmentPoints;
+    }
+    
+    protected static Transform GetRandomAttachmentPoint(IList<Transform> attachmentPoints)
+    {
+        return attachmentPoints[Random.Range(0, attachmentPoints.Count)];
     }
 
     protected static void DestroyAttachmentPoints(params Transform[] attachmentPoints)
@@ -47,5 +59,10 @@ public abstract class BuildingInstructions : MonoBehaviour
         {
             throw new ArgumentException("Space Object Prefab cannot be null");
         }
+    }
+
+    protected class CannotBuildException : Exception
+    {
+        public CannotBuildException(string message) : base(message) {}
     }
 }
