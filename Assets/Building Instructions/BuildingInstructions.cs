@@ -30,27 +30,15 @@ public abstract class BuildingInstructions : MonoBehaviour
     {
         foreach (Transform attachmentPoint in attachmentPoints)
         {
-            Destroy(attachmentPoint.gameObject);
+            DestroyImmediate(attachmentPoint.gameObject);
         }
     }
 
     protected static Quaternion CalculateInstantiationRotation(Transform attachmentPoint1, Transform attachmentPoint2)
     {
-        float y = attachmentPoint1.eulerAngles.y - attachmentPoint2.eulerAngles.y - 180;
+        float targetY = attachmentPoint2.eulerAngles.y - 180;
+        float y = targetY - attachmentPoint1.eulerAngles.y;
         return Quaternion.Euler(0, y, 0);
-    }
-
-    protected Vector3 CalculateInstantiationPosition(Transform attachmentPoint1, Transform attachmentPoint2)
-    {
-        Vector3 thisObjectPosition = spaceObjectPrefab.transform.position;
-        Vector3 thisAttachmentPointVectorFromCenter = attachmentPoint1.position - thisObjectPosition;
-
-        Vector3 relativeObjectPosition = attachmentPoint2.parent.position;
-        Vector3 relativeAttachmentPointVectorFromCenter = attachmentPoint2.position - relativeObjectPosition;
-
-        Vector3 vectorBetweenCenters = thisAttachmentPointVectorFromCenter + relativeAttachmentPointVectorFromCenter;
-
-        return relativeObjectPosition + vectorBetweenCenters;
     }
 
     protected void ValidateSpaceObjectPrefab()

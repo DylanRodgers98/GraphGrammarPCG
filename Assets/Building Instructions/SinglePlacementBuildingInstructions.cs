@@ -17,12 +17,13 @@ public class SinglePlacementBuildingInstructions : BuildingInstructions
         Transform thisAttachmentPoint = GetRandomAttachmentPoint(spaceObjectPrefab);
         Transform relativeAttachmentPoint = GetRandomAttachmentPoint(relativeSpaceObjects);
 
-        Vector3 spaceObjectPosition = CalculateInstantiationPosition(thisAttachmentPoint, relativeAttachmentPoint);
         Quaternion spaceObjectRotation = CalculateInstantiationRotation(thisAttachmentPoint, relativeAttachmentPoint);
 
-        GameObject instantiated = Instantiate(spaceObjectPrefab, spaceObjectPosition, spaceObjectRotation);
-
+        GameObject instantiated = Instantiate(spaceObjectPrefab, relativeAttachmentPoint.position, spaceObjectRotation);
         Transform instantiatedAttachmentPoint = instantiated.transform.Find(thisAttachmentPoint.name);
+        Vector3 translation = instantiated.transform.position - instantiatedAttachmentPoint.position;
+        instantiated.transform.Translate(translation, Space.World);
+        
         DestroyAttachmentPoints(instantiatedAttachmentPoint, relativeAttachmentPoint);
 
         return new[] {instantiated};
