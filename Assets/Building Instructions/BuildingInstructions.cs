@@ -42,7 +42,10 @@ public abstract class BuildingInstructions : MonoBehaviour
     {
         foreach (Transform attachmentPoint in attachmentPoints)
         {
-            DestroyImmediate(attachmentPoint.gameObject);
+            if (attachmentPoint.CompareTag("AttachmentPoint"))
+            {
+                DestroyImmediate(attachmentPoint.gameObject);
+            }
         }
     }
 

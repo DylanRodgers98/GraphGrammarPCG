@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6194704272844896702
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3866587378087573944}
+  - component: {fileID: 7931808476367907837}
+  m_Layer: 0
+  m_Name: Dormans Building Instructions Factory
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3866587378087573944
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6194704272844896702}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.8265452, y: -0.61608505, z: -2.2376404}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7931808476367907837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6194704272844896702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5d737e6e9c80664da017fc0db23e44a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingInstructionsByMissionSymbol:
+  - missionSymbol: bl
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}
+  - missionSymbol: bm
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}
+  - missionSymbol: e
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}
+  - missionSymbol: g
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}
+  - missionSymbol: ib
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}
+  - missionSymbol: iq
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}
+  - missionSymbol: k
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}
+  - missionSymbol: kf
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}
+  - missionSymbol: km
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}
+  - missionSymbol: l
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}
+  - missionSymbol: lf
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}
+  - missionSymbol: lm
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}
+  - missionSymbol: n
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}
+  - missionSymbol: t
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}
+  - missionSymbol: ti
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}
+  - missionSymbol: ts
+    buildingInstructionsPrefab: {fileID: 3925856625312752115, guid: bf08087c27b95e74693cd24e5fd89842,
+      type: 3}

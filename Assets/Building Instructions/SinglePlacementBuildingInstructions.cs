@@ -26,8 +26,8 @@ public class SinglePlacementBuildingInstructions : BuildingInstructions
             Transform instantiatedAttachmentPoint = instantiated.transform.Find(thisAttachmentPoint.name);
             Vector3 translation = instantiated.transform.position - instantiatedAttachmentPoint.position;
             instantiated.transform.Translate(translation, Space.World);
-
-            if (Physics.OverlapBox(instantiated.transform.position, instantiated.transform.localScale / 2 * 0.99f).Length > 1)
+            
+            if (DoesInstantiatedOverlapOtherSpaceObjects(instantiated))
             {
                 DestroyImmediate(instantiated);
                 relativeAttachmentPoints.Remove(relativeAttachmentPoint);
@@ -42,5 +42,13 @@ public class SinglePlacementBuildingInstructions : BuildingInstructions
         throw new CannotBuildException("There are no available attachment points to attach the GameObject to. " +
                                        "This may be because the scene has no space near the relative space objects " +
                                        $"to instantiate {spaceObjectPrefab}.");
+    }
+
+    private static bool DoesInstantiatedOverlapOtherSpaceObjects(GameObject instantiated)
+    {
+        Collider[] colliders = new Collider[2];
+        int numberOfObjectsAtInstantiatedLocation = Physics.OverlapBoxNonAlloc(instantiated.transform.position, 
+            instantiated.transform.localScale / 2 * 0.99f, colliders);
+        return numberOfObjectsAtInstantiatedLocation > 1;
     }
 }
