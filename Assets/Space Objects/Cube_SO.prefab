@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9028949727752742070}
   m_Layer: 0
   m_Name: Attachment Point 2
-  m_TagString: AttachmentPoint
+  m_TagString: ExitPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 8253188802142725577}
   m_Layer: 0
   m_Name: Attachment Point 3
-  m_TagString: AttachmentPoint
+  m_TagString: ExitPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -71,7 +71,7 @@ GameObject:
   - component: {fileID: 2976728797036188190}
   m_Layer: 0
   m_Name: Attachment Point 4
-  m_TagString: AttachmentPoint
+  m_TagString: ExitPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -198,7 +198,7 @@ GameObject:
   - component: {fileID: 1954131021816929683}
   m_Layer: 0
   m_Name: Attachment Point 1
-  m_TagString: AttachmentPoint
+  m_TagString: EntrancePoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

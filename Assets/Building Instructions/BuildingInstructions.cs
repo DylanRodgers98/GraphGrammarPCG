@@ -53,24 +53,28 @@ public abstract class BuildingInstructions : MonoBehaviour
         return attachmentPoints[Random.Range(0, attachmentPoints.Count)];
     }
 
-    protected static void DestroyAttachmentPoints(params Transform[] attachmentPoints)
-    {
-        foreach (Transform attachmentPoint in attachmentPoints)
-        {
-            if (attachmentPoint.CompareTag(AttachmentPointTag) || 
-                attachmentPoint.CompareTag(EntrancePointTag) || 
-                attachmentPoint.CompareTag(ExitPointTag))
-            {
-                DestroyImmediate(attachmentPoint.gameObject);
-            }
-        }
-    }
-
     protected static Quaternion CalculateInstantiationRotation(Transform attachmentPoint1, Transform attachmentPoint2)
     {
         float targetY = attachmentPoint2.eulerAngles.y - 180;
         float y = targetY - attachmentPoint1.eulerAngles.y;
         return Quaternion.Euler(0, y, 0);
+    }
+
+    protected GameObject InstantiateSpaceObject(Vector3 position, Quaternion rotation, Transform attachmentPoint)
+    {
+        GameObject instantiated = Instantiate(spaceObjectPrefab, position, rotation);
+        Transform instantiatedAttachmentPoint = instantiated.transform.Find(attachmentPoint.name);
+        Vector3 translation = instantiated.transform.position - instantiatedAttachmentPoint.position;
+        instantiated.transform.Translate(translation, Space.World);
+        
+        if (DoesInstantiatedOverlapOtherSpaceObjects(instantiated))
+        {
+            DestroyImmediate(instantiated);
+            return null;
+        }
+        
+        DestroyImmediate(instantiatedAttachmentPoint);
+        return instantiated;
     }
 
     protected void ValidateSpaceObjectPrefab()
@@ -86,5 +90,13 @@ public abstract class BuildingInstructions : MonoBehaviour
         public CannotBuildException(string message) : base(message)
         {
         }
+    }
+    
+    private static bool DoesInstantiatedOverlapOtherSpaceObjects(GameObject instantiated)
+    {
+        Collider[] colliders = new Collider[2];
+        int numberOfObjectsAtInstantiatedLocation = Physics.OverlapBoxNonAlloc(instantiated.transform.position, 
+            instantiated.transform.localScale / 2 * 0.99f, colliders);
+        return numberOfObjectsAtInstantiatedLocation > 1;
     }
 }
