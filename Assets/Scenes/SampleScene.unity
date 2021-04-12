@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 253273371}
   - component: {fileID: 253273372}
   m_Layer: 0
-  m_Name: GenGraParser
+  m_Name: Dungeon Generator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

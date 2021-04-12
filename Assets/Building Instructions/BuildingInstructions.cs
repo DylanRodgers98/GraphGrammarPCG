@@ -26,8 +26,8 @@ public abstract class BuildingInstructions : MonoBehaviour
         if (attachmentPoints.Count == 0)
         {
             throw new InvalidOperationException($"No space objects in {spaceObjects} have a child object with " +
-                                                "the 'AttachmentPoint' tag. This tag is required to instantiate one " +
-                                                "the GameObjects attached to an existing GameObject in the scene.");
+                                                "the 'AttachmentPoint' tag. This tag is required to instantiate " +
+                                                "the GameObject attached to an existing GameObject in the scene.");
         }
 
         return attachmentPoints;

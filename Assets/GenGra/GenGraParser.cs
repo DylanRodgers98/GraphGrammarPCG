@@ -94,10 +94,13 @@ namespace GenGra
          */
         private void GenerateSpace(GraphType missionGraph)
         {
-            foreach (NodeType startNode in missionGraph.StartNodes)
+            int numStartNodes = missionGraph.StartNodes.Length;
+            if (numStartNodes > 1)
             {
-                BreadthFirstSpaceGeneration(missionGraph, startNode);
+                throw new InvalidOperationException("Mission graph cannot have more than 1 start node. " +
+                                                    $"It currently has {numStartNodes}.");
             }
+            BreadthFirstSpaceGeneration(missionGraph, missionGraph.StartNodes[0]);
         }
 
         private void BreadthFirstSpaceGeneration(GraphType graph, NodeType startNode)
