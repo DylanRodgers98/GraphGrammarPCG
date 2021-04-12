@@ -18,23 +18,56 @@ public class SinglePlacementBuildingInstructions : BuildingInstructions
         Transform thisAttachmentPoint = GetRandomEntrancePoint(spaceObjectPrefab);
         IList<Transform> relativeAttachmentPoints = GetExitPoints(relativeSpaceObjects);
 
-        while (relativeAttachmentPoints.Count > 0)
+        IList<Transform> otherAttachmentPoints = new List<Transform>(relativeAttachmentPoints);
+        bool isTryingNonRelativeAttachmentPoints = false;
+
+        while (otherAttachmentPoints.Count > 0)
         {
-            Transform relativeAttachmentPoint = GetRandomAttachmentPoint(relativeAttachmentPoints);
-            Quaternion spaceObjectRotation = CalculateInstantiationRotation(thisAttachmentPoint, relativeAttachmentPoint);
-            GameObject instantiated = InstantiateSpaceObject(relativeAttachmentPoint.position, spaceObjectRotation, thisAttachmentPoint);
-            
+            Transform otherAttachmentPoint = GetRandomAttachmentPoint(otherAttachmentPoints);
+            Quaternion spaceObjectRotation = CalculateInstantiationRotation(thisAttachmentPoint, otherAttachmentPoint);
+            GameObject instantiated = InstantiateSpaceObject(otherAttachmentPoint.position, spaceObjectRotation, thisAttachmentPoint);
+
             if (instantiated != null)
             {
-                DestroyImmediate(relativeAttachmentPoint);
+                DestroyImmediate(otherAttachmentPoint.gameObject);
                 return new[] {instantiated};
             }
+
+            otherAttachmentPoints.Remove(otherAttachmentPoint);
+            if (otherAttachmentPoints.Count > 0 || isTryingNonRelativeAttachmentPoints) continue;
             
-            relativeAttachmentPoints.Remove(relativeAttachmentPoint);
+            Debug.LogWarning("Exhausted all relative attachment points. Trying non-relative attachment points.");
+            otherAttachmentPoints = GetNonRelativeAttachmentPoints(relativeAttachmentPoints);
+            isTryingNonRelativeAttachmentPoints = true;
         }
+
+        throw new CannotBuildException("There are no available attachment points to attach the GameObject to, " +
+                                       $"so cannot instantiate {spaceObjectPrefab}.");
+    }
+
+    private static IList<Transform> GetNonRelativeAttachmentPoints(ICollection<Transform> relativeAttachmentPoints)
+    {
+        IList<Transform> nonRelativeAttachmentPoints = new List<Transform>();
         
-        throw new CannotBuildException("There are no available attachment points to attach the GameObject to. " +
-                                       "This may be because the scene has no space near the relative space objects " +
-                                       $"to instantiate {spaceObjectPrefab}.");
+        GameObject[] attachmentPoints = GameObject.FindGameObjectsWithTag(AttachmentPointTag);
+        GameObject[] exitPoints = GameObject.FindGameObjectsWithTag(ExitPointTag);
+                
+        foreach (GameObject attachmentPoint in attachmentPoints)
+        {
+            if (!relativeAttachmentPoints.Contains(attachmentPoint.transform))
+            {
+                nonRelativeAttachmentPoints.Add(attachmentPoint.transform);
+            }
+        }
+
+        foreach (GameObject exitPoint in exitPoints)
+        {
+            if (!relativeAttachmentPoints.Contains(exitPoint.transform))
+            {
+                nonRelativeAttachmentPoints.Add(exitPoint.transform);
+            }
+        }
+
+        return nonRelativeAttachmentPoints;
     }
 }
