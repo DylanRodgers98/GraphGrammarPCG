@@ -15,8 +15,8 @@ public class SinglePlacementBuildingInstructions : BuildingInstructions
             return new[] {Instantiate(spaceObjectPrefab, Vector3.zero, Quaternion.identity)};
         }
 
-        Transform thisAttachmentPoint = GetRandomAttachmentPoint(spaceObjectPrefab);
-        IList<Transform> relativeAttachmentPoints = GetAttachmentPoints(relativeSpaceObjects);
+        Transform thisAttachmentPoint = GetRandomEntrancePoint(spaceObjectPrefab);
+        IList<Transform> relativeAttachmentPoints = GetExitPoints(relativeSpaceObjects);
 
         while (relativeAttachmentPoints.Count > 0)
         {

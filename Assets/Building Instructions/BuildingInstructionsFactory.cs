@@ -28,7 +28,7 @@ public class BuildingInstructionsFactory : MonoBehaviour
             return buildingInstructionsByMissionSymbolDict;
         }
     }
-    
+
     public GameObject[] Build(string missionSymbol, GameObject[] relativeSpaceObjects = null)
     {
         try
@@ -50,7 +50,7 @@ public class BuildingInstructionsFactory : MonoBehaviour
                                                 "Instructions By Mission Symbol array.");
         }
     }
-    
+
     /**
      * This struct is a workaround to allow GameObjects to be mapped to a string in the Unity editor in a
      * similar vein to using a Dictionary, because IDictionary is not serializable by the Unity engine.
