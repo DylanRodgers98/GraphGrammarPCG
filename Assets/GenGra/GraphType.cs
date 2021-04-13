@@ -56,8 +56,8 @@ namespace GenGra
 
         private void CalculateAdjacencyList()
         {
-            adjacencyList = new Dictionary<string, IList<NodeType>>();
-            IDictionary<string, NodeType> nodes = new Dictionary<string, NodeType>();
+            adjacencyList = new Dictionary<string, IList<NodeType>>(Nodes.Node.Length);
+            IDictionary<string, NodeType> nodes = new Dictionary<string, NodeType>(Nodes.Node.Length);
 
             foreach (NodeType node in Nodes.Node)
             {
@@ -151,12 +151,14 @@ namespace GenGra
         {
             foreach (NodeType startNode in otherGraph.StartNodes)
             {
-                IList<IDictionary<string, IList<NodeType>>> markedNodesList = new List<IDictionary<string, IList<NodeType>>>();
-                
                 IList<NodeType> sourceNodes = new List<NodeType> {startNode};
                 IList<NodeType> nodeCandidates = NodeSymbolMap[startNode.symbol];
                 
                 bool markNodesForAllNodeCandidates = markedNodes != null && nodeCandidates.Count > 1;
+                IList<IDictionary<string, IList<NodeType>>> markedNodesList = markNodesForAllNodeCandidates 
+                    ? new List<IDictionary<string, IList<NodeType>>>()
+                    : null;
+
                 bool successfulCandidateFound = false;
                 
                 foreach (NodeType nodeCandidate in nodeCandidates)
@@ -246,7 +248,7 @@ namespace GenGra
                                                     $" {otherGraph.id}, so cannot carry out find and replace operation");
             }
 
-            IDictionary<string, NodeType> markedNodes = new Dictionary<string, NodeType>();
+            IDictionary<string, NodeType> markedNodes = new Dictionary<string, NodeType>(candidateMarkedNodes.Count);
             foreach (KeyValuePair<string, IList<NodeType>> keyValuePair in candidateMarkedNodes)
             {
                 IList<NodeType> nodes = keyValuePair.Value;
