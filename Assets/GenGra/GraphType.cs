@@ -174,14 +174,11 @@ namespace GenGra
                     successfulCandidateFound = true;
                     
                     if (candidateMarkedNodes == null) break; // not marking nodes means we don't need to search every node, so break
-                    if (markNodesForAllNodeCandidates)
-                    {
-                        markedNodesList.Add(candidateMarkedNodes);
-                    }
+                    markedNodesList?.Add(candidateMarkedNodes);
                 }
 
                 if (!successfulCandidateFound) return false;
-                if (!markNodesForAllNodeCandidates) continue;
+                if (markedNodesList == null) continue;
 
                 // pick a random collection of marked nodes to use and add contents to original markedNodes Dictionary
                 IDictionary<string, IList<NodeType>> markedNodesToUse = 
