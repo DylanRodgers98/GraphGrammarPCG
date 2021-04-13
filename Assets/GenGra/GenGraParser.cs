@@ -43,11 +43,19 @@ namespace GenGra
 
             long timeBeforeSpaceGeneration = stopwatch.ElapsedMilliseconds;
 
-            GenerateSpace(missionGraph);
+            IDictionary<string, GameObject[]> generatedSpace = GenerateSpace(missionGraph);
 
             long timeAfterSpaceGeneration = stopwatch.ElapsedMilliseconds;
             long spaceGenerationTime = timeAfterSpaceGeneration - timeBeforeSpaceGeneration;
             Debug.Log($"Space generation completed in: {spaceGenerationTime}ms");
+
+            long timeBeforePostProcessing = stopwatch.ElapsedMilliseconds;
+            
+            PostProcess(missionGraph, generatedSpace);
+
+            long timeAfterPostProcessing = stopwatch.ElapsedMilliseconds;
+            long postProcessingTime = timeAfterPostProcessing - timeBeforePostProcessing;
+            Debug.Log($"Post processing completed in: {postProcessingTime}ms");
 
             stopwatch.Stop();
             Debug.Log($"Total execution completed in: {stopwatch.ElapsedMilliseconds}ms");
@@ -92,7 +100,7 @@ namespace GenGra
          * SpaceObject where possible (e.g. not the first SpaceObject placed, and only connected where specified by the
          * SpaceObject - such as a doorway).
          */
-        private void GenerateSpace(GraphType missionGraph)
+        private IDictionary<string, GameObject[]> GenerateSpace(GraphType missionGraph)
         {
             int numStartNodes = missionGraph.StartNodes.Length;
             if (numStartNodes > 1)
@@ -100,16 +108,16 @@ namespace GenGra
                 throw new InvalidOperationException("Mission graph cannot have more than 1 start node. " +
                                                     $"It currently has {numStartNodes}.");
             }
-            BreadthFirstSpaceGeneration(missionGraph, missionGraph.StartNodes[0]);
+            return BreadthFirstSpaceGeneration(missionGraph, missionGraph.StartNodes[0]);
         }
 
-        private void BreadthFirstSpaceGeneration(GraphType graph, NodeType startNode)
+        private IDictionary<string, GameObject[]> BreadthFirstSpaceGeneration(GraphType graph, NodeType startNode)
         {
-            IList<string> visitedNodeIds = new List<string>(graph.Nodes.Node.Length);
+            IDictionary<string, GameObject[]> generatedSpace = new Dictionary<string, GameObject[]>(graph.Nodes.Node.Length);
             Queue<Tuple<NodeType, GameObject[]>> queue = new Queue<Tuple<NodeType, GameObject[]>>();
 
-            visitedNodeIds.Add(startNode.id);
             GameObject[] startNodeSpaceObjects = BuildSpaceForMissionSymbol(startNode.symbol);
+            generatedSpace[startNode.id] = startNodeSpaceObjects;
             queue.Enqueue(Tuple.Create(startNode, startNodeSpaceObjects));
 
             while (queue.Count != 0)
@@ -118,13 +126,15 @@ namespace GenGra
                 IList<NodeType> adjacentNodes = graph.AdjacencyList[currentNode.id];
                 foreach (NodeType adjacentNode in adjacentNodes)
                 {
-                    if (visitedNodeIds.Contains(adjacentNode.id)) continue;
-                    visitedNodeIds.Add(adjacentNode.id);
+                    if (generatedSpace.ContainsKey(adjacentNode.id)) continue;
                     GameObject[] adjacentNodeSpaceObjects = BuildSpaceForMissionSymbol(
                         adjacentNode.symbol, currentNodeSpaceObjects);
+                    generatedSpace[adjacentNode.id] = adjacentNodeSpaceObjects;
                     queue.Enqueue(Tuple.Create(adjacentNode, adjacentNodeSpaceObjects));
                 }
             }
+
+            return generatedSpace;
         }
 
         private GameObject[] BuildSpaceForMissionSymbol(string missionSymbol, GameObject[] relativeSpaceObjects = null)
@@ -136,6 +146,14 @@ namespace GenGra
             }
 
             return buildingInstructionsFactory.Build(missionSymbol, relativeSpaceObjects);
+        }
+
+        private void PostProcess(GraphType missionGraph, IDictionary<string, GameObject[]> generatedSpace)
+        {
+            foreach (PostProcessor postProcessor in GetComponents<PostProcessor>())
+            {
+                postProcessor.Process(missionGraph, generatedSpace);
+            }
         }
     }
 }

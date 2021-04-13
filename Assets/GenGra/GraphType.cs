@@ -171,7 +171,7 @@ namespace GenGra
                     if (!isSuccessfulCandidate) continue;
                     successfulCandidateFound = true;
                     
-                    if (markedNodes == null) break; // not marking nodes means we don't need to search every node, so break
+                    if (candidateMarkedNodes == null) break; // not marking nodes means we don't need to search every node, so break
                     if (markNodesForAllNodeCandidates)
                     {
                         markedNodesList.Add(candidateMarkedNodes);

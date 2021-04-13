@@ -8,7 +8,7 @@ public class SinglePlacementBuildingInstructions : BuildingInstructions
         ValidateSpaceObjectPrefab();
 
         GameObject spaceObjectPrefab = GetRandomSpaceObject();
-        
+
         // if no relative space objects exist, instantiate this space object at (0, 0, 0)
         // as this should be the first instantiated space object (TODO: add validation around this assumption)
         if (relativeSpaceObjects == null || relativeSpaceObjects.Length == 0)
@@ -21,7 +21,7 @@ public class SinglePlacementBuildingInstructions : BuildingInstructions
 
         IList<Transform> availableExitPoints;
         bool isTryingNonRelativeExitPoints;
-        
+
         if (relativeExitPoints.Count == 0)
         {
             availableExitPoints = GetNonRelativeExitPoints();
@@ -47,22 +47,22 @@ public class SinglePlacementBuildingInstructions : BuildingInstructions
 
             availableExitPoints.Remove(exitPoint);
             if (availableExitPoints.Count > 0 || isTryingNonRelativeExitPoints) continue;
-            
+
             availableExitPoints = GetNonRelativeExitPoints(relativeExitPoints);
             isTryingNonRelativeExitPoints = true;
         }
 
         throw new CannotBuildException("There are no available exit points to attach the GameObject to, " +
-                                       $"so cannot instantiate {spaceObjectPrefab}.");
+                                       $"so cannot instantiate {spaceObjectPrefab}");
     }
 
     private static IList<Transform> GetNonRelativeExitPoints(ICollection<Transform> relativeAttachmentPoints = null)
     {
         IList<Transform> nonRelativeAttachmentPoints = new List<Transform>();
-        
+
         GameObject[] attachmentPoints = GameObject.FindGameObjectsWithTag(AttachmentPointTag);
         GameObject[] exitPoints = GameObject.FindGameObjectsWithTag(ExitPointTag);
-                
+
         foreach (GameObject attachmentPoint in attachmentPoints)
         {
             if (relativeAttachmentPoints == null || !relativeAttachmentPoints.Contains(attachmentPoint.transform))

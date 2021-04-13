@@ -10,7 +10,7 @@ public class MultiplePlacementBuildingInstructions : SinglePlacementBuildingInst
     public override GameObject[] Build(GameObject[] relativeSpaceObjects = null)
     {
         ValidateMultiplicity();
-        
+
         IList<GameObject> instantiated = new List<GameObject>(multiplicity);
 
         for (int i = 0; i < multiplicity; i++)

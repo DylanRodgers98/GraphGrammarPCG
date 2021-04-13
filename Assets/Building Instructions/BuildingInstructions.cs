@@ -9,7 +9,7 @@ public abstract class BuildingInstructions : MonoBehaviour
     protected const string AttachmentPointTag = "AttachmentPoint";
     protected const string EntrancePointTag = "EntrancePoint";
     protected const string ExitPointTag = "ExitPoint";
-    
+
     [SerializeField] private GameObject[] spaceObjectVariants;
 
     public abstract GameObject[] Build(GameObject[] relativeSpaceObjects = null);
@@ -23,10 +23,10 @@ public abstract class BuildingInstructions : MonoBehaviour
     protected static IList<Transform> GetEntrancePoints(params GameObject[] spaceObjects)
     {
         IList<Transform> entrancePoints = GetAttachmentPoints(EntrancePointTag, spaceObjects);
-        
+
         if (entrancePoints.Count == 0)
         {
-            throw new InvalidOperationException($"No space objects in {spaceObjects} have a child object with " + 
+            throw new InvalidOperationException($"No space objects in {spaceObjects} have a child object with " +
                                                 $"the 'AttachmentPoint' tag or the '{EntrancePointTag}' tag. These " +
                                                 "tags are required to instantiate the GameObject attached to an " +
                                                 "existing GameObject in the scene.");
@@ -59,13 +59,13 @@ public abstract class BuildingInstructions : MonoBehaviour
         Transform instantiatedAttachmentPoint = instantiated.transform.Find(attachmentPoint.name);
         Vector3 translation = instantiated.transform.position - instantiatedAttachmentPoint.position;
         instantiated.transform.Translate(translation, Space.World);
-        
+
         if (DoesInstantiatedOverlapOtherSpaceObjects(instantiated))
         {
             DestroyImmediate(instantiated);
             return null;
         }
-        
+
         DestroyImmediate(instantiatedAttachmentPoint.gameObject);
         return instantiated;
     }
@@ -81,10 +81,10 @@ public abstract class BuildingInstructions : MonoBehaviour
     {
         if (spaceObjectVariants == null || spaceObjectVariants.Length == 0)
         {
-            throw new ArgumentException("Space Object Prefab cannot be null");
+            throw new ArgumentException("Space Object Variants array cannot be null or empty");
         }
     }
-    
+
     private static IList<Transform> GetAttachmentPoints(string entranceOrExitPointTag, params GameObject[] spaceObjects)
     {
         return spaceObjects
@@ -92,11 +92,11 @@ public abstract class BuildingInstructions : MonoBehaviour
             .Where(child => child.CompareTag(AttachmentPointTag) || child.CompareTag(entranceOrExitPointTag))
             .ToList();
     }
-    
+
     private static bool DoesInstantiatedOverlapOtherSpaceObjects(GameObject instantiated)
     {
         Collider[] colliders = new Collider[2];
-        int numberOfObjectsAtInstantiatedLocation = Physics.OverlapBoxNonAlloc(instantiated.transform.position, 
+        int numberOfObjectsAtInstantiatedLocation = Physics.OverlapBoxNonAlloc(instantiated.transform.position,
             instantiated.transform.localScale / 2 * 0.99f, colliders);
         return numberOfObjectsAtInstantiatedLocation > 1;
     }
