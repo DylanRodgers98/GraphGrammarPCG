@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3358409513943909401}
   - component: {fileID: -864211287476225444}
   m_Layer: 0
-  m_Name: MultipleCubes_BI
+  m_Name: ThreeCubes_BI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,6 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cb815d4704a473418107160a1587cfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spaceObjectPrefab: {fileID: 4140046003887018756, guid: b2c103e787994314c9e0743949a326ae,
-    type: 3}
+  spaceObjectVariants:
+  - {fileID: 4140046003887018756, guid: b2c103e787994314c9e0743949a326ae, type: 3}
   multiplicity: 3

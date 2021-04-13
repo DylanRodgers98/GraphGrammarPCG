@@ -10,8 +10,7 @@ public class MultiplePlacementBuildingInstructions : SinglePlacementBuildingInst
     public override GameObject[] Build(GameObject[] relativeSpaceObjects = null)
     {
         ValidateMultiplicity();
-        Debug.Log($"[Multiple Placement Building Instructions] Space Object: {spaceObjectPrefab} | Multiplicity: {multiplicity}");
-
+        
         IList<GameObject> instantiated = new List<GameObject>(multiplicity);
 
         for (int i = 0; i < multiplicity; i++)
