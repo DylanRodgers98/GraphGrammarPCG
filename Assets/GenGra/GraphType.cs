@@ -42,7 +42,7 @@ namespace GenGra
 
         public bool IsSupergraphOf(GraphType otherGraph)
         {
-            return HasAllSymbolsIn(otherGraph) && DualSearch(otherGraph);
+            return HasAllSymbolsIn(otherGraph) && SubgraphSearch(otherGraph);
         }
 
         public void FindAndReplace(GraphType sourceGraph, GraphType targetGraph)
@@ -147,7 +147,7 @@ namespace GenGra
             });
         }
 
-        private bool DualSearch(GraphType otherGraph, IDictionary<string, IList<NodeType>> markedNodes = null)
+        private bool SubgraphSearch(GraphType otherGraph, IDictionary<string, IList<NodeType>> markedNodes = null)
         {
             foreach (NodeType startNode in otherGraph.StartNodes)
             {
@@ -169,7 +169,7 @@ namespace GenGra
                         ? new Dictionary<string, IList<NodeType>>()
                         : markedNodes;
 
-                    bool isSuccessfulCandidate = DualSearch(otherGraph, thisNodes, sourceNodes, candidateMarkedNodes);
+                    bool isSuccessfulCandidate = SubgraphSearch(otherGraph, thisNodes, sourceNodes, candidateMarkedNodes);
                     if (!isSuccessfulCandidate) continue;
                     successfulCandidateFound = true;
                     
@@ -193,7 +193,7 @@ namespace GenGra
             return true;
         }
 
-        private bool DualSearch(GraphType otherGraph, IList<NodeType> thisNodes, IList<NodeType> otherNodes,
+        private bool SubgraphSearch(GraphType otherGraph, IList<NodeType> thisNodes, IList<NodeType> otherNodes,
             IDictionary<string, IList<NodeType>> markedNodes = null, IList<string> visitedOtherNodes = null)
         {
             visitedOtherNodes = visitedOtherNodes ?? new List<string>(otherGraph.Nodes.Node.Length);
@@ -211,7 +211,7 @@ namespace GenGra
 
                     IList<NodeType> thisAdjacentNodes = AdjacencyList[thisNode.id];
                     IList<NodeType> otherAdjacentNodes = otherGraph.AdjacencyList[otherNode.id];
-                    matchingNodeFound = DualSearch(otherGraph, thisAdjacentNodes,
+                    matchingNodeFound = SubgraphSearch(otherGraph, thisAdjacentNodes,
                         otherAdjacentNodes, markedNodes, visitedOtherNodes);
 
                     if (!matchingNodeFound)
@@ -238,7 +238,7 @@ namespace GenGra
         {
             IDictionary<string, IList<NodeType>> candidateMarkedNodes = new Dictionary<string, IList<NodeType>>();
 
-            bool isSupergraphOfSourceGraph = DualSearch(otherGraph, candidateMarkedNodes);
+            bool isSupergraphOfSourceGraph = SubgraphSearch(otherGraph, candidateMarkedNodes);
             if (!isSupergraphOfSourceGraph)
             {
                 throw new InvalidOperationException($"No subgraph found in graph {id} matching source graph" +
