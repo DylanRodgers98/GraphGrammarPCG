@@ -114,23 +114,24 @@ namespace GenGra
         private IDictionary<string, GameObject[]> BreadthFirstSpaceGeneration(GraphType graph, NodeType startNode)
         {
             IDictionary<string, GameObject[]> generatedSpace = new Dictionary<string, GameObject[]>(graph.Nodes.Node.Length);
-            Queue<Tuple<NodeType, GameObject[]>> queue = new Queue<Tuple<NodeType, GameObject[]>>();
+            Queue<string> nodeIdQueue = new Queue<string>();
 
             GameObject[] startNodeSpaceObjects = BuildSpaceForMissionSymbol(startNode.symbol);
             generatedSpace[startNode.id] = startNodeSpaceObjects;
-            queue.Enqueue(Tuple.Create(startNode, startNodeSpaceObjects));
+            nodeIdQueue.Enqueue(startNode.id);
 
-            while (queue.Count != 0)
+            while (nodeIdQueue.Count != 0)
             {
-                (NodeType currentNode, GameObject[] currentNodeSpaceObjects) = queue.Dequeue();
-                IList<NodeType> adjacentNodes = graph.AdjacencyList[currentNode.id];
+                string currentNodeId = nodeIdQueue.Dequeue();
+                IList<NodeType> adjacentNodes = graph.AdjacencyList[currentNodeId];
                 foreach (NodeType adjacentNode in adjacentNodes)
                 {
                     if (generatedSpace.ContainsKey(adjacentNode.id)) continue;
+                    GameObject[] currentNodeSpaceObjects = generatedSpace[currentNodeId];
                     GameObject[] adjacentNodeSpaceObjects = BuildSpaceForMissionSymbol(
                         adjacentNode.symbol, currentNodeSpaceObjects);
                     generatedSpace[adjacentNode.id] = adjacentNodeSpaceObjects;
-                    queue.Enqueue(Tuple.Create(adjacentNode, adjacentNodeSpaceObjects));
+                    nodeIdQueue.Enqueue(adjacentNode.id);
                 }
             }
 
