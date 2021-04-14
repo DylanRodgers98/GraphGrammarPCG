@@ -66,7 +66,7 @@ MonoBehaviour:
     buildingInstructionsPrefab: {fileID: 8332849604517794979, guid: cc8e867bc5e2e16488dd68135ec24699,
       type: 3}
   - missionSymbol: e
-    buildingInstructionsPrefab: {fileID: 4538226566311355583, guid: 6de962ca0719bf14bac7a58ef48f2aa0,
+    buildingInstructionsPrefab: {fileID: 1388669498736643094, guid: 0472bd30c07c9bd4381408bd93f0b84d,
       type: 3}
   - missionSymbol: g
     buildingInstructionsPrefab: {fileID: 7733555358758681724, guid: 45036a3c48fe59042b1dca7d319dea5d,
