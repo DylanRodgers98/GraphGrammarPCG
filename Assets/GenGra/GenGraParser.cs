@@ -19,18 +19,11 @@ namespace GenGra
 
             long timeBeforeXmlDeserialization = stopwatch.ElapsedMilliseconds;
 
-            GenGraType genGra;
-            using (FileStream fileStream = new FileStream(missionGraphGrammarFilePath, FileMode.Open))
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(GenGraType));
-                genGra = (GenGraType) serializer.Deserialize(fileStream);
-            }
+            GenGraType genGra = DeserializeGenGraXML();
 
             long timeAfterXmlDeserialization = stopwatch.ElapsedMilliseconds;
             long xmlDeserializationTime = timeAfterXmlDeserialization - timeBeforeXmlDeserialization;
             Debug.Log($"XML deserialization completed in: {xmlDeserializationTime}ms");
-
-            DebugLogDeserialization(genGra);
 
             long timeBeforeGraphTransformation = stopwatch.ElapsedMilliseconds;
 
@@ -38,8 +31,8 @@ namespace GenGra
 
             long timeAfterGraphTransformation = stopwatch.ElapsedMilliseconds;
             long graphTransformationTime = timeAfterGraphTransformation - timeBeforeGraphTransformation;
-            Debug.Log($"Mission graph generation completed in: {graphTransformationTime}ms");
             DebugLogGraph(missionGraph);
+            Debug.Log($"Mission graph generation completed in: {graphTransformationTime}ms");
 
             long timeBeforeSpaceGeneration = stopwatch.ElapsedMilliseconds;
 
@@ -61,22 +54,14 @@ namespace GenGra
             Debug.Log($"Total execution completed in: {stopwatch.ElapsedMilliseconds}ms");
         }
 
-        // TODO: remove this method when done prototyping
-        private void DebugLogDeserialization(GenGraType genGra)
+        private GenGraType DeserializeGenGraXML()
         {
-            foreach (GraphType graph in genGra.Graphs.Graph)
+            using (FileStream fileStream = new FileStream(missionGraphGrammarFilePath, FileMode.Open))
             {
-                DebugLogGraph(graph);
+                XmlSerializer serializer = new XmlSerializer(typeof(GenGraType));
+                return (GenGraType) serializer.Deserialize(fileStream);
             }
-
-            Debug.Log($"[Grammar] StartGraph: {genGra.Grammar.StartGraph.@ref}");
-            RuleType[] rules = genGra.Grammar.Rules.Rule;
-            for (int i = 0; i < rules.Length; i++)
-            {
-                RuleType rule = rules[i];
-                Debug.Log($"[Grammar | Rule {i + 1}] source: {rule.source} | target: {rule.target}");
-            }
-        }
+        } 
 
         // TODO: remove this method when done prototyping
         private void DebugLogGraph(GraphType graph)
