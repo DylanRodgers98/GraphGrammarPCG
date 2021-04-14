@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6194704272844896702
+--- !u!1 &837739251547752404
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,36 +8,51 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3866587378087573944}
-  - component: {fileID: 7931808476367907837}
+  - component: {fileID: 837739251547752406}
+  - component: {fileID: 837739251547752401}
+  - component: {fileID: 2556065000719060197}
+  - component: {fileID: 837739251547752407}
   m_Layer: 0
-  m_Name: Dormans Building Instructions Factory
+  m_Name: Dormans Dungeon Generator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3866587378087573944
+--- !u!4 &837739251547752406
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6194704272844896702}
+  m_GameObject: {fileID: 837739251547752404}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.8265452, y: -0.61608505, z: -2.2376404}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7931808476367907837
+--- !u!114 &837739251547752401
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6194704272844896702}
+  m_GameObject: {fileID: 837739251547752404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a11148189c4fe1c4595fef51d045fc44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  missionGraphGrammarFilePath: Assets/GenGra/dormans-grammar.xml
+--- !u!114 &2556065000719060197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837739251547752404}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5d737e6e9c80664da017fc0db23e44a, type: 3}
@@ -92,3 +107,15 @@ MonoBehaviour:
   - missionSymbol: ts
     buildingInstructionsPrefab: {fileID: 4538226566311355583, guid: 6de962ca0719bf14bac7a58ef48f2aa0,
       type: 3}
+--- !u!114 &837739251547752407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837739251547752404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6088384a6b5f798459952e927c59a968, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

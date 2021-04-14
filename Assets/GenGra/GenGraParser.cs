@@ -6,10 +6,10 @@ using UnityEngine;
 
 namespace GenGra
 {
+    [RequireComponent(typeof(BuildingInstructionsFactory))]
     public class GenGraParser : MonoBehaviour
     {
         [SerializeField] private string missionGraphGrammarFilePath;
-        [SerializeField] private GameObject buildingInstructionsFactoryPrefab;
         private BuildingInstructionsFactory buildingInstructionsFactory;
 
         void Start()
@@ -127,8 +127,7 @@ namespace GenGra
         {
             if (buildingInstructionsFactory == null)
             {
-                buildingInstructionsFactory = buildingInstructionsFactoryPrefab
-                    .GetComponent<BuildingInstructionsFactory>();
+                buildingInstructionsFactory = GetComponent<BuildingInstructionsFactory>();
             }
 
             return buildingInstructionsFactory.Build(missionSymbol, relativeSpaceObjects);
