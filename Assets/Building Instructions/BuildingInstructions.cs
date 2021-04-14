@@ -6,9 +6,9 @@ using Random = UnityEngine.Random;
 
 public abstract class BuildingInstructions : MonoBehaviour
 {
-    protected const string AttachmentPointTag = "AttachmentPoint";
-    protected const string EntrancePointTag = "EntrancePoint";
-    protected const string ExitPointTag = "ExitPoint";
+    public const string AttachmentPointTag = "AttachmentPoint";
+    public const string EntrancePointTag = "EntrancePoint";
+    public const string ExitPointTag = "ExitPoint";
 
     [SerializeField] private GameObject[] spaceObjectVariants;
 
