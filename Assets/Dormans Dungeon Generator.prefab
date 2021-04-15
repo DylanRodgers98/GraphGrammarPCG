@@ -60,10 +60,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingInstructionsByMissionSymbol:
   - missionSymbol: bl
-    buildingInstructionsPrefab: {fileID: 8332849604517794979, guid: cc8e867bc5e2e16488dd68135ec24699,
+    buildingInstructionsPrefab: {fileID: 8641044939069163260, guid: 690d84ef7344cf54d842d678491cb5cf,
       type: 3}
   - missionSymbol: bm
-    buildingInstructionsPrefab: {fileID: 8332849604517794979, guid: cc8e867bc5e2e16488dd68135ec24699,
+    buildingInstructionsPrefab: {fileID: 8641044939069163260, guid: 690d84ef7344cf54d842d678491cb5cf,
       type: 3}
   - missionSymbol: e
     buildingInstructionsPrefab: {fileID: 1388669498736643094, guid: 0472bd30c07c9bd4381408bd93f0b84d,
@@ -72,28 +72,28 @@ MonoBehaviour:
     buildingInstructionsPrefab: {fileID: 7733555358758681724, guid: 45036a3c48fe59042b1dca7d319dea5d,
       type: 3}
   - missionSymbol: ib
-    buildingInstructionsPrefab: {fileID: 8332849604517794979, guid: cc8e867bc5e2e16488dd68135ec24699,
+    buildingInstructionsPrefab: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
       type: 3}
   - missionSymbol: iq
-    buildingInstructionsPrefab: {fileID: 8332849604517794979, guid: cc8e867bc5e2e16488dd68135ec24699,
+    buildingInstructionsPrefab: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
       type: 3}
   - missionSymbol: k
-    buildingInstructionsPrefab: {fileID: 4538226566311355583, guid: 6de962ca0719bf14bac7a58ef48f2aa0,
+    buildingInstructionsPrefab: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
       type: 3}
   - missionSymbol: kf
-    buildingInstructionsPrefab: {fileID: 8332849604517794979, guid: cc8e867bc5e2e16488dd68135ec24699,
+    buildingInstructionsPrefab: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
       type: 3}
   - missionSymbol: km
-    buildingInstructionsPrefab: {fileID: 8332849604517794979, guid: cc8e867bc5e2e16488dd68135ec24699,
+    buildingInstructionsPrefab: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
       type: 3}
   - missionSymbol: l
-    buildingInstructionsPrefab: {fileID: 1151101686877800287, guid: 640119e4b426e9746b018bb10d165e65,
+    buildingInstructionsPrefab: {fileID: 3491742149654382603, guid: fc3c6fc020766ed40834e0197d5b35b2,
       type: 3}
   - missionSymbol: lf
-    buildingInstructionsPrefab: {fileID: 8332849604517794979, guid: cc8e867bc5e2e16488dd68135ec24699,
+    buildingInstructionsPrefab: {fileID: 1594512451508645890, guid: 1644032802a6c3441b2c89393fc9f5b1,
       type: 3}
   - missionSymbol: lm
-    buildingInstructionsPrefab: {fileID: 8332849604517794979, guid: cc8e867bc5e2e16488dd68135ec24699,
+    buildingInstructionsPrefab: {fileID: 1594512451508645890, guid: 1644032802a6c3441b2c89393fc9f5b1,
       type: 3}
   - missionSymbol: n
     buildingInstructionsPrefab: {fileID: 2152583560514882903, guid: 5635bc17478d7834cbea1543979c5371,
