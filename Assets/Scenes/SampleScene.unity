@@ -369,5 +369,23 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1388669498736643094, guid: 0472bd30c07c9bd4381408bd93f0b84d,
         type: 3}
+    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
+        type: 3}
+      propertyPath: buildingInstructionsByMissionSymbol.Array.data[9].buildingInstructionsPrefab
+      value: 
+      objectReference: {fileID: 3491742149654382603, guid: fc3c6fc020766ed40834e0197d5b35b2,
+        type: 3}
+    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
+        type: 3}
+      propertyPath: buildingInstructionsByMissionSymbol.Array.data[10].buildingInstructionsPrefab
+      value: 
+      objectReference: {fileID: 1594512451508645890, guid: 1644032802a6c3441b2c89393fc9f5b1,
+        type: 3}
+    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
+        type: 3}
+      propertyPath: buildingInstructionsByMissionSymbol.Array.data[11].buildingInstructionsPrefab
+      value: 
+      objectReference: {fileID: 1594512451508645890, guid: 1644032802a6c3441b2c89393fc9f5b1,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a04c8d09d9edf6c488e0ed734d884c3e, type: 3}
