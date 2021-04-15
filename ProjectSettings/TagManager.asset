@@ -7,6 +7,8 @@ TagManager:
   - AttachmentPoint
   - EntrancePoint
   - ExitPoint
+  - Lock
+  - Key
   layers:
   - Default
   - TransparentFX
