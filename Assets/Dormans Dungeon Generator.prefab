@@ -99,13 +99,13 @@ MonoBehaviour:
     buildingInstructionsPrefab: {fileID: 2152583560514882903, guid: 5635bc17478d7834cbea1543979c5371,
       type: 3}
   - missionSymbol: t
-    buildingInstructionsPrefab: {fileID: 4538226566311355583, guid: 6de962ca0719bf14bac7a58ef48f2aa0,
+    buildingInstructionsPrefab: {fileID: 6840560483175785107, guid: 9671322966d62c04d941c8c22a9c697e,
       type: 3}
   - missionSymbol: ti
-    buildingInstructionsPrefab: {fileID: 8332849604517794979, guid: cc8e867bc5e2e16488dd68135ec24699,
+    buildingInstructionsPrefab: {fileID: 8766852099338467340, guid: 3e3f23c82c03ed74781aa1a2ee19e512,
       type: 3}
   - missionSymbol: ts
-    buildingInstructionsPrefab: {fileID: 4538226566311355583, guid: 6de962ca0719bf14bac7a58ef48f2aa0,
+    buildingInstructionsPrefab: {fileID: 6840560483175785107, guid: 9671322966d62c04d941c8c22a9c697e,
       type: 3}
 --- !u!114 &837739251547752407
 MonoBehaviour:
