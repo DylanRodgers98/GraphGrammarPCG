@@ -53,6 +53,11 @@ namespace GenGra
             InsertEdgesBetweenMarkedNodes(targetGraph, markedNodes);
             RecalculateFields();
         }
+        
+        public bool HasNodesForSymbols(params string[] symbols)
+        {
+            return symbols.All(symbol => symbol != null && NodeSymbolMap.ContainsKey(symbol));
+        }
 
         private void CalculateAdjacencyList()
         {

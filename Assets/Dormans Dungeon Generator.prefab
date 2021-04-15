@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 837739251547752401}
   - component: {fileID: 2556065000719060197}
   - component: {fileID: 837739251547752407}
+  - component: {fileID: -2502878175280443817}
   m_Layer: 0
   m_Name: Dormans Dungeon Generator
   m_TagString: Untagged
@@ -119,3 +120,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6088384a6b5f798459952e927c59a968, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-2502878175280443817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837739251547752404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 643ca44c73ef2a14aac413ee46831467, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockSymbol: l
+  keySymbol: k
+  lockMultiSymbol: lm
+  keyMultiSymbol: km
+  lockFinalSymbol: lf
+  keyFinalSymbol: kf

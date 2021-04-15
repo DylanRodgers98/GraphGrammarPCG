@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 6386074101238431252}
   - component: {fileID: 6405568751953792898}
   - component: {fileID: 6396443785857536210}
+  - component: {fileID: -1237980696807691978}
   m_Layer: 0
   m_Name: Wall with Door
-  m_TagString: Untagged
+  m_TagString: Lock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -80,6 +81,18 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &-1237980696807691978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6383289030945436600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8bfb070b66201042ba1c28c329c399b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6383842311834516184
 GameObject:
   m_ObjectHideFlags: 0
