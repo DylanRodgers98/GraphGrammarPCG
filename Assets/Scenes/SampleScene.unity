@@ -387,5 +387,35 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1594512451508645890, guid: 1644032802a6c3441b2c89393fc9f5b1,
         type: 3}
+    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
+        type: 3}
+      propertyPath: buildingInstructionsByMissionSymbol.Array.data[4].buildingInstructionsPrefab
+      value: 
+      objectReference: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
+        type: 3}
+    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
+        type: 3}
+      propertyPath: buildingInstructionsByMissionSymbol.Array.data[5].buildingInstructionsPrefab
+      value: 
+      objectReference: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
+        type: 3}
+    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
+        type: 3}
+      propertyPath: buildingInstructionsByMissionSymbol.Array.data[6].buildingInstructionsPrefab
+      value: 
+      objectReference: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
+        type: 3}
+    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
+        type: 3}
+      propertyPath: buildingInstructionsByMissionSymbol.Array.data[7].buildingInstructionsPrefab
+      value: 
+      objectReference: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
+        type: 3}
+    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
+        type: 3}
+      propertyPath: buildingInstructionsByMissionSymbol.Array.data[8].buildingInstructionsPrefab
+      value: 
+      objectReference: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a04c8d09d9edf6c488e0ed734d884c3e, type: 3}
