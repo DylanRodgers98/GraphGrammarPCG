@@ -175,23 +175,26 @@ namespace GenGra
                         : markedNodes;
 
                     bool isSuccessfulCandidate = SubgraphSearch(otherGraph, thisNodes, sourceNodes, candidateMarkedNodes);
-                    if (!isSuccessfulCandidate) continue;
-                    successfulCandidateFound = true;
-                    
-                    if (candidateMarkedNodes == null) break; // not marking nodes means we don't need to search every node, so break
-                    markedNodesList?.Add(candidateMarkedNodes);
+                    if (isSuccessfulCandidate)
+                    {
+                        successfulCandidateFound = true;
+                        if (!markNodesForAllNodeCandidates) break; // not marking nodes for all candidates means we don't need to search every node, so break
+                        markedNodesList.Add(candidateMarkedNodes);
+                    }
                 }
 
                 if (!successfulCandidateFound) return false;
-                if (markedNodesList == null) continue;
-
-                // pick a random collection of marked nodes to use and add contents to original markedNodes Dictionary
-                IDictionary<string, IList<NodeType>> markedNodesToUse = 
-                    markedNodesList[Random.Range(0, markedNodesList.Count - 1)];
-
-                foreach (KeyValuePair<string, IList<NodeType>> keyValuePair in markedNodesToUse)
+                
+                if (markNodesForAllNodeCandidates)
                 {
-                    markedNodes[keyValuePair.Key] = keyValuePair.Value;
+                    // pick a random collection of marked nodes to use and add contents to original markedNodes Dictionary
+                    IDictionary<string, IList<NodeType>> markedNodesToUse = 
+                        markedNodesList[Random.Range(0, markedNodesList.Count - 1)];
+
+                    foreach (KeyValuePair<string, IList<NodeType>> keyValuePair in markedNodesToUse)
+                    {
+                        markedNodes[keyValuePair.Key] = keyValuePair.Value;
+                    }
                 }
             }
 
