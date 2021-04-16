@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6405568751953792898}
   - component: {fileID: 6396443785857536210}
   - component: {fileID: -1237980696807691978}
+  - component: {fileID: 6445869455089796240}
   m_Layer: 0
   m_Name: Wall with Door
   m_TagString: Lock
@@ -93,6 +94,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8bfb070b66201042ba1c28c329c399b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actionKey: 101
+--- !u!135 &6445869455089796240
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6383289030945436600}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.6
+  m_Center: {x: 0, y: 0.65, z: 0}
 --- !u!1 &6383842311834516184
 GameObject:
   m_ObjectHideFlags: 0

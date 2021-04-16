@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private IList<GameObject> inventory;
+    private readonly IList<GameObject> inventory = new List<GameObject>();
 
     public void AddItemToInventory(GameObject item)
     {
