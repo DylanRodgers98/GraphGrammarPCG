@@ -45,12 +45,13 @@ namespace GenGra
                 IList<NodeType> adjacentNodes = missionGraph.AdjacencyList[keyNode.id];
                 foreach (NodeType adjacentNode in adjacentNodes)
                 {
-                    if (adjacentNode.symbol != lockSymbol) continue;
-                    
-                    ConnectLockAndKey(generatedSpace, adjacentNode.id, keyNode.id);
-                    usedLockNodes.Add(adjacentNode);
-                    isLockNodeAdjacent = true;
-                    break;
+                    if (adjacentNode.symbol == lockSymbol)
+                    {
+                        ConnectLockAndKey(generatedSpace, adjacentNode.id, keyNode.id);
+                        usedLockNodes.Add(adjacentNode);
+                        isLockNodeAdjacent = true;
+                        break;
+                    }
                 }
 
                 if (!isLockNodeAdjacent)
@@ -79,28 +80,31 @@ namespace GenGra
             IDictionary<string, GameObject[]> generatedSpace)
         {
             IList<NodeType> lockMultiNodes = missionGraph.NodeSymbolMap[lockMultiSymbol];
-            if (lockMultiNodes.Count == 1)
+            if (lockMultiNodes.Count != 1)
             {
-                string lockId = lockMultiNodes[0].id;
-                IList<GameObject> locks = GetLocks(generatedSpace, lockId);
-                
-                if (locks.Count != 1)
-                {
-                    throw new InvalidOperationException($"Cannot connect multi keys to multi lock " +
-                                                        $"(ID: {lockId}) due to the wrong number of lock GameObjects " +
-                                                        $"corresponding to the lock's ID. Expected 1 but found " +
-                                                        $"{locks.Count}.");
-                }
-                
-                IList<GameObject> keys = missionGraph.NodeSymbolMap[keyMultiSymbol]
-                    .SelectMany(node => generatedSpace[node.id])
-                    .SelectMany(obj => obj.transform.Cast<Transform>())
-                    .Where(child => child.CompareTag("Key"))
-                    .Select(keyTransform => keyTransform.gameObject)
-                    .ToList();
-                
-                locks[0].GetComponent<LockedDoorBehavior>().SetRequiredKeys(keys);
+                throw new InvalidOperationException("Cannot connect multi keys to multi lock due to the wrong " +
+                                                    "number of lock nodes in mission graph corresponding to the lock " +
+                                                    $"final symbol '{lockMultiSymbol}'. Expected 1 but found " +
+                                                    $"{lockMultiNodes.Count}.");
             }
+        
+            string lockId = lockMultiNodes[0].id;
+            IList<GameObject> locks = GetLocks(generatedSpace, lockId);
+            if (locks.Count != 1)
+            {
+                throw new InvalidOperationException($"Cannot connect multi keys to multi lock (ID: {lockId}) " +
+                                                    "due to the wrong number of lock GameObjects corresponding to " +
+                                                    $"the lock's ID. Expected 1 but found {locks.Count}.");
+            }
+            
+            IList<GameObject> keys = missionGraph.NodeSymbolMap[keyMultiSymbol]
+                .SelectMany(node => generatedSpace[node.id])
+                .SelectMany(obj => obj.transform.Cast<Transform>())
+                .Where(child => child.CompareTag("Key"))
+                .Select(keyTransform => keyTransform.gameObject)
+                .ToList();
+            
+            locks[0].GetComponent<UnlockDoorAction>().SetRequiredKeys(keys);
         }
 
         private void ConnectFinalKeyToFinalLock(GraphType missionGraph,
@@ -131,7 +135,6 @@ namespace GenGra
             string keyId)
         {
             IList<GameObject> locks = GetLocks(generatedSpace, lockId);
-                    
             if (locks.Count != 1)
             {
                 throw new InvalidOperationException($"Cannot connect lock (ID: {lockId}) to key (ID: {keyId}) " +
@@ -140,7 +143,6 @@ namespace GenGra
             }
                     
             IList<GameObject> keys = GetKeys(generatedSpace, keyId);
-            
             if (keys.Count != 1)
             {
                 throw new InvalidOperationException($"Cannot connect lock (ID: {lockId}) to key (ID: {keyId}) " +
@@ -148,7 +150,7 @@ namespace GenGra
                                                     $"key's ID. Expected 1 but found {keys.Count}.");
             }
                     
-            locks[0].GetComponent<LockedDoorBehavior>().AddRequiredKey(keys[0]);
+            locks[0].GetComponent<UnlockDoorAction>().AddRequiredKey(keys[0]);
         }
 
         private static IList<GameObject> GetLocks(IDictionary<string, GameObject[]> generatedSpace, string nodeId)
