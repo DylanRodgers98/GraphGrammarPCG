@@ -79,13 +79,13 @@ MonoBehaviour:
     buildingInstructionsPrefab: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
       type: 3}
   - missionSymbol: k
-    buildingInstructionsPrefab: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
+    buildingInstructionsPrefab: {fileID: 3989953284891950604, guid: ffb396a8466a0f44ab3bcf0164d16993,
       type: 3}
   - missionSymbol: kf
-    buildingInstructionsPrefab: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
+    buildingInstructionsPrefab: {fileID: 3989953284891950604, guid: ffb396a8466a0f44ab3bcf0164d16993,
       type: 3}
   - missionSymbol: km
-    buildingInstructionsPrefab: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
+    buildingInstructionsPrefab: {fileID: 3989953284891950604, guid: ffb396a8466a0f44ab3bcf0164d16993,
       type: 3}
   - missionSymbol: l
     buildingInstructionsPrefab: {fileID: 3491742149654382603, guid: fc3c6fc020766ed40834e0197d5b35b2,

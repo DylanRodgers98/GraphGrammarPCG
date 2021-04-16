@@ -211,7 +211,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &963194225
 GameObject:
@@ -296,7 +296,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &837739251599631053
+--- !u!1001 &1379548045
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -346,7 +346,7 @@ PrefabInstance:
     - target: {fileID: 837739251547752406, guid: a04c8d09d9edf6c488e0ed734d884c3e,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 837739251547752406, guid: a04c8d09d9edf6c488e0ed734d884c3e,
         type: 3}
@@ -363,71 +363,5 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
-        type: 3}
-      propertyPath: buildingInstructionsByMissionSymbol.Array.data[2].buildingInstructionsPrefab
-      value: 
-      objectReference: {fileID: 1388669498736643094, guid: 0472bd30c07c9bd4381408bd93f0b84d,
-        type: 3}
-    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
-        type: 3}
-      propertyPath: buildingInstructionsByMissionSymbol.Array.data[9].buildingInstructionsPrefab
-      value: 
-      objectReference: {fileID: 3491742149654382603, guid: fc3c6fc020766ed40834e0197d5b35b2,
-        type: 3}
-    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
-        type: 3}
-      propertyPath: buildingInstructionsByMissionSymbol.Array.data[10].buildingInstructionsPrefab
-      value: 
-      objectReference: {fileID: 1594512451508645890, guid: 1644032802a6c3441b2c89393fc9f5b1,
-        type: 3}
-    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
-        type: 3}
-      propertyPath: buildingInstructionsByMissionSymbol.Array.data[11].buildingInstructionsPrefab
-      value: 
-      objectReference: {fileID: 1594512451508645890, guid: 1644032802a6c3441b2c89393fc9f5b1,
-        type: 3}
-    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
-        type: 3}
-      propertyPath: buildingInstructionsByMissionSymbol.Array.data[4].buildingInstructionsPrefab
-      value: 
-      objectReference: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
-        type: 3}
-    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
-        type: 3}
-      propertyPath: buildingInstructionsByMissionSymbol.Array.data[5].buildingInstructionsPrefab
-      value: 
-      objectReference: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
-        type: 3}
-    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
-        type: 3}
-      propertyPath: buildingInstructionsByMissionSymbol.Array.data[6].buildingInstructionsPrefab
-      value: 
-      objectReference: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
-        type: 3}
-    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
-        type: 3}
-      propertyPath: buildingInstructionsByMissionSymbol.Array.data[7].buildingInstructionsPrefab
-      value: 
-      objectReference: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
-        type: 3}
-    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
-        type: 3}
-      propertyPath: buildingInstructionsByMissionSymbol.Array.data[8].buildingInstructionsPrefab
-      value: 
-      objectReference: {fileID: 1704735383011037728, guid: 1e81974cadd32824da0ef12899f4ee35,
-        type: 3}
-    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
-        type: 3}
-      propertyPath: buildingInstructionsByMissionSymbol.Array.data[1].buildingInstructionsPrefab
-      value: 
-      objectReference: {fileID: 8641044939069163260, guid: 690d84ef7344cf54d842d678491cb5cf,
-        type: 3}
-    - target: {fileID: 2556065000719060197, guid: a04c8d09d9edf6c488e0ed734d884c3e,
-        type: 3}
-      propertyPath: buildingInstructionsByMissionSymbol.Array.data[0].buildingInstructionsPrefab
-      value: 
-      objectReference: {fileID: 8641044939069163260, guid: 690d84ef7344cf54d842d678491cb5cf,
-        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a04c8d09d9edf6c488e0ed734d884c3e, type: 3}
