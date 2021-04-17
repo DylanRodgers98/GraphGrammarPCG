@@ -97,11 +97,11 @@ namespace GenGra
                                                     $"the lock's ID. Expected 1 but found {locks.Count}.");
             }
             
-            IList<GameObject> keys = missionGraph.NodeSymbolMap[keyMultiSymbol]
+            IList<Item> keys = missionGraph.NodeSymbolMap[keyMultiSymbol]
                 .SelectMany(node => generatedSpace[node.id])
-                .SelectMany(obj => obj.transform.Cast<Transform>())
+                .SelectMany(spaceObject => spaceObject.transform.Cast<Transform>())
                 .Where(child => child.CompareTag("Key"))
-                .Select(keyTransform => keyTransform.gameObject)
+                .Select(keyTransform => keyTransform.GetComponent<Item>())
                 .ToList();
             
             locks[0].GetComponent<UnlockDoorAction>().SetRequiredKeys(keys);
@@ -149,8 +149,9 @@ namespace GenGra
                                                     "due to the wrong number of key GameObjects corresponding to the " +
                                                     $"key's ID. Expected 1 but found {keys.Count}.");
             }
-                    
-            locks[0].GetComponent<UnlockDoorAction>().AddRequiredKey(keys[0]);
+
+            Item key = keys[0].GetComponent<Item>();
+            locks[0].GetComponent<UnlockDoorAction>().AddRequiredKey(key);
         }
 
         private static IList<GameObject> GetLocks(IDictionary<string, GameObject[]> generatedSpace, string nodeId)
@@ -167,7 +168,7 @@ namespace GenGra
             string nodeId, string tag)
         {
             return generatedSpace[nodeId]
-                .SelectMany(obj => obj.transform.Cast<Transform>())
+                .SelectMany(spaceObject => spaceObject.transform.Cast<Transform>())
                 .Where(child => child.CompareTag(tag))
                 .Select(transform => transform.gameObject)
                 .ToList();

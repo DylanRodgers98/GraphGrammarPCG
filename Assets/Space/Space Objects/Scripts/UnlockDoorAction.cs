@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 public class UnlockDoorAction : Actionable
 {
     private bool isDoorLocked = true;
-    private IList<GameObject> requiredKeys;
+    private IList<Item> requiredKeys;
 
     protected override void DoAction()
     {
@@ -15,17 +14,17 @@ public class UnlockDoorAction : Actionable
         }
     }
 
-    public void AddRequiredKey(GameObject requiredKey)
+    public void AddRequiredKey(Item requiredKey)
     {
         if (requiredKeys == null)
         {
-            requiredKeys = new List<GameObject>();
+            requiredKeys = new List<Item>();
         }
 
         requiredKeys.Add(requiredKey);
     }
 
-    public void SetRequiredKeys(IList<GameObject> requiredKeys)
+    public void SetRequiredKeys(IList<Item> requiredKeys)
     {
         if (this.requiredKeys == null)
         {
@@ -33,7 +32,7 @@ public class UnlockDoorAction : Actionable
         }
         else
         {
-            foreach (GameObject requiredKey in requiredKeys)
+            foreach (Item requiredKey in requiredKeys)
             {
                 this.requiredKeys.Add(requiredKey);
             }

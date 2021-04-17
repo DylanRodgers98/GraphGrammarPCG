@@ -9,6 +9,7 @@ TagManager:
   - ExitPoint
   - Lock
   - Key
+  - Item
   layers:
   - Default
   - TransparentFX

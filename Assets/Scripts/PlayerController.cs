@@ -3,14 +3,19 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private readonly IList<GameObject> inventory = new List<GameObject>();
+    private IList<Item> inventory;
 
-    public void AddItemToInventory(GameObject item)
+    private void Start()
+    {
+        inventory = new List<Item>();
+    }
+
+    public void AddItemToInventory(Item item)
     {
         inventory.Add(item);
     }
 
-    public bool DoesInventoryContainItem(GameObject item)
+    public bool DoesInventoryContainItem(Item item)
     {
         return inventory.Contains(item);
     }
