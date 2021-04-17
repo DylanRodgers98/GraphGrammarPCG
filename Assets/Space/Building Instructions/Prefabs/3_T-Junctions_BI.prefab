@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8393590569108798052}
   - component: {fileID: 3213790403840098041}
   m_Layer: 0
-  m_Name: n_BI
+  m_Name: 3_T-Junctions_BI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,5 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spaceObjectVariants:
-  - {fileID: 5307552915949802491, guid: b2421eee422e87c42bf67acced0066e3, type: 3}
+  - spaceObject: {fileID: 5307552915949802491, guid: b2421eee422e87c42bf67acced0066e3,
+      type: 3}
+    weighting: 1
   multiplicity: 3

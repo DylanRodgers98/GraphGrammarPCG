@@ -10,7 +10,7 @@ public abstract class BuildingInstructions : MonoBehaviour
     public const string EntrancePointTag = "EntrancePoint";
     public const string ExitPointTag = "ExitPoint";
 
-    [SerializeField] private GameObject[] spaceObjectVariants;
+    [SerializeField] private WeightedSpaceObject[] spaceObjectVariants;
 
     public abstract GameObject[] Build(GameObject[] relativeSpaceObjects = null);
 
@@ -72,9 +72,35 @@ public abstract class BuildingInstructions : MonoBehaviour
 
     protected GameObject GetRandomSpaceObject()
     {
-        return spaceObjectVariants.Length == 1
-            ? spaceObjectVariants[0]
-            : spaceObjectVariants[Random.Range(0, spaceObjectVariants.Length - 1)];
+        if (spaceObjectVariants.Length == 1)
+        {
+            return spaceObjectVariants[0].SpaceObject;
+        }
+        
+        int totalWeighting = 0;
+        foreach (WeightedSpaceObject spaceObjectVariant in spaceObjectVariants)
+        {
+            if (spaceObjectVariant.Weighting < 1)
+            {
+                spaceObjectVariant.Weighting = 1;
+            }
+
+            totalWeighting += spaceObjectVariant.Weighting;
+        }
+        
+        int desiredWeighting = Random.Range(1, totalWeighting);
+        int currentWeighting = 0;
+        
+        foreach (WeightedSpaceObject spaceObjectVariant in spaceObjectVariants)
+        {
+            currentWeighting += spaceObjectVariant.Weighting;
+            if (desiredWeighting <= currentWeighting)
+            {
+                return spaceObjectVariant.SpaceObject;
+            }
+        }
+
+        throw new InvalidOperationException($"Could not determine space object for weighting {desiredWeighting}");
     }
 
     protected void ValidateSpaceObjectPrefab()
@@ -105,6 +131,21 @@ public abstract class BuildingInstructions : MonoBehaviour
     {
         public CannotBuildException(string message) : base(message)
         {
+        }
+    }
+
+    [Serializable]
+    private class WeightedSpaceObject
+    {
+        [SerializeField] private GameObject spaceObject;
+        [SerializeField] private int weighting = 1;
+
+        public GameObject SpaceObject => spaceObject;
+
+        public int Weighting
+        {
+            get => weighting;
+            set => weighting = value;
         }
     }
 }

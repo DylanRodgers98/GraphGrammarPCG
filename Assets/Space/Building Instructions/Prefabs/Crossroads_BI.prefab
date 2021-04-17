@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5169219866641637747}
   - component: {fileID: 107082072262458113}
   m_Layer: 0
-  m_Name: crossroads_BI
+  m_Name: Crossroads_BI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,4 +44,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spaceObjectVariants:
-  - {fileID: 5526949669200760755, guid: 68fd838380e0ac041add10a2fe46eadd, type: 3}
+  - spaceObject: {fileID: 5526949669200760755, guid: 68fd838380e0ac041add10a2fe46eadd,
+      type: 3}
+    weighting: 1

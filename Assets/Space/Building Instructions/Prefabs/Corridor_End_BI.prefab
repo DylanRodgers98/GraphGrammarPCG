@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1302908699752970672}
   - component: {fileID: 6112633775481398210}
   m_Layer: 0
-  m_Name: g_BI
+  m_Name: Corridor_End_BI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,4 +44,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spaceObjectVariants:
-  - {fileID: 875559353412970914, guid: 8650284b47e1fae4199b687f7ca273ab, type: 3}
+  - spaceObject: {fileID: 875559353412970914, guid: 8650284b47e1fae4199b687f7ca273ab,
+      type: 3}
+    weighting: 1

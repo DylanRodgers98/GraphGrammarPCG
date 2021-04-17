@@ -44,4 +44,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spaceObjectVariants:
-  - {fileID: 4424527674130614065, guid: 9fd5eabf7a7d2734c87cb1271edcc58c, type: 3}
+  - spaceObject: {fileID: 4424527674130614065, guid: 9fd5eabf7a7d2734c87cb1271edcc58c,
+      type: 3}
+    weighting: 1

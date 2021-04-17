@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2556065000719060197}
   - component: {fileID: 837739251547752407}
   - component: {fileID: -2502878175280443817}
+  - component: {fileID: 3137038419845666730}
   m_Layer: 0
   m_Name: Dormans Dungeon Generator
   m_TagString: Untagged
@@ -138,3 +139,16 @@ MonoBehaviour:
   keyMultiSymbol: km
   lockFinalSymbol: lf
   keyFinalSymbol: kf
+--- !u!114 &3137038419845666730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837739251547752404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b2df41c47c51fb46bd79a492ed08ad0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questItemSymbol: iq

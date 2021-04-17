@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4467093054577705005}
   - component: {fileID: 3965363319235274297}
   m_Layer: 0
-  m_Name: Corridor_Trap_BI
+  m_Name: Corridor_Trap_Item_BI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,8 +44,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spaceObjectVariants:
-  - {fileID: 1868213341642364099, guid: 3a1f9e84d24968b469b8c872815bc5f7, type: 3}
-  - {fileID: 4168208284294342322, guid: 6a73d2141ca70ed4482bf3d9091b5881, type: 3}
-  - {fileID: 499824624062091326, guid: b1ce8febd307aac4eae9efd40f588639, type: 3}
-  - {fileID: 7564759425362692529, guid: d9d2ab53dc4c04548ac39ff0e6bfd266, type: 3}
-  - {fileID: 2966019419407642031, guid: c94200a34b2a38248b42301f5821e185, type: 3}
+  - spaceObject: {fileID: 1868213341642364099, guid: 3a1f9e84d24968b469b8c872815bc5f7,
+      type: 3}
+    weighting: 1
+  - spaceObject: {fileID: 4168208284294342322, guid: 6a73d2141ca70ed4482bf3d9091b5881,
+      type: 3}
+    weighting: 1
+  - spaceObject: {fileID: 499824624062091326, guid: b1ce8febd307aac4eae9efd40f588639,
+      type: 3}
+    weighting: 1
+  - spaceObject: {fileID: 7564759425362692529, guid: d9d2ab53dc4c04548ac39ff0e6bfd266,
+      type: 3}
+    weighting: 1
+  - spaceObject: {fileID: 2966019419407642031, guid: c94200a34b2a38248b42301f5821e185,
+      type: 3}
+    weighting: 1

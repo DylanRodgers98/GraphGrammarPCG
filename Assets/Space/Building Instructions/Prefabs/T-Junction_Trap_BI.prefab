@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1926095308648389298}
   - component: {fileID: 1171882448063134886}
   m_Layer: 0
-  m_Name: T-Junction_Trap_Item_BI
+  m_Name: T-Junction_Trap_BI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,9 +44,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spaceObjectVariants:
-  - {fileID: 6800235592210523216, guid: da0f990e9d2109d429c037fd170bbf15, type: 3}
-  - {fileID: 3591624821491109661, guid: a8355a8095412804bb1c3a25a4091da0, type: 3}
-  - {fileID: 7452588310700939775, guid: b3a46a669a6eb8648a3cc13f4e5bd322, type: 3}
-  - {fileID: 7018253736206059230, guid: d6070fc96692ea841b6dcbddae6d6d1f, type: 3}
-  - {fileID: 6209853491376029433, guid: 783a04400e982024faecdd1fa279c01d, type: 3}
-  - {fileID: 6464327301866207130, guid: 2517e12517209a3499b14f3547296dc4, type: 3}
+  - spaceObject: {fileID: 6800235592210523216, guid: da0f990e9d2109d429c037fd170bbf15,
+      type: 3}
+    weighting: 1
+  - spaceObject: {fileID: 3591624821491109661, guid: a8355a8095412804bb1c3a25a4091da0,
+      type: 3}
+    weighting: 1
+  - spaceObject: {fileID: 7452588310700939775, guid: b3a46a669a6eb8648a3cc13f4e5bd322,
+      type: 3}
+    weighting: 1
+  - spaceObject: {fileID: 7018253736206059230, guid: d6070fc96692ea841b6dcbddae6d6d1f,
+      type: 3}
+    weighting: 1
+  - spaceObject: {fileID: 6209853491376029433, guid: 783a04400e982024faecdd1fa279c01d,
+      type: 3}
+    weighting: 1
+  - spaceObject: {fileID: 6464327301866207130, guid: 2517e12517209a3499b14f3547296dc4,
+      type: 3}
+    weighting: 1
