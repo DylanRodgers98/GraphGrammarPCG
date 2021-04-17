@@ -14,28 +14,16 @@ public class UnlockDoorAction : Actionable
         }
     }
 
-    public void AddRequiredKey(Item requiredKey)
+    public void AddRequiredKeys(params Item[] requiredKeys)
     {
-        if (requiredKeys == null)
+        foreach (Item requiredKey in requiredKeys)
         {
-            requiredKeys = new List<Item>();
+            this.requiredKeys.Add(requiredKey);
         }
-
-        requiredKeys.Add(requiredKey);
     }
 
-    public void SetRequiredKeys(IList<Item> requiredKeys)
+    private void Awake()
     {
-        if (this.requiredKeys == null)
-        {
-            this.requiredKeys = requiredKeys;
-        }
-        else
-        {
-            foreach (Item requiredKey in requiredKeys)
-            {
-                this.requiredKeys.Add(requiredKey);
-            }
-        }
+        requiredKeys = new List<Item>();
     }
 }

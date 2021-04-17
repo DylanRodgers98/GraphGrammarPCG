@@ -89,22 +89,22 @@ namespace GenGra
             }
         
             string lockId = lockMultiNodes[0].id;
-            IList<GameObject> locks = GetLocks(generatedSpace, lockId);
-            if (locks.Count != 1)
+            GameObject[] locks = GetLocks(generatedSpace, lockId);
+            if (locks.Length != 1)
             {
                 throw new InvalidOperationException($"Cannot connect multi keys to multi lock (ID: {lockId}) " +
                                                     "due to the wrong number of lock GameObjects corresponding to " +
-                                                    $"the lock's ID. Expected 1 but found {locks.Count}.");
+                                                    $"the lock's ID. Expected 1 but found {locks.Length}.");
             }
             
-            IList<Item> keys = missionGraph.NodeSymbolMap[keyMultiSymbol]
+            Item[] keys = missionGraph.NodeSymbolMap[keyMultiSymbol]
                 .SelectMany(node => generatedSpace[node.id])
                 .SelectMany(spaceObject => spaceObject.transform.Cast<Transform>())
                 .Where(child => child.CompareTag("Key"))
                 .Select(keyTransform => keyTransform.GetComponent<Item>())
-                .ToList();
+                .ToArray();
             
-            locks[0].GetComponent<UnlockDoorAction>().SetRequiredKeys(keys);
+            locks[0].GetComponent<UnlockDoorAction>().AddRequiredKeys(keys);
         }
 
         private void ConnectFinalKeyToFinalLock(GraphType missionGraph,
@@ -134,44 +134,44 @@ namespace GenGra
         private static void ConnectLockAndKey(IDictionary<string, GameObject[]> generatedSpace, string lockId, 
             string keyId)
         {
-            IList<GameObject> locks = GetLocks(generatedSpace, lockId);
-            if (locks.Count != 1)
+            GameObject[] locks = GetLocks(generatedSpace, lockId);
+            if (locks.Length != 1)
             {
                 throw new InvalidOperationException($"Cannot connect lock (ID: {lockId}) to key (ID: {keyId}) " +
                                                     "due to the wrong number of lock GameObjects corresponding to " +
-                                                    $"the lock's ID. Expected 1 but found {locks.Count}.");
+                                                    $"the lock's ID. Expected 1 but found {locks.Length}.");
             }
                     
-            IList<GameObject> keys = GetKeys(generatedSpace, keyId);
-            if (keys.Count != 1)
+            GameObject[] keys = GetKeys(generatedSpace, keyId);
+            if (keys.Length != 1)
             {
                 throw new InvalidOperationException($"Cannot connect lock (ID: {lockId}) to key (ID: {keyId}) " +
                                                     "due to the wrong number of key GameObjects corresponding to the " +
-                                                    $"key's ID. Expected 1 but found {keys.Count}.");
+                                                    $"key's ID. Expected 1 but found {keys.Length}.");
             }
 
             Item key = keys[0].GetComponent<Item>();
-            locks[0].GetComponent<UnlockDoorAction>().AddRequiredKey(key);
+            locks[0].GetComponent<UnlockDoorAction>().AddRequiredKeys(key);
         }
 
-        private static IList<GameObject> GetLocks(IDictionary<string, GameObject[]> generatedSpace, string nodeId)
+        private static GameObject[] GetLocks(IDictionary<string, GameObject[]> generatedSpace, string nodeId)
         {
             return GetChildrenByTag(generatedSpace, nodeId, "Lock");
         }
 
-        private static IList<GameObject> GetKeys(IDictionary<string, GameObject[]> generatedSpace, string nodeId)
+        private static GameObject[] GetKeys(IDictionary<string, GameObject[]> generatedSpace, string nodeId)
         {
             return GetChildrenByTag(generatedSpace, nodeId, "Key");
         }
 
-        private static IList<GameObject> GetChildrenByTag(IDictionary<string, GameObject[]> generatedSpace,
+        private static GameObject[] GetChildrenByTag(IDictionary<string, GameObject[]> generatedSpace,
             string nodeId, string tag)
         {
             return generatedSpace[nodeId]
                 .SelectMany(spaceObject => spaceObject.transform.Cast<Transform>())
                 .Where(child => child.CompareTag(tag))
                 .Select(transform => transform.gameObject)
-                .ToList();
+                .ToArray();
         }
     }
 }
