@@ -4,9 +4,10 @@ public class Item : MonoBehaviour
 {
     [SerializeField] private string itemName;
     [SerializeField] private int goldValue;
-    [SerializeField] private bool isQuestItem;
     [SerializeField] private ItemRarity rarity;
 
+    public Quest Quest { get; set; }
+    
     public string ItemName
     {
         get => itemName;
@@ -19,17 +20,13 @@ public class Item : MonoBehaviour
         set => goldValue = value;
     }
 
-    public bool IsQuestItem
-    {
-        get => isQuestItem;
-        set => isQuestItem = value;
-    }
-
     public ItemRarity Rarity
     {
         get => rarity;
         set => rarity = value;
     }
+
+    public bool IsQuestItem() => Quest != null;
 
     public enum ItemRarity
     {

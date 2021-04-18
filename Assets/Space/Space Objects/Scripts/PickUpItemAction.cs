@@ -11,8 +11,12 @@
     {
         if (gameObject.activeInHierarchy)
         {
-            PlayerController.AddItemToInventory(item);
             gameObject.SetActive(false);
+            PlayerController.AddItemToInventory(item);
+            if (item.IsQuestItem())
+            {
+                item.Quest.MarkAsCompleted();
+            }
         }
     }
 }
