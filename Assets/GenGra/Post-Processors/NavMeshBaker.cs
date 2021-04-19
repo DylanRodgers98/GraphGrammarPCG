@@ -14,10 +14,13 @@ namespace GenGra
                 {
                     foreach (Transform child in spaceObject.transform)
                     {
-                        NavMeshSurface navMeshSurface = child.GetComponent<NavMeshSurface>();
-                        if (navMeshSurface != null)
+                        if (child.CompareTag("Navigatable")) 
                         {
-                            navMeshSurface.BuildNavMesh();
+                            NavMeshSurface navMeshSurface = child.GetComponent<NavMeshSurface>();
+                            if (navMeshSurface != null)
+                            {
+                                navMeshSurface.BuildNavMesh();
+                            }
                         }
                     }
                 }
