@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 837739251547752406}
   - component: {fileID: 837739251547752401}
   - component: {fileID: 2556065000719060197}
+  - component: {fileID: 6087726541588794866}
   - component: {fileID: 837739251547752407}
   - component: {fileID: -2502878175280443817}
   - component: {fileID: 3137038419845666730}
@@ -109,6 +110,18 @@ MonoBehaviour:
   - missionSymbol: ts
     buildingInstructionsPrefab: {fileID: 6840560483175785107, guid: 9671322966d62c04d941c8c22a9c697e,
       type: 3}
+--- !u!114 &6087726541588794866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837739251547752404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d5621cffed44954fafef65a770f10ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &837739251547752407
 MonoBehaviour:
   m_ObjectHideFlags: 0
