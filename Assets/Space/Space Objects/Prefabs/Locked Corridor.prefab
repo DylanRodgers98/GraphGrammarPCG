@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 1063248090628625888}
   - component: {fileID: 7132018934658116095}
   - component: {fileID: 1018877111675701440}
-  - component: {fileID: 4807603691062743984}
   m_Layer: 8
   m_Name: Floor
   m_TagString: Navigatable
@@ -116,7 +115,7 @@ MonoBehaviour:
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 256
-  m_UseGeometry: 0
+  m_UseGeometry: 1
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1
   m_IgnoreNavMeshObstacle: 1
@@ -162,26 +161,6 @@ MonoBehaviour:
   m_StartPoint: {x: 0, y: 0, z: 2.4}
   m_EndPoint: {x: 0, y: 0, z: 2.6}
   m_Width: 3
-  m_CostModifier: -1
-  m_Bidirectional: 1
-  m_AutoUpdatePosition: 0
-  m_Area: 0
---- !u!114 &4807603691062743984
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1829934507610264071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6eeb5dc026fdf4b488bc7ae0138ab719, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AgentTypeID: 0
-  m_StartPoint: {x: 0, y: 0, z: -2.4}
-  m_EndPoint: {x: 0, y: 0, z: 2.4}
-  m_Width: 0
   m_CostModifier: -1
   m_Bidirectional: 1
   m_AutoUpdatePosition: 0
