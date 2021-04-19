@@ -13,7 +13,8 @@ public class UnlockDoorAction : Actionable
         if (isDoorLocked && requiredKeys.All(PlayerController.DoesInventoryContainItem))
         {
             isDoorLocked = false;
-            doorGameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
+            float y = doorGameObject.transform.eulerAngles.y + 90;
+            doorGameObject.transform.rotation = Quaternion.Euler(0, y, 0);
         }
     }
 
