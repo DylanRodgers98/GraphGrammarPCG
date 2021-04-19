@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 474010127612839754}
   - component: {fileID: 9000623625130875113}
   - component: {fileID: -9214785798587475930}
-  m_Layer: 0
+  - component: {fileID: 8462342587055382516}
+  m_Layer: 8
   m_Name: Key
   m_TagString: Key
   m_Icon: {fileID: 0}
@@ -122,3 +123,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: Key
+  goldValue: 0
+  rarity: 0
+--- !u!135 &8462342587055382516
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4285617197091189747}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.3
+  m_Center: {x: 0, y: 0, z: 0}

@@ -395,7 +395,7 @@ GameObject:
   - component: {fileID: 7332001168117205318}
   - component: {fileID: 4497540389895397846}
   - component: {fileID: 643674820670434345}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Floor
   m_TagString: Navigatable
   m_Icon: {fileID: 0}
@@ -494,7 +494,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 256
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1
@@ -541,7 +541,7 @@ GameObject:
   - component: {fileID: 8639288383316234062}
   - component: {fileID: 344864293603165133}
   - component: {fileID: 3905624258973281184}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Floor
   m_TagString: Navigatable
   m_Icon: {fileID: 0}
@@ -640,7 +640,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 256
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1
@@ -932,6 +932,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Wall (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8733602212038973013, guid: 6be98fd7ed87f2e4fb09469b8d054a35,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6be98fd7ed87f2e4fb09469b8d054a35, type: 3}

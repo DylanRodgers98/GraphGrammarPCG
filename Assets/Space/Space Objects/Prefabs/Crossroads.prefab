@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 372371939395635467}
   - component: {fileID: 6058682925342641676}
   - component: {fileID: 7620045163087534996}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Floor
   m_TagString: Navigatable
   m_Icon: {fileID: 0}
@@ -215,7 +215,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 256
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1

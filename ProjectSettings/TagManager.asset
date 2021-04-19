@@ -11,6 +11,7 @@ TagManager:
   - Key
   - Item
   - Navigatable
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Bake NavMesh
   - 
   - 
   - 

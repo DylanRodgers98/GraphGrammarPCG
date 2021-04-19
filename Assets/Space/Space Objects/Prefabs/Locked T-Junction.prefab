@@ -114,7 +114,7 @@ GameObject:
   - component: {fileID: 667947425683665675}
   - component: {fileID: 8515499726427190031}
   - component: {fileID: 7660826250366877407}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Floor
   m_TagString: Navigatable
   m_Icon: {fileID: 0}
@@ -213,7 +213,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 256
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1
@@ -456,6 +456,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall
       objectReference: {fileID: 0}
+    - target: {fileID: 8733602212038973013, guid: 6be98fd7ed87f2e4fb09469b8d054a35,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6be98fd7ed87f2e4fb09469b8d054a35, type: 3}
 --- !u!4 &7336219424527471286 stripped
@@ -475,6 +480,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Wall with Door
+      objectReference: {fileID: 0}
+    - target: {fileID: 6383289030945436600, guid: abfac218aac7e574f88c550263e0f018,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6383842311834516184, guid: abfac218aac7e574f88c550263e0f018,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6386074101238431252, guid: abfac218aac7e574f88c550263e0f018,
         type: 3}

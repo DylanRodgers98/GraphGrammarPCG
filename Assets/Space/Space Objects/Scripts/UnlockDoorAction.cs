@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class UnlockDoorAction : Actionable
 {
+    [SerializeField] private GameObject doorGameObject;
     private bool isDoorLocked = true;
     private IList<Item> requiredKeys;
 
@@ -11,6 +13,7 @@ public class UnlockDoorAction : Actionable
         if (isDoorLocked && requiredKeys.All(PlayerController.DoesInventoryContainItem))
         {
             isDoorLocked = false;
+            doorGameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
         }
     }
 
