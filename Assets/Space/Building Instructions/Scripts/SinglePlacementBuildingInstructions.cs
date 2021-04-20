@@ -5,7 +5,7 @@ public class SinglePlacementBuildingInstructions : BuildingInstructions
 {
     public override GameObject[] Build(GameObject[] relativeSpaceObjects = null, bool checkForOverlap = true)
     {
-        ValidateSpaceObjectPrefab();
+        ValidateSpaceObjectVariants();
 
         GameObject spaceObjectPrefab = GetRandomSpaceObject();
 

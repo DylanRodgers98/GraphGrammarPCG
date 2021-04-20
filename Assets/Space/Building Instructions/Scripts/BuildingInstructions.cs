@@ -109,7 +109,7 @@ public abstract class BuildingInstructions : MonoBehaviour
         throw new InvalidOperationException($"Could not determine space object for weighting {desiredWeighting}");
     }
 
-    protected void ValidateSpaceObjectPrefab()
+    protected void ValidateSpaceObjectVariants()
     {
         if (spaceObjectVariants == null || spaceObjectVariants.Length == 0)
         {
@@ -125,7 +125,7 @@ public abstract class BuildingInstructions : MonoBehaviour
             .ToList();
     }
 
-    public static bool DoesInstantiatedOverlapOtherSpaceObjects(GameObject instantiated)
+    protected static bool DoesInstantiatedOverlapOtherSpaceObjects(GameObject instantiated)
     {
         Collider[] colliders = new Collider[2];
         int numberOfObjectsAtInstantiatedLocation = Physics.OverlapBoxNonAlloc(instantiated.transform.position,
