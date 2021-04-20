@@ -12,11 +12,6 @@ public abstract class BuildingInstructions : MonoBehaviour
 
     [SerializeField] private WeightedSpaceObject[] spaceObjectVariants;
 
-    public WeightedSpaceObject[] SpaceObjectVariants
-    {
-        set => spaceObjectVariants = value;
-    }
-
     public abstract GameObject[] Build(GameObject[] relativeSpaceObjects = null, bool checkForOverlap = true);
 
     protected static Transform GetRandomEntrancePoint(params GameObject[] spaceObjects)
@@ -117,20 +112,20 @@ public abstract class BuildingInstructions : MonoBehaviour
         }
     }
 
-    private static IList<Transform> GetAttachmentPoints(string entranceOrExitPointTag, params GameObject[] spaceObjects)
-    {
-        return spaceObjects
-            .SelectMany(spaceObject => spaceObject.transform.Cast<Transform>())
-            .Where(child => child.CompareTag(AttachmentPointTag) || child.CompareTag(entranceOrExitPointTag))
-            .ToList();
-    }
-
     protected static bool DoesInstantiatedOverlapOtherSpaceObjects(GameObject instantiated)
     {
         Collider[] colliders = new Collider[2];
         int numberOfObjectsAtInstantiatedLocation = Physics.OverlapBoxNonAlloc(instantiated.transform.position,
             instantiated.transform.localScale / 2 * 0.99f, colliders);
         return numberOfObjectsAtInstantiatedLocation > 1;
+    }
+
+    private static IList<Transform> GetAttachmentPoints(string entranceOrExitPointTag, params GameObject[] spaceObjects)
+    {
+        return spaceObjects
+            .SelectMany(spaceObject => spaceObject.transform.Cast<Transform>())
+            .Where(child => child.CompareTag(AttachmentPointTag) || child.CompareTag(entranceOrExitPointTag))
+            .ToList();
     }
 
     protected class CannotBuildException : Exception
