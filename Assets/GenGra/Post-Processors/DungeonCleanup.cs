@@ -7,15 +7,9 @@ namespace GenGra
 {
     public class DungeonCleanup : PostProcessor
     {
-        private const string LockTag = "Lock";
-        private const string KeyTag = "Key";
-        private const string ItemTag = "Item";
-        private const string EnemyTag = "Enemy";
-        private const string TestTag = "Test";
-
-        [SerializeField] private GameObject endWallPrefab;
-        [SerializeField] private GameObject corridorPrefab;
-        [SerializeField] private GameObject corridorEndPrefab;
+        [SerializeField] private GameObject endWallBuildingInstructions;
+        [SerializeField] private GameObject corridorBuildingInstructions;
+        [SerializeField] private GameObject corridorEndBuildingInstructions;
 
         public override void Process(GraphType missionGraph, IDictionary<string, GameObject[]> generatedSpace)
         {
@@ -107,26 +101,7 @@ namespace GenGra
         private void CleanUpCrossroads(GameObject crossroadsSpaceObject, string nodeId,
             IDictionary<string, GameObject[]> generatedSpace)
         {
-            IList<GameObject> exitPoints = new List<GameObject>();
-            bool isEmptyCrossroads = true;
-
-            foreach (Transform child in crossroadsSpaceObject.transform)
-            {
-                switch (child.tag)
-                {
-                    case BuildingInstructions.AttachmentPointTag:
-                    case BuildingInstructions.ExitPointTag:
-                        exitPoints.Add(child.gameObject);
-                        break;
-                    case LockTag:
-                    case KeyTag:
-                    case ItemTag:
-                    case TestTag:
-                    case EnemyTag:
-                        isEmptyCrossroads = false;
-                        break;
-                }
-            }
+            (IList<GameObject> exitPoints, bool isEmptyCrossroads) = GetExitPointsAndEmptiness(crossroadsSpaceObject);
 
             if (exitPoints.Count == 0) return;
 
@@ -143,35 +118,37 @@ namespace GenGra
                 }
                 else
                 {
-                    GameObject instantiated = ReplaceSpaceObject(crossroadsSpaceObject, corridorPrefab);
-                    IList<GameObject> instantiatedAttachmentPoints = instantiated.transform.Cast<Transform>()
-                        .Where(child => child.CompareTag(BuildingInstructions.AttachmentPointTag) ||
-                                        child.CompareTag(BuildingInstructions.ExitPointTag))
-                        .Select(child => child.gameObject)
-                        .ToList();
+                    GameObject replacement = ReplaceSpaceObject(
+                        corridorBuildingInstructions, crossroadsSpaceObject, exitPoints.Count, nodeId, generatedSpace);
 
-                    if (instantiatedAttachmentPoints.Count != 2)
+                    if (replacement != null)
                     {
-                        throw new InvalidOperationException($"Instantiated corridor {instantiated} has " +
-                                                            $"{instantiatedAttachmentPoints.Count} attachment " +
-                                                            "points or exit points but was expecting 2");
-                    }
+                        IList<GameObject> instantiatedAttachmentPoints = replacement.transform.Cast<Transform>()
+                            .Where(child => child.CompareTag(BuildingInstructions.AttachmentPointTag) ||
+                                            child.CompareTag(BuildingInstructions.ExitPointTag))
+                            .Select(child => child.gameObject)
+                            .ToList();
 
-                    if (aX.Equals(bX))
-                    {
-                        float aXInstantiated = instantiatedAttachmentPoints[0].transform.position.x;
-                        float bXInstantiated = instantiatedAttachmentPoints[1].transform.position.x;
-                        RotateInstantiated(instantiated, aXInstantiated, aX, bXInstantiated, bX);
-                    }
-                    else if (aZ.Equals(bZ))
-                    {
-                        float aZInstantiated = instantiatedAttachmentPoints[0].transform.position.z;
-                        float bZInstantiated = instantiatedAttachmentPoints[1].transform.position.z;
-                        RotateInstantiated(instantiated, aZInstantiated, aZ, bZInstantiated, bZ);
-                    }
+                        if (instantiatedAttachmentPoints.Count != 2)
+                        {
+                            throw new InvalidOperationException($"Instantiated corridor {replacement} has " +
+                                                                $"{instantiatedAttachmentPoints.Count} attachment " +
+                                                                "points or exit points but was expecting 2");
+                        }
 
-                    AttachWallsToOriginalIfOverlap(instantiated, crossroadsSpaceObject,
-                        exitPoints.Count, nodeId, generatedSpace);
+                        if (aX.Equals(bX))
+                        {
+                            float aXInstantiated = instantiatedAttachmentPoints[0].transform.position.x;
+                            float bXInstantiated = instantiatedAttachmentPoints[1].transform.position.x;
+                            RotateInstantiated(replacement, aXInstantiated, aX, bXInstantiated, bX);
+                        }
+                        else if (aZ.Equals(bZ))
+                        {
+                            float aZInstantiated = instantiatedAttachmentPoints[0].transform.position.z;
+                            float bZInstantiated = instantiatedAttachmentPoints[1].transform.position.z;
+                            RotateInstantiated(replacement, aZInstantiated, aZ, bZInstantiated, bZ);
+                        }
+                    }
                 }
             }
             else
@@ -183,10 +160,25 @@ namespace GenGra
         private void CleanUpTJunction(GameObject tJunctionSpaceObject, string nodeId,
             IDictionary<string, GameObject[]> generatedSpace)
         {
-            IList<GameObject> exitPoints = new List<GameObject>();
-            bool isEmptyTJunction = true;
+            (IList<GameObject> exitPoints, bool isEmptyTJunction) = GetExitPointsAndEmptiness(tJunctionSpaceObject);
 
-            foreach (Transform child in tJunctionSpaceObject.transform)
+            if (isEmptyTJunction && exitPoints.Count == 2)
+            {
+                ReplaceSpaceObject(
+                    corridorEndBuildingInstructions, tJunctionSpaceObject, exitPoints.Count, nodeId, generatedSpace);
+            }
+            else
+            {
+                AttachWallTo(tJunctionSpaceObject, exitPoints.Count);
+            }
+        }
+
+        private static Tuple<IList<GameObject>, bool> GetExitPointsAndEmptiness(GameObject spaceObject)
+        {
+            IList<GameObject> exitPoints = new List<GameObject>();
+            bool isEmpty = true;
+
+            foreach (Transform child in spaceObject.transform)
             {
                 switch (child.tag)
                 {
@@ -194,27 +186,63 @@ namespace GenGra
                     case BuildingInstructions.ExitPointTag:
                         exitPoints.Add(child.gameObject);
                         break;
-                    case LockTag:
-                    case KeyTag:
-                    case ItemTag:
-                    case TestTag:
-                    case EnemyTag:
-                        isEmptyTJunction = false;
+                    case "Lock":
+                    case "Key":
+                    case "Item":
+                    case "Trap":
+                    case "Enemy":
+                        isEmpty = false;
                         break;
                 }
-
-                if (exitPoints.Count == 2 && !isEmptyTJunction) break;
             }
 
-            if (isEmptyTJunction && exitPoints.Count == 2)
+            return Tuple.Create(exitPoints, isEmpty);
+        }
+
+        private GameObject ReplaceSpaceObject(GameObject buildingInstructionsPrefab, GameObject spaceObjectToReplace,
+            int numExitPoints, string nodeId, IDictionary<string, GameObject[]> generatedSpace)
+        {
+            BuildingInstructions buildingInstructions =
+                buildingInstructionsPrefab.GetComponent<ReplacementBuildingInstructions>();
+
+            if (buildingInstructions == null)
             {
-                GameObject instantiated = ReplaceSpaceObject(tJunctionSpaceObject, corridorEndPrefab);
-                AttachWallsToOriginalIfOverlap(instantiated, tJunctionSpaceObject,
-                    exitPoints.Count, nodeId, generatedSpace);
+                throw new InvalidOperationException("No BuildingInstructions component found attached " +
+                                                    $"to {buildingInstructionsPrefab}. Please check validity of this " +
+                                                    "prefab.");
             }
-            else
+
+            GameObject[] built = buildingInstructions.Build(new[] {spaceObjectToReplace});
+            if (built.Length == 0)
             {
-                AttachWallTo(tJunctionSpaceObject, exitPoints.Count);
+                spaceObjectToReplace.SetActive(true);
+                AttachWallTo(spaceObjectToReplace, numExitPoints);
+                return null;
+            }
+
+            if (built.Length != 1)
+            {
+                throw new InvalidOperationException($"Expected BuildingInstructions {buildingInstructions} " +
+                                                    $"to build 1 space object but it built {built.Length}");
+            }
+
+            GameObject replacement = built[0];
+
+            List<GameObject> spaceObjects = generatedSpace[nodeId].ToList();
+            spaceObjects.Remove(spaceObjectToReplace);
+            spaceObjects.Add(replacement);
+            generatedSpace[nodeId] = spaceObjects.ToArray();
+            DestroyImmediate(spaceObjectToReplace);
+
+            return replacement;
+        }
+
+        private void RotateInstantiated(GameObject instantiated, float a1, float b1, float a2, float b2)
+        {
+            while (!a1.Equals(b1) && !a2.Equals(b2))
+            {
+                float instantiatedYRotation = instantiated.transform.eulerAngles.y;
+                instantiated.transform.rotation = Quaternion.Euler(0, instantiatedYRotation + 90, 0);
             }
         }
 
@@ -228,56 +256,20 @@ namespace GenGra
 
         private void AttachWallTo(GameObject spaceObjectToAttachWallTo)
         {
-            BuildingInstructions wallBuildingInstructions = GetComponent<SinglePlacementBuildingInstructions>();
+            BuildingInstructions wallBuildingInstructions =
+                endWallBuildingInstructions.GetComponent<SinglePlacementBuildingInstructions>();
+
             if (wallBuildingInstructions == null)
             {
-                wallBuildingInstructions = gameObject.AddComponent<SinglePlacementBuildingInstructions>();
-                wallBuildingInstructions.SpaceObjectVariants = new[]
-                {
-                    new BuildingInstructions.WeightedSpaceObject {SpaceObject = endWallPrefab}
-                };
+                throw new InvalidOperationException("No BuildingInstructions component found attached to " +
+                                                    $"{endWallBuildingInstructions}. Please check validity of this " +
+                                                    $"prefab.");
             }
 
             GameObject[] built = wallBuildingInstructions.Build(new[] {spaceObjectToAttachWallTo}, false);
             foreach (GameObject obj in built)
             {
                 obj.transform.parent = spaceObjectToAttachWallTo.transform;
-            }
-        }
-
-        private static GameObject ReplaceSpaceObject(GameObject spaceObject, GameObject prefabToInstantiate)
-        {
-            Vector3 position = spaceObject.transform.position;
-            Quaternion rotation = spaceObject.transform.rotation;
-            spaceObject.SetActive(false);
-            return Instantiate(prefabToInstantiate, position, rotation);
-        }
-
-        private void AttachWallsToOriginalIfOverlap(GameObject gameObjectToCheck, GameObject originalSpaceObject,
-            int numExitPoints, string nodeId, IDictionary<string, GameObject[]> generatedSpace)
-        {
-            if (BuildingInstructions.DoesInstantiatedOverlapOtherSpaceObjects(gameObjectToCheck))
-            {
-                DestroyImmediate(gameObjectToCheck);
-                originalSpaceObject.SetActive(true);
-                AttachWallTo(originalSpaceObject, numExitPoints);
-            }
-            else
-            {
-                List<GameObject> spaceObjects = generatedSpace[nodeId].ToList();
-                spaceObjects.Remove(originalSpaceObject);
-                spaceObjects.Add(gameObjectToCheck);
-                generatedSpace[nodeId] = spaceObjects.ToArray();
-                DestroyImmediate(originalSpaceObject);
-            }
-        }
-
-        private void RotateInstantiated(GameObject instantiated, float a1, float b1, float a2, float b2)
-        {
-            while (!a1.Equals(b1) && !a2.Equals(b2))
-            {
-                float instantiatedYRotation = instantiated.transform.eulerAngles.y;
-                instantiated.transform.rotation = Quaternion.Euler(0, instantiatedYRotation + 90, 0);
             }
         }
     }
