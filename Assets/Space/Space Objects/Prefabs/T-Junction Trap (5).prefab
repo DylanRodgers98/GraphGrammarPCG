@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 6649157462947690816}
   m_Layer: 0
   m_Name: T-Junction Trap (5)
-  m_TagString: Untagged
+  m_TagString: T-Junction
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -497,6 +497,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 152550, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
+      propertyPath: m_TagString
+      value: Test
+      objectReference: {fileID: 0}
     - target: {fileID: 175764, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -571,6 +575,10 @@ PrefabInstance:
     - target: {fileID: 152550, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_Layer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 152550, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
+      propertyPath: m_TagString
+      value: Test
       objectReference: {fileID: 0}
     - target: {fileID: 175764, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_Layer
@@ -647,6 +655,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 152550, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
+      propertyPath: m_TagString
+      value: Test
+      objectReference: {fileID: 0}
     - target: {fileID: 175764, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -721,6 +733,10 @@ PrefabInstance:
     - target: {fileID: 152550, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_Layer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 152550, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
+      propertyPath: m_TagString
+      value: Test
       objectReference: {fileID: 0}
     - target: {fileID: 175764, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_Layer

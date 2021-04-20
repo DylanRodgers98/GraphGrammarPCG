@@ -12,6 +12,11 @@ TagManager:
   - Item
   - Navigatable
   - SpawnPoint
+  - Corridor
+  - Crossroads
+  - T-Junction
+  - Enemy
+  - Test
   layers:
   - Default
   - TransparentFX

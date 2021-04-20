@@ -227,7 +227,7 @@ GameObject:
   - component: {fileID: 6067496172948333545}
   m_Layer: 0
   m_Name: T-Junction Trap (1)
-  m_TagString: Untagged
+  m_TagString: T-Junction
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -421,6 +421,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 158420, guid: a5939b4c5392ebf4cad04ece1aa33190, type: 3}
+      propertyPath: m_TagString
+      value: Test
+      objectReference: {fileID: 0}
     - target: {fileID: 458420, guid: a5939b4c5392ebf4cad04ece1aa33190, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.5
@@ -605,6 +609,10 @@ PrefabInstance:
     - target: {fileID: 158420, guid: a5939b4c5392ebf4cad04ece1aa33190, type: 3}
       propertyPath: m_Layer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 158420, guid: a5939b4c5392ebf4cad04ece1aa33190, type: 3}
+      propertyPath: m_TagString
+      value: Test
       objectReference: {fileID: 0}
     - target: {fileID: 458420, guid: a5939b4c5392ebf4cad04ece1aa33190, type: 3}
       propertyPath: m_LocalPosition.x

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SinglePlacementBuildingInstructions : BuildingInstructions
 {
-    public override GameObject[] Build(GameObject[] relativeSpaceObjects = null)
+    public override GameObject[] Build(GameObject[] relativeSpaceObjects = null, bool checkForOverlap = true)
     {
         ValidateSpaceObjectPrefab();
 
@@ -37,7 +37,8 @@ public class SinglePlacementBuildingInstructions : BuildingInstructions
         {
             Transform exitPoint = GetRandomAttachmentPoint(availableExitPoints);
             Quaternion spaceObjectRotation = CalculateInstantiationRotation(entrancePoint, exitPoint);
-            GameObject instantiated = InstantiateSpaceObject(exitPoint.position, spaceObjectRotation, entrancePoint);
+            GameObject instantiated = InstantiateSpaceObject(
+                exitPoint.position, spaceObjectRotation, entrancePoint, checkForOverlap);
 
             if (instantiated != null)
             {

@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 837739251547752406}
   - component: {fileID: 837739251547752401}
   - component: {fileID: 2556065000719060197}
-  - component: {fileID: 6087726541588794866}
   - component: {fileID: 837739251547752407}
+  - component: {fileID: 6087726541588794866}
   - component: {fileID: -2502878175280443817}
   - component: {fileID: 3137038419845666730}
   m_Layer: 0
@@ -110,18 +110,6 @@ MonoBehaviour:
   - missionSymbol: ts
     buildingInstructionsPrefab: {fileID: 6840560483175785107, guid: 9671322966d62c04d941c8c22a9c697e,
       type: 3}
---- !u!114 &6087726541588794866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 837739251547752404}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d5621cffed44954fafef65a770f10ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &837739251547752407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,6 +120,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6088384a6b5f798459952e927c59a968, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  endWallPrefab: {fileID: 466405050674232202, guid: 341ea14ec8242854ba5ec9b7a18deafc,
+    type: 3}
+  corridorEndPrefab: {fileID: 875559353412970914, guid: 8650284b47e1fae4199b687f7ca273ab,
+    type: 3}
+  corridorPrefab: {fileID: 7452016271000296026, guid: 7288b518441ddfd409b76809095b5d80,
+    type: 3}
+  tJunctionPrefab: {fileID: 5307552915949802491, guid: b2421eee422e87c42bf67acced0066e3,
+    type: 3}
+--- !u!114 &6087726541588794866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837739251547752404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d5621cffed44954fafef65a770f10ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &-2502878175280443817

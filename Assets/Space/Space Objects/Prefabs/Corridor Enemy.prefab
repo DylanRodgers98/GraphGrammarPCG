@@ -329,7 +329,7 @@ GameObject:
   - component: {fileID: 8110725314180477923}
   m_Layer: 0
   m_Name: Corridor Enemy
-  m_TagString: Untagged
+  m_TagString: Corridor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -600,6 +600,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8172442304542317006, guid: 6e4019dcbde26c8408f888128d0a9a67,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 8569649574974592577, guid: 6e4019dcbde26c8408f888128d0a9a67,
         type: 3}

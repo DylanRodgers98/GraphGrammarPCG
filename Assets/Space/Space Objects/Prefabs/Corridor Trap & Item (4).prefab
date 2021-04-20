@@ -329,7 +329,7 @@ GameObject:
   - component: {fileID: 7102235146962963976}
   m_Layer: 0
   m_Name: Corridor Trap & Item (4)
-  m_TagString: Untagged
+  m_TagString: Corridor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -370,6 +370,10 @@ PrefabInstance:
     - target: {fileID: 152550, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_Layer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 152550, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
+      propertyPath: m_TagString
+      value: Test
       objectReference: {fileID: 0}
     - target: {fileID: 175764, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_Layer
@@ -537,6 +541,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 152550, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
+      propertyPath: m_TagString
+      value: Test
+      objectReference: {fileID: 0}
     - target: {fileID: 175764, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -607,6 +615,10 @@ PrefabInstance:
     - target: {fileID: 1414361740253324, guid: 9acd60bc8ae6a884c88aa0334f2026e9, type: 3}
       propertyPath: m_Layer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1414361740253324, guid: 9acd60bc8ae6a884c88aa0334f2026e9, type: 3}
+      propertyPath: m_TagString
+      value: Item
       objectReference: {fileID: 0}
     - target: {fileID: 1711807827488204, guid: 9acd60bc8ae6a884c88aa0334f2026e9, type: 3}
       propertyPath: m_Layer

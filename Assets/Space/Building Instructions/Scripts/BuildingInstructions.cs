@@ -12,7 +12,12 @@ public abstract class BuildingInstructions : MonoBehaviour
 
     [SerializeField] private WeightedSpaceObject[] spaceObjectVariants;
 
-    public abstract GameObject[] Build(GameObject[] relativeSpaceObjects = null);
+    public WeightedSpaceObject[] SpaceObjectVariants
+    {
+        set => spaceObjectVariants = value;
+    }
+
+    public abstract GameObject[] Build(GameObject[] relativeSpaceObjects = null, bool checkForOverlap = true);
 
     protected static Transform GetRandomEntrancePoint(params GameObject[] spaceObjects)
     {
@@ -52,7 +57,8 @@ public abstract class BuildingInstructions : MonoBehaviour
         return Quaternion.Euler(0, y, 0);
     }
 
-    protected GameObject InstantiateSpaceObject(Vector3 position, Quaternion rotation, Transform attachmentPoint)
+    protected GameObject InstantiateSpaceObject(Vector3 position, Quaternion rotation, Transform attachmentPoint, 
+        bool checkForOverlap)
     {
         GameObject spaceObjectPrefab = GetRandomSpaceObject();
         GameObject instantiated = Instantiate(spaceObjectPrefab, position, rotation);
@@ -60,7 +66,7 @@ public abstract class BuildingInstructions : MonoBehaviour
         Vector3 translation = instantiated.transform.position - instantiatedAttachmentPoint.position;
         instantiated.transform.Translate(translation, Space.World);
 
-        if (DoesInstantiatedOverlapOtherSpaceObjects(instantiated))
+        if (checkForOverlap && DoesInstantiatedOverlapOtherSpaceObjects(instantiated))
         {
             DestroyImmediate(instantiated);
             return null;
@@ -119,7 +125,7 @@ public abstract class BuildingInstructions : MonoBehaviour
             .ToList();
     }
 
-    private static bool DoesInstantiatedOverlapOtherSpaceObjects(GameObject instantiated)
+    public static bool DoesInstantiatedOverlapOtherSpaceObjects(GameObject instantiated)
     {
         Collider[] colliders = new Collider[2];
         int numberOfObjectsAtInstantiatedLocation = Physics.OverlapBoxNonAlloc(instantiated.transform.position,
@@ -135,12 +141,16 @@ public abstract class BuildingInstructions : MonoBehaviour
     }
 
     [Serializable]
-    private class WeightedSpaceObject
+    public class WeightedSpaceObject
     {
         [SerializeField] private GameObject spaceObject;
         [SerializeField] private int weighting = 1;
 
-        public GameObject SpaceObject => spaceObject;
+        public GameObject SpaceObject
+        {
+            get => spaceObject;
+            set => spaceObject = value;
+        }
 
         public int Weighting
         {

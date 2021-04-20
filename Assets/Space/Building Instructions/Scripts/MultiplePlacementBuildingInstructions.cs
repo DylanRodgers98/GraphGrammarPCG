@@ -7,7 +7,7 @@ public class MultiplePlacementBuildingInstructions : SinglePlacementBuildingInst
 {
     [SerializeField] private int multiplicity;
 
-    public override GameObject[] Build(GameObject[] relativeSpaceObjects = null)
+    public override GameObject[] Build(GameObject[] relativeSpaceObjects = null, bool checkForOverlap = true)
     {
         ValidateMultiplicity();
 
@@ -15,7 +15,7 @@ public class MultiplePlacementBuildingInstructions : SinglePlacementBuildingInst
 
         for (int i = 0; i < multiplicity; i++)
         {
-            GameObject[] currentInstantiated = base.Build(relativeSpaceObjects);
+            GameObject[] currentInstantiated = base.Build(relativeSpaceObjects, checkForOverlap);
             foreach (GameObject obj in currentInstantiated)
             {
                 instantiated.Add(obj);
