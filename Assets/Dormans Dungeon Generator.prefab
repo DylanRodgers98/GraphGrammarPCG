@@ -122,13 +122,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6088384a6b5f798459952e927c59a968, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endWallPrefab: {fileID: 466405050674232202, guid: 341ea14ec8242854ba5ec9b7a18deafc,
+  endWallBuildingInstructions: {fileID: 718350908336618168, guid: 2dff551662319f343b568c6cdfa4e0ab,
     type: 3}
-  corridorEndPrefab: {fileID: 875559353412970914, guid: 8650284b47e1fae4199b687f7ca273ab,
+  corridorBuildingInstructions: {fileID: 1113956370355793128, guid: 6847645411dba3149b60235c8303f073,
     type: 3}
-  corridorPrefab: {fileID: 7452016271000296026, guid: 7288b518441ddfd409b76809095b5d80,
-    type: 3}
-  tJunctionPrefab: {fileID: 5307552915949802491, guid: b2421eee422e87c42bf67acced0066e3,
+  corridorEndBuildingInstructions: {fileID: 827704812176858742, guid: fdeb81e55157b3e4abc328032d348784,
     type: 3}
 --- !u!114 &6087726541588794866
 MonoBehaviour:

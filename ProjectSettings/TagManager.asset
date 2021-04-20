@@ -16,7 +16,7 @@ TagManager:
   - Crossroads
   - T-Junction
   - Enemy
-  - Test
+  - Trap
   layers:
   - Default
   - TransparentFX

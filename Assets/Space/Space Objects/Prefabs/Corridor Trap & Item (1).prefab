@@ -389,7 +389,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 158420, guid: a5939b4c5392ebf4cad04ece1aa33190, type: 3}
       propertyPath: m_TagString
-      value: Test
+      value: Trap
       objectReference: {fileID: 0}
     - target: {fileID: 458420, guid: a5939b4c5392ebf4cad04ece1aa33190, type: 3}
       propertyPath: m_LocalPosition.x
@@ -488,7 +488,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 158420, guid: a5939b4c5392ebf4cad04ece1aa33190, type: 3}
       propertyPath: m_TagString
-      value: Test
+      value: Trap
       objectReference: {fileID: 0}
     - target: {fileID: 458420, guid: a5939b4c5392ebf4cad04ece1aa33190, type: 3}
       propertyPath: m_LocalPosition.x

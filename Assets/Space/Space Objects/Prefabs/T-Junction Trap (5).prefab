@@ -499,7 +499,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 152550, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_TagString
-      value: Test
+      value: Trap
       objectReference: {fileID: 0}
     - target: {fileID: 175764, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_Layer
@@ -578,7 +578,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 152550, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_TagString
-      value: Test
+      value: Trap
       objectReference: {fileID: 0}
     - target: {fileID: 175764, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_Layer
@@ -657,7 +657,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 152550, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_TagString
-      value: Test
+      value: Trap
       objectReference: {fileID: 0}
     - target: {fileID: 175764, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_Layer
@@ -736,7 +736,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 152550, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_TagString
-      value: Test
+      value: Trap
       objectReference: {fileID: 0}
     - target: {fileID: 175764, guid: c8dc2031dea625e46a42a7c1688cf26d, type: 3}
       propertyPath: m_Layer
