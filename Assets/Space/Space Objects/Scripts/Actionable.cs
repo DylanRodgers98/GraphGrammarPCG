@@ -8,6 +8,8 @@ public abstract class Actionable : MonoBehaviour
 
     protected abstract void DoAction();
 
+    protected abstract string GetGUIText();
+
     private void Update()
     {
         if (IsPlayerInRange && Input.GetKeyDown(actionKey))
@@ -29,5 +31,14 @@ public abstract class Actionable : MonoBehaviour
     {
         PlayerController = null;
         IsPlayerInRange = false;
+    }
+
+    private void OnGUI()
+    {
+        string text = GetGUIText();
+        if (text != null)
+        {
+            GUI.Box(new Rect(10, 10, 200, 30), text);
+        }
     }
 }

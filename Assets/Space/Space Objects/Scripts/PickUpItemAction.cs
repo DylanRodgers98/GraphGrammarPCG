@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class PickUpItemAction : Actionable
+﻿public class PickUpItemAction : Actionable
 {
     private Item item;
 
@@ -17,11 +15,11 @@ public class PickUpItemAction : Actionable
         }
     }
 
-    protected void OnGUI()
+    protected override string GetGUIText()
     {
-        if (!IsPlayerInRange || !gameObject.activeInHierarchy) return;
-        string text = $"Press {actionKey} to pick up {item.ItemName}";
-        GUI.Box(new Rect(10, 10, 200, 30), text);
+        return IsPlayerInRange && !gameObject.activeInHierarchy ?
+            $"Press {actionKey} to pick up {item.ItemName}"
+            : null;
     }
 
     private void Start()
