@@ -122,11 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6088384a6b5f798459952e927c59a968, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endWallBuildingInstructions: {fileID: 718350908336618168, guid: 2dff551662319f343b568c6cdfa4e0ab,
-    type: 3}
-  corridorBuildingInstructions: {fileID: 1113956370355793128, guid: 6847645411dba3149b60235c8303f073,
-    type: 3}
-  corridorEndBuildingInstructions: {fileID: 827704812176858742, guid: fdeb81e55157b3e4abc328032d348784,
+  endWallBuildingInstructionsPrefab: {fileID: 718350908336618168, guid: 2dff551662319f343b568c6cdfa4e0ab,
     type: 3}
 --- !u!114 &6087726541588794866
 MonoBehaviour:
