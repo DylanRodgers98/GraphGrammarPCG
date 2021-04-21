@@ -1,17 +1,16 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class Actionable : MonoBehaviour
 {
     protected PlayerController PlayerController;
-    [SerializeField] private KeyCode actionKey;
-    private bool isPlayerInRange;
+    [SerializeField] protected KeyCode actionKey;
+    protected bool IsPlayerInRange;
 
     protected abstract void DoAction();
 
     private void Update()
     {
-        if (isPlayerInRange && Input.GetKeyDown(actionKey))
+        if (IsPlayerInRange && Input.GetKeyDown(actionKey))
         {
             DoAction();
         }
@@ -22,13 +21,13 @@ public abstract class Actionable : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             PlayerController = other.gameObject.GetComponent<PlayerController>();
-            isPlayerInRange = true;
+            IsPlayerInRange = true;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
         PlayerController = null;
-        isPlayerInRange = false;
+        IsPlayerInRange = false;
     }
 }

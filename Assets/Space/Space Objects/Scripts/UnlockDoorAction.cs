@@ -18,6 +18,18 @@ public class UnlockDoorAction : Actionable
         }
     }
 
+    private void OnGUI()
+    {
+        if (!isDoorLocked || !IsPlayerInRange) return;
+
+        int numRequiredKeysInInventory = requiredKeys.Count(PlayerController.DoesInventoryContainItem);
+        string text = numRequiredKeysInInventory == requiredKeys.Count
+            ? $"Press {actionKey} to unlock door"
+            : $"Door locked. {numRequiredKeysInInventory}/{requiredKeys.Count} keys found";
+        
+        GUI.Box(new Rect(10, 10, 200, 30), text);
+    }
+
     public void AddRequiredKeys(params Item[] requiredKeys)
     {
         foreach (Item requiredKey in requiredKeys)

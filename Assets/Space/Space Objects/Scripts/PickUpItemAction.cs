@@ -1,11 +1,8 @@
-﻿public class PickUpItemAction : Actionable
+﻿using UnityEngine;
+
+public class PickUpItemAction : Actionable
 {
     private Item item;
-
-    private void Start()
-    {
-        item = GetComponent<Item>();
-    }
 
     protected override void DoAction()
     {
@@ -18,5 +15,17 @@
                 item.Quest.MarkAsCompleted();
             }
         }
+    }
+
+    protected void OnGUI()
+    {
+        if (!IsPlayerInRange || !gameObject.activeInHierarchy) return;
+        string text = $"Press {actionKey} to pick up {item.ItemName}";
+        GUI.Box(new Rect(10, 10, 200, 30), text);
+    }
+
+    private void Start()
+    {
+        item = GetComponent<Item>();
     }
 }
