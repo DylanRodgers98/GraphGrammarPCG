@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,9 +11,10 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField] private Camera mainCamera;
     [SerializeField] private NavMeshAgent navMeshAgent;
-    [SerializeField] private int maxHealth;
-    private int currentHealth;
+    [SerializeField] private float maxHealth;
+    private float currentHealth;
     private IList<Item> inventory;
+    private bool isDead;
 
     public IList<Quest> Quests { get; private set; }
 
@@ -21,6 +23,22 @@ public class PlayerController : MonoBehaviour
     public bool DoesInventoryContainItem(Item item) => inventory.Contains(item);
 
     public void AddQuest(Quest quest) => Quests.Add(quest);
+
+    public void TakeDamage(float damageAmount)
+    {
+        currentHealth -= damageAmount;
+        if (currentHealth <= 0) Kill();
+    }
+
+    private void Kill()
+    {
+        if (!isDead)
+        {
+            currentHealth = 0;
+            navMeshAgent.gameObject.SetActive(false);
+            isDead = true;
+        }
+    }
 
     private void Awake()
     {
@@ -55,7 +73,8 @@ public class PlayerController : MonoBehaviour
     {
         float x = Screen.width - HealthGUIWidth - HealthGUIOffset;
         float y = HealthGUIOffset;
-        string text = $"Health: {currentHealth}";
+        double roundedHealth = Math.Round(currentHealth, MidpointRounding.AwayFromZero);
+        string text = $"Health: {roundedHealth}";
         GUI.Box(new Rect(x, y, HealthGUIWidth, HealthGUIHeight), text);
     }
 }
