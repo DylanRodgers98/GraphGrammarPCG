@@ -2,6 +2,10 @@
 
 public abstract class Actionable : MonoBehaviour
 {
+    private const float GUIWidth = 200;
+    private const float GUIHeight = 25;
+    private const float GUIOffset = 10;
+    
     protected PlayerController PlayerController;
     [SerializeField] protected KeyCode actionKey;
     private bool isPlayerInRange;
@@ -39,7 +43,9 @@ public abstract class Actionable : MonoBehaviour
         string text = GetGUIText();
         if (text != null)
         {
-            GUI.Box(new Rect(10, 10, 200, 30), text);
+            float x = Screen.width / 2f - GUIWidth / 2;
+            float y = Screen.height - GUIHeight - GUIOffset;
+            GUI.Box(new Rect(x, y, GUIWidth, GUIHeight), text);
         }
     }
 }

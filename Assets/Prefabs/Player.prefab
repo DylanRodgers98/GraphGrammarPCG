@@ -134,6 +134,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 7151460960804298812}
   navMeshAgent: {fileID: 8833524096202301360}
+  maxHealth: 100
 --- !u!54 &8851690534770374589
 Rigidbody:
   m_ObjectHideFlags: 0
