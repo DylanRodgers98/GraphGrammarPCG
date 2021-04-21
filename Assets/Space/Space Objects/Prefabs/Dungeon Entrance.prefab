@@ -1404,6 +1404,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7205072853522108245, guid: d511093694817e54cb54e08c5360dc9b,
+        type: 3}
+      propertyPath: attackRange
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7205072853522108245, guid: d511093694817e54cb54e08c5360dc9b,
+        type: 3}
+      propertyPath: attackDamageAmount
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7205072853522108245, guid: d511093694817e54cb54e08c5360dc9b,
+        type: 3}
+      propertyPath: attackCooldown
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7205072853522108245, guid: d511093694817e54cb54e08c5360dc9b,
+        type: 3}
+      propertyPath: damagePerAttack
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 8553308457450866915, guid: d511093694817e54cb54e08c5360dc9b,
         type: 3}
       propertyPath: m_Name

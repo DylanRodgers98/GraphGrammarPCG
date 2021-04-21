@@ -17,6 +17,10 @@ public class PlayerController : Damageable
 
     [SerializeField] private Camera mainCamera;
     [SerializeField] private NavMeshAgent navMeshAgent;
+    [SerializeField] private float damagePerAttack;
+    [SerializeField] private float attackRange;
+    [SerializeField] private float attackCooldown;
+    private float currentAttackCooldown;
 
     private IList<Item> inventory;
     private IList<Quest> quests;
@@ -32,6 +36,7 @@ public class PlayerController : Damageable
         base.Awake();
         inventory = new List<Item>();
         quests = new List<Quest>();
+        currentAttackCooldown = 0;
     }
 
     private void Start()
@@ -49,38 +54,81 @@ public class PlayerController : Damageable
 
     private void Update()
     {
-        if (!IsDead && Input.GetMouseButtonDown(0) &&
-            Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100))
+        if (IsDead) return;
+        if (Input.GetMouseButtonDown(0)) MoveToPoint();
+        if (Input.GetMouseButtonDown(1)) Attack();
+        CoolDownAttackCooldown();
+    }
+
+    private void MoveToPoint()
+    {
+        if (Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100))
         {
             navMeshAgent.destination = hit.point;
         }
+    }
+
+    private void Attack()
+    {
+        if (currentAttackCooldown > 0) return;
+        currentAttackCooldown = attackCooldown;
+
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, attackRange, Vector3.forward);
+        foreach (RaycastHit raycastHit in hits)
+        {
+            if (raycastHit.transform.CompareTag("Enemy"))
+            {
+                raycastHit.transform.GetComponent<Enemy>().TakeDamage(damagePerAttack);
+            }   
+        }
+    }
+
+    private void CoolDownAttackCooldown()
+    {
+        if (currentAttackCooldown == 0) return;
+        currentAttackCooldown -= Time.deltaTime;
+        if (currentAttackCooldown <= 0) currentAttackCooldown = 0;
     }
 
     private void OnGUI()
     {
         if (IsDead)
         {
-            float deathX = Screen.width / 2f - DeathGUIWidth / 2;
-            float deathY = Screen.height / 2f - DeathGUIHeight / 2;
-            GUI.Box(new Rect(deathX, deathY, DeathGUIWidth, DeathGUIHeight), "YOU DIED");
+            DisplayDeathGUI();
         }
         else
         {
-            float healthX = Screen.width - HealthGUIWidth - GUIOffset;
-            double roundedHealth = CurrentHealth == 0 ? 0 : Math.Round(CurrentHealth, MidpointRounding.AwayFromZero);
-            string healthText = $"HEALTH: {roundedHealth}";
-
-            GUI.Box(new Rect(healthX, GUIOffset, HealthGUIWidth, HealthGUIHeight), healthText);
-
-            int numIncompleteQuests = quests.Count(quest => !quest.IsCompleted());
-            if (numIncompleteQuests == 0) return;
-            float questsHeight = QuestsGUIInitialHeight + QuestsGUIHeightPerQuest * numIncompleteQuests;
-            string questsText = quests
-                .Where(quest => !quest.IsCompleted())
-                .Select(quest => quest.QuestName())
-                .Aggregate("QUESTS:", (str, questName) => $"{str}\n{questName}");
-
-            GUI.Box(new Rect(GUIOffset, GUIOffset, QuestsGUIWidth, questsHeight), questsText);
+            DisplayHealthGUI();
+            DisplayQuestsGUI();
         }
+    }
+
+    private static void DisplayDeathGUI()
+    {
+        float deathX = Screen.width / 2f - DeathGUIWidth / 2;
+        float deathY = Screen.height / 2f - DeathGUIHeight / 2;
+        GUI.Box(new Rect(deathX, deathY, DeathGUIWidth, DeathGUIHeight), "YOU DIED");   
+    }
+
+    private void DisplayHealthGUI()
+    {
+        float healthX = Screen.width - HealthGUIWidth - GUIOffset;
+        double roundedHealth = CurrentHealth == 0 ? 0 : Math.Round(CurrentHealth, MidpointRounding.AwayFromZero);
+        string healthText = $"HEALTH: {roundedHealth}";
+
+        GUI.Box(new Rect(healthX, GUIOffset, HealthGUIWidth, HealthGUIHeight), healthText);
+    }
+
+    private void DisplayQuestsGUI()
+    {
+        int numIncompleteQuests = quests.Count(quest => !quest.IsCompleted());
+        if (numIncompleteQuests == 0) return;
+        float questsHeight = QuestsGUIInitialHeight + QuestsGUIHeightPerQuest * numIncompleteQuests;
+        string questsText = quests
+            .Where(quest => !quest.IsCompleted())
+            .Select(quest => quest.QuestName())
+            .Aggregate("QUESTS:", (str, questName) => $"{str}\n{questName}");
+
+        GUI.Box(new Rect(GUIOffset, GUIOffset, QuestsGUIWidth, questsHeight), questsText);
     }
 }
