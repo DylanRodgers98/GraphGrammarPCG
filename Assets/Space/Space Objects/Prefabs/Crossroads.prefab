@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 5105097162759407626}
   m_Layer: 0
   m_Name: Crossroads
-  m_TagString: Crossroads
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

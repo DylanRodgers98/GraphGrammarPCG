@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 2540649559499893270}
   m_Layer: 0
   m_Name: Corridor Trap & Item (5)
-  m_TagString: Corridor
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -372,7 +372,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 154860, guid: 28ad6bc8a17e7284d884987726cf5100, type: 3}
       propertyPath: m_TagString
-      value: Trap
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 154862, guid: 28ad6bc8a17e7284d884987726cf5100, type: 3}
       propertyPath: m_Layer

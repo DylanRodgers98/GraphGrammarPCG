@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 4831337076123180149}
   m_Layer: 0
   m_Name: Corridor Key
-  m_TagString: Corridor
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
