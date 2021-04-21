@@ -8,21 +8,22 @@ public class PlayerController : MonoBehaviour
     private const float HealthGUIWidth = 100;
     private const float HealthGUIHeight = 25;
     private const float HealthGUIOffset = 10;
+    private const float DeathGUIWidth = 100;
+    private const float DeathGUIHeight = 25;
     
     [SerializeField] private Camera mainCamera;
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private float maxHealth;
     private float currentHealth;
-    private IList<Item> inventory;
     private bool isDead;
-
-    public IList<Quest> Quests { get; private set; }
+    private IList<Item> inventory;
+    private IList<Quest> quests;
 
     public void AddItemToInventory(Item item) => inventory.Add(item);
 
     public bool DoesInventoryContainItem(Item item) => inventory.Contains(item);
 
-    public void AddQuest(Quest quest) => Quests.Add(quest);
+    public void AddQuest(Quest quest) => quests.Add(quest);
 
     public void TakeDamage(float damageAmount)
     {
@@ -35,7 +36,6 @@ public class PlayerController : MonoBehaviour
         if (!isDead)
         {
             currentHealth = 0;
-            navMeshAgent.gameObject.SetActive(false);
             isDead = true;
         }
     }
@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         inventory = new List<Item>();
-        Quests = new List<Quest>();
+        quests = new List<Quest>();
         currentHealth = maxHealth;
     }
 
@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) &&
+        if (!isDead && Input.GetMouseButtonDown(0) &&
             Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100))
         {
             navMeshAgent.destination = hit.point;
@@ -71,10 +71,20 @@ public class PlayerController : MonoBehaviour
 
     private void OnGUI()
     {
-        float x = Screen.width - HealthGUIWidth - HealthGUIOffset;
-        float y = HealthGUIOffset;
-        double roundedHealth = Math.Round(currentHealth, MidpointRounding.AwayFromZero);
-        string text = $"Health: {roundedHealth}";
-        GUI.Box(new Rect(x, y, HealthGUIWidth, HealthGUIHeight), text);
+        if (isDead)
+        {
+            float deathX = Screen.width / 2f - DeathGUIWidth / 2;
+            float deathY = Screen.height / 2f - DeathGUIHeight / 2;
+            string deathText = "YOU DIED";
+            GUI.Box(new Rect(deathX, deathY, DeathGUIWidth, DeathGUIHeight), deathText);
+        }
+        else
+        {
+            float healthX = Screen.width - HealthGUIWidth - HealthGUIOffset;
+            float healthY = HealthGUIOffset;
+            double roundedHealth = currentHealth == 0 ? 0 : Math.Round(currentHealth, MidpointRounding.AwayFromZero);
+            string healthText = $"Health: {roundedHealth}";
+            GUI.Box(new Rect(healthX, healthY, HealthGUIWidth, HealthGUIHeight), healthText);
+        }
     }
 }
