@@ -10,11 +10,14 @@ public class PlayerController : MonoBehaviour
 
     public IList<Quest> Quests { get; private set; }
 
-    private void Start()
+    private void Awake()
     {
         inventory = new List<Item>();
         Quests = new List<Quest>();
+    }
 
+    private void Start()
+    {
         if (navMeshAgent == null)
         {
             navMeshAgent = GetComponent<NavMeshAgent>();

@@ -17,7 +17,7 @@
 
     protected override string GetGUIText()
     {
-        return IsPlayerInRange && !gameObject.activeInHierarchy ?
+        return gameObject.activeInHierarchy ?
             $"Press {actionKey} to pick up {item.ItemName}"
             : null;
     }

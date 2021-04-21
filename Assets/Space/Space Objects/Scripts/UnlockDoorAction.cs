@@ -20,7 +20,7 @@ public class UnlockDoorAction : Actionable
 
     protected override string GetGUIText()
     {
-        if (!isDoorLocked || !IsPlayerInRange) return null;
+        if (!isDoorLocked) return null;
 
         int numRequiredKeysInInventory = requiredKeys.Count(PlayerController.DoesInventoryContainItem);
         return numRequiredKeysInInventory == requiredKeys.Count

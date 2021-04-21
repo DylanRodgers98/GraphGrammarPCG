@@ -4,7 +4,7 @@ public abstract class Actionable : MonoBehaviour
 {
     protected PlayerController PlayerController;
     [SerializeField] protected KeyCode actionKey;
-    protected bool IsPlayerInRange;
+    private bool isPlayerInRange;
 
     protected abstract void DoAction();
 
@@ -12,7 +12,7 @@ public abstract class Actionable : MonoBehaviour
 
     private void Update()
     {
-        if (IsPlayerInRange && Input.GetKeyDown(actionKey))
+        if (isPlayerInRange && Input.GetKeyDown(actionKey))
         {
             DoAction();
         }
@@ -23,18 +23,19 @@ public abstract class Actionable : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             PlayerController = other.gameObject.GetComponent<PlayerController>();
-            IsPlayerInRange = true;
+            isPlayerInRange = true;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
         PlayerController = null;
-        IsPlayerInRange = false;
+        isPlayerInRange = false;
     }
 
     private void OnGUI()
     {
+        if (!isPlayerInRange) return;
         string text = GetGUIText();
         if (text != null)
         {
