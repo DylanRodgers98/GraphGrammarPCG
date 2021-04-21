@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Damageable
 {
     [SerializeField] private string enemyName;
+    [SerializeField] private float damagePerAttack;
+    [SerializeField] private float attackCooldown;
 
     public string EnemyName => enemyName;
     public Quest Quest { get; set; }
