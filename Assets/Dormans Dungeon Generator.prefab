@@ -166,4 +166,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b2df41c47c51fb46bd79a492ed08ad0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   questItemSymbol: iq
+  levelBossSymbol: bl

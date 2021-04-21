@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     private const float HealthGUIHeight = 25;
     private const float DeathGUIWidth = 100;
     private const float DeathGUIHeight = 25;
-    private const float QuestsGUIWidth = 100;
+    private const float QuestsGUIWidth = 120;
     private const float QuestsGUIInitialHeight = 20;
     private const float QuestsGUIHeightPerQuest = 16;
     
