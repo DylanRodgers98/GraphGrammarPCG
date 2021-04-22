@@ -15,15 +15,19 @@ public class PlayerController : Damageable
     private const float QuestsGUIInitialHeight = 20;
     private const float QuestsGUIHeightPerQuest = 16;
 
+    private readonly Collider[] enemiesHit = new Collider[5];
+
     [SerializeField] private Camera mainCamera;
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private float damagePerAttack;
     [SerializeField] private float attackRange;
     [SerializeField] private float attackCooldown;
-    private float currentAttackCooldown;
-
+    [SerializeField] private int enemiesLayerIndex;
+    
     private IList<Item> inventory;
     private IList<Quest> quests;
+    private float currentAttackCooldown;
+    private int enemiesLayerMask;
 
     public void AddItemToInventory(Item item) => inventory.Add(item);
 
@@ -37,6 +41,7 @@ public class PlayerController : Damageable
         inventory = new List<Item>();
         quests = new List<Quest>();
         currentAttackCooldown = 0;
+        enemiesLayerMask = 1 << enemiesLayerIndex;
     }
 
     private void Start()
@@ -73,13 +78,10 @@ public class PlayerController : Damageable
         if (currentAttackCooldown > 0) return;
         currentAttackCooldown = attackCooldown;
 
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, attackRange, Vector3.forward);
-        foreach (RaycastHit raycastHit in hits)
+        Physics.OverlapSphereNonAlloc(transform.position, attackRange, enemiesHit, enemiesLayerMask);
+        foreach (Collider enemyHit in enemiesHit)
         {
-            if (raycastHit.transform.CompareTag("Enemy"))
-            {
-                raycastHit.transform.GetComponent<Enemy>().TakeDamage(damagePerAttack);
-            }   
+            enemyHit.transform.GetComponent<Enemy>().TakeDamage(damagePerAttack);
         }
     }
 
@@ -107,7 +109,7 @@ public class PlayerController : Damageable
     {
         float deathX = Screen.width / 2f - DeathGUIWidth / 2;
         float deathY = Screen.height / 2f - DeathGUIHeight / 2;
-        GUI.Box(new Rect(deathX, deathY, DeathGUIWidth, DeathGUIHeight), "YOU DIED");   
+        GUI.Box(new Rect(deathX, deathY, DeathGUIWidth, DeathGUIHeight), "YOU DIED");
     }
 
     private void DisplayHealthGUI()
