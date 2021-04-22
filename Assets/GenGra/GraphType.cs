@@ -110,6 +110,7 @@ namespace GenGra
 
             // Calculate the indegree for each node in the graph
             IDictionary<string, int> nodeIndegrees = new Dictionary<string, int>();
+            IDictionary<string, int> nodeOutdegrees = new Dictionary<string, int>();
             if (Edges?.Edge != null)
             {
                 foreach (EdgeType edge in Edges.Edge)
@@ -118,27 +119,32 @@ namespace GenGra
                     {
                         nodeIndegrees[edge.target] = 0;
                     }
+                    if (!nodeOutdegrees.ContainsKey(edge.source))
+                    {
+                        nodeOutdegrees[edge.source] = 0;
+                    }
 
                     nodeIndegrees[edge.target]++;
+                    nodeOutdegrees[edge.source]++;
                 }
             }
 
             // Find all nodes with an indegree of 0
-            NodeType[] returnNodes = Nodes.Node
+            NodeType[] nodesWithZeroIndegree = Nodes.Node
                 .Where(node => !nodeIndegrees.ContainsKey(node.id))
                 .ToArray();
 
-            if (returnNodes.Length != 0)
+            if (nodesWithZeroIndegree.Length != 0)
             {
-                startNodes = returnNodes;
+                startNodes = nodesWithZeroIndegree;
                 return;
             }
 
-            // If no node exists with an indegree of 0, then this graph is cyclic, so set startNodes
-            // to be an array containing just one random start node, as the actual start node will
-            // not matter since all nodes can be visited from any other node
-            NodeType randomNode = Nodes.Node[Random.Range(0, Nodes.Node.Length - 1)];
-            startNodes = new[] {randomNode};
+            // If no node exists with an indegree of 0, then this graph contains a cycle, so find all nodes with
+            // an outdegree greater than 0 and set startNodes to be an array containing the first of these nodes
+            // picked, as the actual start node will not matter since all nodes can be visited from this node.
+            NodeType startNode = Nodes.Node.First(node => nodeOutdegrees.ContainsKey(node.id));
+            startNodes = new[] {startNode};
         }
 
         private bool HasAllSymbolsIn(GraphType otherGraph)
@@ -342,7 +348,7 @@ namespace GenGra
             if (otherGraph.Edges?.Edge == null || otherGraph.Edges?.Edge?.Length == 0) return;
 
             IList<EdgeType> edges = Edges?.Edge != null
-                ? new List<EdgeType>(Edges?.Edge)
+                ? new List<EdgeType>(Edges.Edge)
                 : new List<EdgeType>(otherGraph.Edges.Edge.Length);
 
             foreach (EdgeType targetGraphEdge in otherGraph.Edges.Edge)
