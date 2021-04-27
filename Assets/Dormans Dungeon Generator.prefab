@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 837739251547752406}
   - component: {fileID: 837739251547752401}
-  - component: {fileID: 2556065000719060197}
   - component: {fileID: 837739251547752407}
   - component: {fileID: 6087726541588794866}
   - component: {fileID: -2502878175280443817}
@@ -49,18 +48,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   missionGraphGrammarFilePath: Assets/GenGra/dormans-grammar.xml
---- !u!114 &2556065000719060197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 837739251547752404}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5d737e6e9c80664da017fc0db23e44a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   buildingInstructionsByMissionSymbol:
   - missionSymbol: bl
     buildingInstructionsPrefab: {fileID: 8641044939069163260, guid: 690d84ef7344cf54d842d678491cb5cf,
@@ -166,6 +153,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b2df41c47c51fb46bd79a492ed08ad0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
   questItemSymbol: iq
   levelBossSymbol: bl

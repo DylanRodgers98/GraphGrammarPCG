@@ -3,16 +3,40 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace GenGra
 {
-    [RequireComponent(typeof(BuildingInstructionsFactory))]
-    public class GenGraParser : MonoBehaviour
+    public class GenGraGenerator : MonoBehaviour
     {
         [SerializeField] private string missionGraphGrammarFilePath;
-        private BuildingInstructionsFactory buildingInstructionsFactory;
+        
+        /*
+         * See doc comment on struct BuildingInstructionsHolder about
+         * the necessity for both a public Array and a private IDictionary
+         */
+        [SerializeField] private BuildingInstructionsHolder[] buildingInstructionsByMissionSymbol;
+        private IDictionary<string, GameObject> buildingInstructionsByMissionSymbolDict;
 
-        void Start()
+        private IDictionary<string, GameObject> BuildingInstructionsByMissionSymbol
+        {
+            get
+            {
+                if (buildingInstructionsByMissionSymbolDict == null)
+                {
+                    buildingInstructionsByMissionSymbolDict = new Dictionary<string, GameObject>();
+                    foreach (BuildingInstructionsHolder biHolder in buildingInstructionsByMissionSymbol)
+                    {
+                        buildingInstructionsByMissionSymbolDict[biHolder.MissionSymbol] =
+                            biHolder.BuildingInstructionsPrefab;
+                    }
+                }
+
+                return buildingInstructionsByMissionSymbolDict;
+            }
+        }
+
+        private void Start()
         {
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -125,12 +149,68 @@ namespace GenGra
 
         private GameObject[] BuildSpaceForMissionSymbol(string missionSymbol, GameObject[] relativeSpaceObjects = null)
         {
-            if (buildingInstructionsFactory == null)
+            BuildingInstructions buildingInstructions = GetRandomBuildingInstructions(missionSymbol);
+            return buildingInstructions.Build(relativeSpaceObjects);
+        }
+        
+        private BuildingInstructions GetRandomBuildingInstructions(string missionSymbol)
+        {
+            BuildingInstructions[] buildingInstructionsArray = GetBuildingInstructions(missionSymbol);
+
+            if (buildingInstructionsArray.Length == 1)
             {
-                buildingInstructionsFactory = GetComponent<BuildingInstructionsFactory>();
+                return buildingInstructionsArray[0];
+            }
+            
+            int totalWeighting = 0;
+            foreach (BuildingInstructions buildingInstructions in buildingInstructionsArray)
+            {
+                if (buildingInstructions.Weighting < 1)
+                {
+                    buildingInstructions.Weighting = 1;
+                }
+
+                totalWeighting += buildingInstructions.Weighting;
+            }
+            
+            int desiredWeighting = Random.Range(1, totalWeighting + 1);
+            int currentWeighting = 0;
+            
+            foreach (BuildingInstructions buildingInstructions in buildingInstructionsArray)
+            {
+                currentWeighting += buildingInstructions.Weighting;
+                if (desiredWeighting <= currentWeighting)
+                {
+                    return buildingInstructions;
+                }
             }
 
-            return buildingInstructionsFactory.Build(missionSymbol, relativeSpaceObjects);
+            throw new InvalidOperationException("Could not determine building instructions " +
+                                                $"for weighting {desiredWeighting}");
+        }
+
+        private BuildingInstructions[] GetBuildingInstructions(string missionSymbol)
+        {
+            GameObject biPrefab;
+            try
+            {
+                biPrefab = BuildingInstructionsByMissionSymbol[missionSymbol];
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new InvalidOperationException("No building instructions prefab found for mission symbol " +
+                                                    $"'{missionSymbol}'. Please check validity of Building " +
+                                                    "Instructions By Mission Symbol array.");
+            }
+            
+            BuildingInstructions[] buildingInstructionsArray = biPrefab.GetComponents<BuildingInstructions>();
+            if (buildingInstructionsArray == null || buildingInstructionsArray.Length == 0)
+            {
+                throw new InvalidOperationException("No BuildingInstructions component found attached to " +
+                                                    $"{biPrefab}. Please check validity of this prefab.");
+            }
+
+            return buildingInstructionsArray;
         }
 
         private void PostProcess(GraphType missionGraph, IDictionary<string, GameObject[]> generatedSpace)
@@ -139,6 +219,21 @@ namespace GenGra
             {
                 postProcessor.Process(missionGraph, generatedSpace);
             }
+        }
+
+        /**
+         * This struct is a workaround to allow GameObjects to be mapped to a string in the Unity editor in a
+         * similar vein to using a Dictionary, because IDictionary is not serializable by the Unity engine.
+         */
+        [Serializable]
+        private class BuildingInstructionsHolder
+        {
+            [SerializeField] private string missionSymbol;
+            [SerializeField] private GameObject buildingInstructionsPrefab;
+
+            public string MissionSymbol => missionSymbol;
+
+            public GameObject BuildingInstructionsPrefab => buildingInstructionsPrefab;
         }
     }
 }
