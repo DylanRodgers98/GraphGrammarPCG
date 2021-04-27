@@ -195,7 +195,7 @@ namespace GenGra
                 {
                     // pick a random collection of marked nodes to use and add contents to original markedNodes Dictionary
                     IDictionary<string, IList<NodeType>> markedNodesToUse = 
-                        markedNodesList[Random.Range(0, markedNodesList.Count - 1)];
+                        markedNodesList[Random.Range(0, markedNodesList.Count)];
 
                     foreach (KeyValuePair<string, IList<NodeType>> keyValuePair in markedNodesToUse)
                     {
@@ -263,7 +263,7 @@ namespace GenGra
             foreach (KeyValuePair<string, IList<NodeType>> keyValuePair in candidateMarkedNodes)
             {
                 IList<NodeType> nodes = keyValuePair.Value;
-                NodeType nodeToUse = nodes.Count == 1 ? nodes[0] : nodes[Random.Range(0, nodes.Count - 1)];
+                NodeType nodeToUse = nodes.Count == 1 ? nodes[0] : nodes[Random.Range(0, nodes.Count)];
                 markedNodes[keyValuePair.Key] = nodeToUse;
             }
 

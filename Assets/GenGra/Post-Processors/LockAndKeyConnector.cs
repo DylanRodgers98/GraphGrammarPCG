@@ -69,7 +69,7 @@ namespace GenGra
             {
                 NodeType randomLockNode = lockNodes.Count == 1
                     ? lockNodes[0] 
-                    : lockNodes[Random.Range(0, lockNodes.Count - 1)];
+                    : lockNodes[Random.Range(0, lockNodes.Count)];
                 
                 ConnectLockAndKey(generatedSpace, randomLockNode.id, keyNode.id);
                 lockNodes.Remove(randomLockNode);

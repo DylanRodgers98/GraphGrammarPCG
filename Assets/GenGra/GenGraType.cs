@@ -26,7 +26,7 @@ namespace GenGra
 
                 RuleType ruleToApply = applicableRules.Length == 1
                     ? applicableRules[0]
-                    : applicableRules[Random.Range(0, applicableRules.Length - 1)];
+                    : applicableRules[Random.Range(0, applicableRules.Length)];
 
                 Debug.Log($"[Applying Rule {++ruleNumber}] source: {ruleToApply.source} | target: {ruleToApply.target}");
 

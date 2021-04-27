@@ -89,7 +89,7 @@ public abstract class BuildingInstructions : MonoBehaviour
             totalWeighting += spaceObjectVariant.Weighting;
         }
         
-        int desiredWeighting = Random.Range(1, totalWeighting);
+        int desiredWeighting = Random.Range(1, totalWeighting + 1);
         int currentWeighting = 0;
         
         foreach (WeightedSpaceObject spaceObjectVariant in spaceObjectVariants)
