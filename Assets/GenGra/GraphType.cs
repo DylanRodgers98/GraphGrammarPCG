@@ -263,7 +263,7 @@ namespace GenGra
             foreach (KeyValuePair<string, IList<NodeType>> keyValuePair in candidateMarkedNodes)
             {
                 IList<NodeType> nodes = keyValuePair.Value;
-                NodeType nodeToUse = nodes.Count == 1 ? nodes[0] : nodes[Random.Range(0, nodes.Count)];
+                NodeType nodeToUse = nodes[nodes.Count == 1 ? 0 : Random.Range(0, nodes.Count)];
                 markedNodes[keyValuePair.Key] = nodeToUse;
             }
 

@@ -24,9 +24,8 @@ namespace GenGra
                 RuleType[] applicableRules = GetApplicableRules(graphs, startGraph);
                 if (applicableRules.Length == 0) return startGraph;
 
-                RuleType ruleToApply = applicableRules.Length == 1
-                    ? applicableRules[0]
-                    : applicableRules[Random.Range(0, applicableRules.Length)];
+                RuleType ruleToApply = applicableRules[
+                    applicableRules.Length == 1 ? 0 : Random.Range(0, applicableRules.Length)];
 
                 Debug.Log($"[Applying Rule {++ruleNumber}] source: {ruleToApply.source} | target: {ruleToApply.target}");
 

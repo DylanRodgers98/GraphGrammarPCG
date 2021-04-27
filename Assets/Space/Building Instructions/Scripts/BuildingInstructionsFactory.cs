@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BuildingInstructionsFactory : MonoBehaviour
 {
@@ -31,17 +32,52 @@ public class BuildingInstructionsFactory : MonoBehaviour
 
     public GameObject[] Build(string missionSymbol, GameObject[] relativeSpaceObjects = null)
     {
-        try
+        BuildingInstructions buildingInstructions = GetRandomBuildingInstructions(missionSymbol);
+        return buildingInstructions.Build(relativeSpaceObjects);
+    }
+
+    private BuildingInstructions GetRandomBuildingInstructions(string missionSymbol)
+    {
+        BuildingInstructions[] buildingInstructionsArray = GetBuildingInstructions(missionSymbol);
+
+        if (buildingInstructionsArray.Length == 1)
         {
-            GameObject biPrefab = BuildingInstructionsByMissionSymbol[missionSymbol];
-            BuildingInstructions buildingInstructions = biPrefab.GetComponent<BuildingInstructions>();
-            if (buildingInstructions == null)
+            return buildingInstructionsArray[0];
+        }
+        
+        int totalWeighting = 0;
+        foreach (BuildingInstructions buildingInstructions in buildingInstructionsArray)
+        {
+            if (buildingInstructions.Weighting < 1)
             {
-                throw new InvalidOperationException("No BuildingInstructions component found attached to " +
-                                                    $"{biPrefab}. Please check validity of this prefab.");
+                buildingInstructions.Weighting = 1;
             }
 
-            return buildingInstructions.Build(relativeSpaceObjects);
+            totalWeighting += buildingInstructions.Weighting;
+        }
+        
+        int desiredWeighting = Random.Range(1, totalWeighting + 1);
+        int currentWeighting = 0;
+        
+        foreach (BuildingInstructions buildingInstructions in buildingInstructionsArray)
+        {
+            currentWeighting += buildingInstructions.Weighting;
+            if (desiredWeighting <= currentWeighting)
+            {
+                return buildingInstructions;
+            }
+        }
+
+        throw new InvalidOperationException("Could not determine building instructions " +
+                                            $"for weighting {desiredWeighting}");
+    }
+
+    private BuildingInstructions[] GetBuildingInstructions(string missionSymbol)
+    {
+        GameObject biPrefab;
+        try
+        {
+            biPrefab = BuildingInstructionsByMissionSymbol[missionSymbol];
         }
         catch (KeyNotFoundException)
         {
@@ -49,6 +85,15 @@ public class BuildingInstructionsFactory : MonoBehaviour
                                                 $"'{missionSymbol}'. Please check validity of Building " +
                                                 "Instructions By Mission Symbol array.");
         }
+        
+        BuildingInstructions[] buildingInstructionsArray = biPrefab.GetComponents<BuildingInstructions>();
+        if (buildingInstructionsArray == null || buildingInstructionsArray.Length == 0)
+        {
+            throw new InvalidOperationException("No BuildingInstructions component found attached to " +
+                                                $"{biPrefab}. Please check validity of this prefab.");
+        }
+
+        return buildingInstructionsArray;
     }
 
     /**

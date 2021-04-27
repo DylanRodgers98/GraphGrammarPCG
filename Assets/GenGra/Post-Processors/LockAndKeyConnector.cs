@@ -67,9 +67,7 @@ namespace GenGra
             
             foreach (NodeType keyNode in suspendedKeyNodes)
             {
-                NodeType randomLockNode = lockNodes.Count == 1
-                    ? lockNodes[0] 
-                    : lockNodes[Random.Range(0, lockNodes.Count)];
+                NodeType randomLockNode = lockNodes[lockNodes.Count == 1 ? 0 : Random.Range(0, lockNodes.Count)];
                 
                 ConnectLockAndKey(generatedSpace, randomLockNode.id, keyNode.id);
                 lockNodes.Remove(randomLockNode);

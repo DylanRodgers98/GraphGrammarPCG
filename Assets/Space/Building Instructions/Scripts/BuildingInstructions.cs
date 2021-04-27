@@ -10,7 +10,14 @@ public abstract class BuildingInstructions : MonoBehaviour
     public const string EntrancePointTag = "EntrancePoint";
     public const string ExitPointTag = "ExitPoint";
 
+    [SerializeField] private int weighting;
     [SerializeField] private WeightedSpaceObject[] spaceObjectVariants;
+    
+    public int Weighting
+    {
+        get => weighting;
+        set => weighting = value;
+    }
 
     public abstract GameObject[] Build(GameObject[] relativeSpaceObjects = null, bool checkForOverlap = true);
 
