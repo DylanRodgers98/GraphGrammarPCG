@@ -43,7 +43,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae3a3402255653042a70cbd0abc03def, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weighting: 0
   spaceObjectVariants:
   - spaceObject: {fileID: 1230215893993611257, guid: e64ea433ca3fb134580bf9391c2c292d,
+      type: 3}
+    weighting: 2
+  - spaceObject: {fileID: 8299211303417591816, guid: fe23d5228858c1d4381529db5e89f198,
+      type: 3}
+    weighting: 5
+  - spaceObject: {fileID: 2141179580065893700, guid: 628fcfc8165bb4c4f8d318ca41e85f86,
       type: 3}
     weighting: 1
